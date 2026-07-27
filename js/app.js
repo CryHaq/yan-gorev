@@ -4,6 +4,7 @@
 document.addEventListener("DOMContentLoaded", sayfayiKur);
 
 function sayfayiKur() {
+  temaDugmesiKur();
   uyeNavGuncelle();
   const sayfa = location.pathname.split("/").pop() || "index.html";
   if (sayfa === "oyun.html") oyunSayfasi();
@@ -222,6 +223,29 @@ const AVATAR_RENKLERI = [
 
 function uyeGetir() {
   try { return JSON.parse(localStorage.getItem("yg-uye")) || null; } catch (e) { return null; }
+}
+
+/* Gece/gündüz düğmesi: nav'a JS ile eklenir, tercih localStorage'da yaşar.
+   İlk boyamadan önce temayı head'deki tek satırlık betik uygular. */
+function temaDugmesiKur() {
+  const nav = document.querySelector(".site-header nav");
+  if (!nav || document.getElementById("tema-dugme")) return;
+  const dugme = el("button", "tema-dugme");
+  dugme.id = "tema-dugme";
+  dugme.type = "button";
+  const ciz = () => {
+    const gunduz = document.documentElement.dataset.tema === "gunduz";
+    dugme.textContent = gunduz ? "☾" : "☀";
+    dugme.setAttribute("aria-label", gunduz ? "Gece moduna geç" : "Gündüz moduna geç");
+  };
+  dugme.addEventListener("click", () => {
+    const yeni = document.documentElement.dataset.tema === "gunduz" ? "gece" : "gunduz";
+    document.documentElement.dataset.tema = yeni;
+    localStorage.setItem("yg-tema", yeni);
+    ciz();
+  });
+  ciz();
+  nav.append(dugme);
 }
 
 function uyeNavGuncelle() {

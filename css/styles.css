@@ -16,11 +16,43 @@
   --vurgu-derin: #2743c7;   /* kimlik kobaltı — dolgular */
   --vurgu-zemin: #182050;
   --parilti: 0 0 26px rgba(107, 139, 255, 0.28);
+  --header-zemin: rgba(12, 15, 30, 0.82);
+  --rozet-zemin: rgba(20, 26, 49, 0.85);
+  --rozet-metin: #ffffff;
+  --metin-yumusak: #c3c9e6;
   --serif: "Besley", "Iowan Old Style", Georgia, serif;
   --grotesk: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --govde-olcu: 68ch;
   --sayfa-genislik: 1080px;
 }
+
+/* ---------- Gündüz teması ---------- */
+
+html[data-tema="gunduz"] {
+  --zemin: #f4f3ee;
+  --panel: #ffffff;
+  --panel-ust: #eef0fb;
+  --murekkep: #17161c;
+  --soluk: #666a80;
+  --cizgi: #dbdde9;
+  --vurgu: #2743c7;
+  --vurgu-derin: #2743c7;
+  --vurgu-zemin: #e6eafc;
+  --parilti: 0 0 24px rgba(39, 67, 199, 0.16);
+  --header-zemin: rgba(244, 243, 238, 0.86);
+  --rozet-zemin: rgba(255, 255, 255, 0.92);
+  --rozet-metin: #2743c7;
+  --metin-yumusak: #494d61;
+}
+
+html[data-tema="gunduz"] .logo { text-shadow: none; }
+
+html[data-tema="gunduz"] .gunun-tartismasi {
+  border-color: rgba(214, 90, 45, 0.4);
+  background: linear-gradient(135deg, rgba(255, 122, 77, 0.12), rgba(39, 67, 199, 0.08));
+}
+
+html[data-tema="gunduz"] .gunun-tartismasi .eyebrow { color: #c2542e; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -42,42 +74,78 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: -30%;
+  inset: -32%;
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(45% 40% at 20% 25%, rgba(43, 86, 255, 0.55), transparent 66%),
-    radial-gradient(40% 38% at 82% 14%, rgba(158, 60, 255, 0.45), transparent 66%),
-    radial-gradient(46% 44% at 76% 80%, rgba(0, 190, 205, 0.42), transparent 66%),
-    radial-gradient(36% 32% at 10% 86%, rgba(255, 92, 140, 0.34), transparent 66%);
-  animation: suAk 26s ease-in-out infinite alternate;
+    radial-gradient(45% 40% at 20% 25%, rgba(43, 86, 255, 0.68), transparent 66%),
+    radial-gradient(40% 38% at 82% 14%, rgba(168, 62, 255, 0.58), transparent 66%),
+    radial-gradient(46% 44% at 76% 80%, rgba(0, 200, 215, 0.55), transparent 66%),
+    radial-gradient(36% 32% at 10% 86%, rgba(255, 92, 140, 0.45), transparent 66%);
+  animation: suAk 14s ease-in-out infinite alternate;
   will-change: transform, filter;
 }
 
 body::after {
   content: "";
   position: fixed;
-  inset: -30%;
+  inset: -32%;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(34% 30% at 58% 42%, rgba(84, 122, 255, 0.30), transparent 60%),
-    radial-gradient(30% 28% at 32% 68%, rgba(0, 220, 185, 0.26), transparent 60%);
-  animation: suAkKarsi 34s ease-in-out infinite alternate;
+    radial-gradient(34% 30% at 58% 42%, rgba(92, 128, 255, 0.42), transparent 60%),
+    radial-gradient(30% 28% at 32% 68%, rgba(0, 225, 190, 0.36), transparent 60%);
+  animation: suAkKarsi 19s ease-in-out infinite alternate;
   will-change: transform, filter;
 }
 
+html[data-tema="gunduz"] body::before {
+  background:
+    radial-gradient(45% 40% at 20% 25%, rgba(43, 86, 255, 0.30), transparent 66%),
+    radial-gradient(40% 38% at 82% 14%, rgba(168, 62, 255, 0.24), transparent 66%),
+    radial-gradient(46% 44% at 76% 80%, rgba(0, 185, 200, 0.26), transparent 66%),
+    radial-gradient(36% 32% at 10% 86%, rgba(255, 92, 140, 0.20), transparent 66%);
+}
+
+html[data-tema="gunduz"] body::after {
+  background:
+    radial-gradient(34% 30% at 58% 42%, rgba(92, 128, 255, 0.20), transparent 60%),
+    radial-gradient(30% 28% at 32% 68%, rgba(0, 200, 170, 0.18), transparent 60%);
+}
+
 @keyframes suAk {
-  0%   { transform: translate3d(-4%, -2%, 0) rotate(-3deg) scale(1);    filter: blur(58px) hue-rotate(0deg); }
-  50%  { transform: translate3d(3%, 3%, 0)   rotate(2deg)  scale(1.12); filter: blur(64px) hue-rotate(48deg); }
-  100% { transform: translate3d(-2%, 4%, 0)  rotate(-1deg) scale(1.05); filter: blur(58px) hue-rotate(-36deg); }
+  0%   { transform: translate3d(-6%, -3%, 0) rotate(-4deg) scale(1);    filter: blur(52px) hue-rotate(0deg); }
+  33%  { transform: translate3d(4%, 4%, 0)   rotate(3deg)  scale(1.16); filter: blur(60px) hue-rotate(70deg); }
+  66%  { transform: translate3d(-3%, 6%, 0)  rotate(-2deg) scale(1.08); filter: blur(55px) hue-rotate(-50deg); }
+  100% { transform: translate3d(5%, -4%, 0)  rotate(3deg)  scale(1.2);  filter: blur(62px) hue-rotate(35deg); }
 }
 
 @keyframes suAkKarsi {
-  0%   { transform: translate3d(3%, 2%, 0)   rotate(2deg)  scale(1.06); filter: blur(70px) hue-rotate(0deg); }
-  50%  { transform: translate3d(-3%, -3%, 0) rotate(-2deg) scale(1);    filter: blur(76px) hue-rotate(-40deg); }
-  100% { transform: translate3d(2%, -4%, 0)  rotate(1deg)  scale(1.1);  filter: blur(70px) hue-rotate(30deg); }
+  0%   { transform: translate3d(5%, 3%, 0)   rotate(3deg)  scale(1.1);  filter: blur(64px) hue-rotate(0deg); }
+  33%  { transform: translate3d(-4%, -5%, 0) rotate(-3deg) scale(1);    filter: blur(72px) hue-rotate(-65deg); }
+  66%  { transform: translate3d(3%, -2%, 0)  rotate(2deg)  scale(1.14); filter: blur(66px) hue-rotate(45deg); }
+  100% { transform: translate3d(-5%, 5%, 0)  rotate(-2deg) scale(1.05); filter: blur(70px) hue-rotate(-30deg); }
 }
+
+/* ---------- Tema düğmesi ---------- */
+
+.tema-dugme {
+  font: inherit;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--cizgi);
+  background: var(--panel);
+  color: var(--murekkep);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  line-height: 1;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.tema-dugme:hover { border-color: var(--vurgu); box-shadow: var(--parilti); }
 
 a { color: var(--vurgu); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { text-decoration-thickness: 2px; }
@@ -101,7 +169,7 @@ img { max-width: 100%; display: block; }
   justify-content: space-between;
   gap: 1rem;
   padding: 1.1rem 1.25rem 0.9rem;
-  background: rgba(12, 15, 30, 0.82);
+  background: var(--header-zemin);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 3px double var(--cizgi);
@@ -201,15 +269,19 @@ main {
   width: 100%;
 }
 
+/* Hero metinleri her temada görüntü ÜZERİNDE durur; renkleri temadan bağımsız sabittir. */
 .hero .eyebrow {
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.22em;
-  color: var(--vurgu);
+  color: #94a8ff;
   margin: 0 0 0.8rem;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
+
+.hero h1, .hero .puan-rozet { color: #eef0fa; }
+.hero .puan-rozet { background: rgba(20, 26, 49, 0.85); border-color: #6b8bff; }
 
 .hero h1 {
   font-family: var(--serif);
@@ -240,12 +312,12 @@ main {
   display: inline-block;
   font-family: var(--serif);
   font-weight: 700;
-  color: #fff;
+  color: var(--rozet-metin);
   border: 2.5px solid var(--vurgu);
   border-radius: 8px;
   padding: 0.35rem 0.8rem;
   transform: rotate(-2.5deg);
-  background: rgba(20, 26, 49, 0.85);
+  background: var(--rozet-zemin);
   box-shadow: var(--parilti);
 }
 
@@ -928,7 +1000,7 @@ main {
   font-weight: 600;
   font-size: clamp(1.15rem, 2.2vw, 1.5rem);
   line-height: 1.2;
-  color: #c9cfec;
+  color: var(--metin-yumusak);
   margin: 0 0 0.45rem;
 }
 
@@ -938,7 +1010,7 @@ main {
 .forum-konu .meta { color: var(--soluk); font-size: 0.85rem; margin: 0 0 0.7rem; }
 
 .forum-konu .onizleme {
-  color: #c3c9e6;
+  color: var(--metin-yumusak);
   margin: 0 0 0.8rem;
   max-width: 78ch;
   display: -webkit-box;
