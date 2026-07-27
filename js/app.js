@@ -60,7 +60,7 @@ function ipuclariSayfasi() {
     icerik.append(manset);
   }
 
-  const liste = el("div", "forum-izgara");
+  const liste = el("div", "forum-izgara ipucu-izgara");
   IPUCLARI.forEach(grup => {
     const oyun = OYUNLAR.find(o => o.id === grup.oyunId);
     if (!oyun) return;
@@ -94,17 +94,42 @@ function ipuclariSayfasi() {
       }
       ul.append(li);
     });
-    govde.append(ul);
-
+    /* İpuçları varsayılan gizli: kart küçük kalır, isteyen baloncukla açar. */
+    const detay = el("div", "ipucu-detay gizli");
+    detay.append(ul);
     const git = el("a", "tartisma-git");
     git.href = "konu.html?id=" + oyun.konuId;
     git.append(document.createTextNode("Bu ipuçlarını tartış"), el("span", "ok-mini", "→"));
-    govde.append(git);
+    detay.append(git);
 
+    const gor = el("button", "tartisma-git ipucu-gor");
+    gor.type = "button";
+    gor.setAttribute("aria-expanded", "false");
+    const gorYazi = el("span", null, "İpuçlarını gör");
+    const gorOk = el("span", "ok-mini", "▾");
+    gor.append(gorYazi, gorOk);
+    gor.addEventListener("click", () => {
+      const acik = !detay.classList.toggle("gizli");
+      gor.setAttribute("aria-expanded", acik ? "true" : "false");
+      gorYazi.textContent = acik ? "İpuçlarını gizle" : "İpuçlarını gör";
+      gorOk.textContent = acik ? "▴" : "▾";
+    });
+
+    govde.append(gor, detay);
     kart.append(govde);
     liste.append(kart);
   });
   icerik.append(liste);
+
+  /* Aramadan #ipucu-<oyun> çapasıyla gelindiyse ilgili kartı aç ve odakla. */
+  if (location.hash) {
+    const hedef = document.getElementById(location.hash.slice(1));
+    if (hedef) {
+      const dugme = hedef.querySelector(".ipucu-gor");
+      if (dugme) dugme.click();
+      hedef.scrollIntoView({ block: "start" });
+    }
+  }
   canlandir();
 }
 
