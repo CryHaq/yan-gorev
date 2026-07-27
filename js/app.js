@@ -57,7 +57,7 @@ function anaSayfa() {
   incelemeBaslik.id = "incelemeler";
   const grid = el("div", "kart-grid");
   OYUNLAR.filter(o => !o.manset).forEach(o => {
-    const kart = el("article", "kart");
+    const kart = el("article", "kart js-reveal");
     const kapak = el("a", "kart-kapak");
     kapak.href = "oyun.html?id=" + o.id;
     kapak.setAttribute("aria-label", o.ad + " incelemesine git");
@@ -81,7 +81,7 @@ function anaSayfa() {
   forumBaslik.id = "forum";
   const liste = el("ul", "forum-liste");
   KONULAR.forEach(k => {
-    const li = el("li");
+    const li = el("li", "js-reveal");
     const a = el("a");
     a.href = "konu.html?id=" + k.id;
     a.append(
@@ -93,7 +93,46 @@ function anaSayfa() {
     liste.append(li);
   });
 
+  const tartisma = gununTartismasi();
+  if (tartisma) icerik.append(tartisma);
   icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste);
+  canlandir();
+}
+
+/* Günün Tartışması: adaylar arasından ayın gününe göre seçilir — her gün başka alıntı. */
+function gununTartismasi() {
+  const aday = TARTISMA_ADAYLARI[new Date().getDate() % TARTISMA_ADAYLARI.length];
+  const konu = KONULAR.find(k => k.id === aday.konuId);
+  const yorum = konu && konu.yorumlar[aday.yorum];
+  if (!yorum) return null;
+  const kutu = el("section", "gunun-tartismasi");
+  kutu.append(el("p", "eyebrow", "🔥 Günün Tartışması"));
+  kutu.append(el("blockquote", null, "“" + yorum.metin + "”"));
+  const alt = el("p", "alt-bilgi");
+  alt.append(el("span", "rumuz", yorum.rumuz));
+  const git = el("a", null, konu.baslik + " →");
+  git.href = "konu.html?id=" + konu.id;
+  alt.append(document.createTextNode(" · "), git);
+  kutu.append(alt);
+  return kutu;
+}
+
+/* Görünüme girenleri kademeli belirt; hareket azaltma tercihine saygı duy. */
+function canlandir() {
+  const hedefler = document.querySelectorAll(".js-reveal:not(.gorunur)");
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+    hedefler.forEach(n => n.classList.add("gorunur"));
+    return;
+  }
+  const izleyici = new IntersectionObserver(girisler => {
+    girisler.forEach(g => {
+      if (g.isIntersecting) { g.target.classList.add("gorunur"); izleyici.unobserve(g.target); }
+    });
+  }, { threshold: 0.12 });
+  hedefler.forEach((n, i) => {
+    n.style.animationDelay = (i % 6) * 70 + "ms";
+    izleyici.observe(n);
+  });
 }
 
 /* ---------- inceleme sayfası ---------- */
@@ -150,6 +189,7 @@ function oyunSayfasi() {
   const cta = el("a", "forum-cta", "Bu oyunu forumda tartış →");
   cta.href = "konu.html?id=" + oyun.konuId;
   icerik.append(cta);
+  canlandir();
 }
 
 /* ---------- forum konusu ---------- */
@@ -178,6 +218,7 @@ function konuSayfasi() {
   tumYorumlar.forEach((y, i) => liste.append(yorumSatiri(konu.id, y, i)));
 
   icerik.append(baslik, acilis, liste, yorumFormu(konu));
+  canlandir();
 }
 
 /* Rumuzdan deterministik pastel renk: aynı kişi her sayfada aynı renkte görünür. */
@@ -188,7 +229,7 @@ function avatarRengi(rumuz) {
 }
 
 function yorumSatiri(konuId, yorum, sira) {
-  const li = el("li", "yorum" + (yorum.kullanici ? " kullanici" : ""));
+  const li = el("li", "yorum js-reveal" + (yorum.kullanici ? " kullanici" : ""));
   const avatar = el("span", "avatar", (yorum.rumuz || "?").charAt(0));
   if (!yorum.kullanici) avatar.style.background = avatarRengi(yorum.rumuz || "?");
   li.append(avatar);

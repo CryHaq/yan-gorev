@@ -127,6 +127,69 @@ const OYUNLAR = [
     arti: ["Dalış mekanikleri ve rüya fiziğinin ayarı", "Su ile uzayın karıştığı görsel katmanlar", "Uyurgezerlerin sessiz gerilimi"],
     eksi: ["Hiçbir yere bağlanmayan ipuçları", "Orta bölümde askıda kalan kimlik sorusu"],
     konuId: "derin-uyku-teoriler"
+  },
+  {
+    id: "vites",
+    gorsel: "img/vites.jpg",
+    ad: "Vites",
+    tur: "Yarış / Arcade",
+    studyo: "Şanzıman Interactive",
+    cikis: "Nisan 2026",
+    platformlar: ["PC", "Konsol"],
+    puan: 8.5,
+    ozet: "Karayel'in yağmurlu gece yollarında, polis telsizinin cızırtısı eşliğinde vites küçültüp virajlara yatıyorsun.",
+    manset: false,
+    inceleme: [
+      "Vites, ilk beş dakikada ne olduğunu söylüyor: kontak, yağmur, gece ve arkanızda kalan şehir ışıkları. Kurgu liman kenti Karayel'in çevre yollarında geçen bu arcade yarış oyunu, simülasyon ciddiyetine hiç öykünmüyor — el freni bir enstrüman, bariyerler ise öneriden ibaret.",
+      "Sürüş hissi türün son yıllardaki en iyisi. Islak asfaltta arka teker kayarken direksiyonun toparlanma anı öyle iyi ayarlanmış ki her viraj küçük bir alkış gibi. Polis kovalamacalarında telsiz cızırtısından rakip devriyelerin rotasını kestirmek, oyunun en zekice dokunuşu.",
+      "Müzik ayrı bir karakter: sentezle bağlama arasında gidip gelen gece radyosu, hız düştükçe yavaşlıyor, drift'te bas gömülüyor. Karayel'in mahalleleri arasında radyo istasyonu değişince şehrin ruh hali de değişiyor.",
+      "Kusur, ilerleme sisteminde: lastik ve yakıt ekonomisi orta oyunda belirgin bir tekrara zorluyor, aynı üç kovalamaca şablonu sık dönüyor. Yine de Vites, gaz pedalına her bastığınızda yüzünüzü güldüren, nadir 'bir tur daha' oyunlarından."
+    ],
+    arti: ["Drift ve toparlanma hissinin ayarı", "Telsizle rota kestirme fikri", "Gece radyosunun dinamik müziği"],
+    eksi: ["Orta oyunda ilerleme tekrara bağlıyor", "Kovalamaca şablonlarının azlığı"],
+    konuId: "vites-kestirmeler"
+  },
+  {
+    id: "hoyuk",
+    gorsel: "img/hoyuk.jpg",
+    ad: "Höyük",
+    tur: "Bulmaca / Keşif",
+    studyo: "Katman Yapım",
+    cikis: "Şubat 2026",
+    platformlar: ["PC", "Mobil"],
+    puan: 8.9,
+    ozet: "Bir fırça, bir defter ve dört bin yıllık bir tepe: kazdıkça uygarlık değil, kendi ailenin izleri çıkıyor.",
+    manset: false,
+    inceleme: [
+      "Höyük'te aceleye yer yok. Dedenizden kalan tozlu bir kazı defteriyle Anadolu'da kurgu bir tepeye geliyorsunuz; elinizde fırça, mala ve bitmeyen bir sabır. Her katman bir çağ, her çağ bir bulmaca — ve defterdeki el yazısı, kazdıkça sizin aile tarihinize doğru kıvrılıyor.",
+      "Oyunun kalbi mühür alfabesi. Kırık tabletlerdeki işaretleri karşılaştırıp anlam çıkarıyor, çözdüğünüz her kelimeyle hem uygarlığın hem hikâyenin bir odasını açıyorsunuz. Kimse size doğrulama vermiyor; bir çevirinin oturduğunu, sonraki tabletin birden anlam kazanmasından anlıyorsunuz. Bu güven, türde eşine az rastlanır bir tasarım cesareti.",
+      "Görsel dil, sıcak toprak tonları ve gün doğumu ışığıyla adeta meditasyon. Fırça sesleri, uzaktan gelen guguk kuşu ve rüzgâr — Katman Yapım, 'sessiz oyun' yapmanın ders kitabını yazmış.",
+      "Mobil tarafta hassas fırça kontrolleri zaman zaman inatlaşıyor ve son perdenin duygusal vuruşu biraz erken haber veriliyor. Ama Höyük, bu yılın en zarif bulmaca oyunu; toprağın altından çıkan şeyin en çok kendiniz olduğu ender yapımlardan."
+    ],
+    arti: ["Mühür alfabesinin doğrulamasız çözüm güveni", "Katman katman anlatılan aile hikâyesi", "Ses ve ışık tasarımının dinginliği"],
+    eksi: ["Mobilde fırça hassasiyeti", "Finalin kendini erken belli etmesi"],
+    konuId: "hoyuk-muhurler"
+  },
+  {
+    id: "meydan",
+    gorsel: "img/meydan.jpg",
+    ad: "Meydan",
+    tur: "Çevrimiçi Arena",
+    studyo: "Meydan Oyun Kolektifi",
+    cikis: "Erken Erişim",
+    platformlar: ["PC"],
+    puan: 7.4,
+    ozet: "Üçe üç kadim meydan güreşi + unsur büyüsü: muhteşem anlar, kaotik denge yamaları.",
+    manset: false,
+    inceleme: [
+      "Meydan'ın fikri kâğıt üstünde bile heyecan verici: antik bir taş meydanda, yağlı güreş geleneğiyle unsur büyüsünü birleştiren üçe üç takım kapışmaları. Kispetli bir devle rüzgâr okuyucusunu aynı takımda görmek ilk başta absürt geliyor; üç maç sonra 'başka türlüsü nasıl olurdu' diyorsunuz.",
+      "Çekirdek döngü gerçekten parlak. Tutuş-fırlatma sistemi, büyü iptalleriyle örülünce her kapışma küçük bir satranç hamlesine dönüyor; iyi bir peşrev, iyi bir ekip sözleşmesi kadar değerli. Ağ kodu da erken erişim standardının üstünde — yenilgide bahane bulamıyorsunuz, ki bu forumda görüleceği üzere herkesi memnun etmiyor.",
+      "Sorun, dengede. Kolektif, yama notlarını cesur yazıyor ama 1.7'de olduğu gibi bir karakteri bir gecede baş tacından yedek kulübesine gönderebiliyor. Yeni başlayan eğrisi de dik: ilk on saatinizde meydana değil, tahtaya bakıyorsunuz.",
+      "Meydan bugün 7,4'lük bir oyun; ama bir gün dengesini bulursa, buradaki tavan 9'ların işi. Şimdilik: arkadaşlarınızla girin, yalnız girecekseniz kalın derinizi de getirin."
+    ],
+    arti: ["Tutuş + büyü iptalinin taktik derinliği", "Erken erişime göre sağlam ağ kodu", "Takım kimyasının gerçekten hissedilmesi"],
+    eksi: ["Yamalarla savrulan denge", "Dik öğrenme eğrisi", "Tek başına eşleşmenin acımasızlığı"],
+    konuId: "meydan-denge"
   }
 ];
 
@@ -211,5 +274,54 @@ const KONULAR = [
       { rumuz: "derindalgic", tarih: "23 Temmuz 2026", metin: "@kapsul7 ...oyunu tekrar açıyorum. Eğer 113. kapsül bizim karakterinse bu her şeyi değiştirir." },
       { rumuz: "sayiklama", tarih: "24 Temmuz 2026", metin: "Bu başlığı okumadan önce oyun hakkında hiçbir teorim yoktu, şimdi uyuyamıyorum. Yan Görev incelemesi ne zaman geliyor, merakla bekliyorum." }
     ]
+  },
+  {
+    id: "vites-kestirmeler",
+    baslik: "Vites: Karayel'in gizli kestirmeleri (harita paylaşımı)",
+    acan: "elfreni",
+    tarih: "26 Temmuz 2026",
+    mesaj: "Liman turundaki rekoru kırmak istiyorsanız yazıyorum: tersane kapısındaki bariyer 23:00'ten sonra AÇIK. Vinçlerin altından geçen yol sizi doğrudan gümrük rampasına çıkarıyor, düz yoldan tam dört saniye kazandırıyor. Başka bilen var mı benzer yerleri?",
+    yorumlar: [
+      { rumuz: "karayelli", tarih: "26 Temmuz 2026", metin: "Tersaneyi herkes öğrendiğinden beri devriye orada bekliyor, haberin olsun. Ben stadyum otoparkını kullanıyorum: maç günü kapalı ama diğer günler içinden geçince telsiz menzilinden tamamen çıkıyorsun." },
+      { rumuz: "elfreni", tarih: "26 Temmuz 2026", metin: "@karayelli devriye beklese de vinç rotasında ışıklar sönükse riske değiyor bence, iki tur üst üste temiz geçtim. Stadyumu deneyeceğim, teşekkürler." },
+      { rumuz: "dortcyeker", tarih: "27 Temmuz 2026", metin: "Kimse yazmamış: sahil şeridindeki balıkçı iskelesine radyoyu Kıyı FM'e çevirip girerseniz gizli bir süre denemesi açılıyor. Şaka değil, deneyin. Ödülü söylemiyorum, sürpriz." },
+      { rumuz: "vitesbesteci", tarih: "27 Temmuz 2026", metin: "@dortcyeker bunu okuyup denedim ve oyunda müziğin neden dinamik olduğunu şimdi anladım. Herkes dursun ve bunu denesin. Şanzıman Interactive neyin peşindeymiş meğer." }
+    ]
+  },
+  {
+    id: "hoyuk-muhurler",
+    baslik: "Höyük mühür alfabesi — topluluk çevirisi ilerlemesi",
+    acan: "katmankazici",
+    tarih: "25 Temmuz 2026",
+    mesaj: "Topluluk çeviri tablosunu güncelliyorum. Kesinleşenler: dalga işareti = su/nehir, üç nokta üst üste = tahıl ambarı, içi çizgili daire = mühür sahibinin kendisi. Tartışmalı olan: kırık ay işareti. Ben 'yas' diyorum, bazıları 'borç' diyor. Elinde üçüncü tabletten örnek olan var mı?",
+    yorumlar: [
+      { rumuz: "fircadarbesi", tarih: "25 Temmuz 2026", metin: "Kırık ay bende iki kez borç bağlamında geçti: ambar tabletinde tahıl işaretinin YANINDA. Yas olsaydı mezar katmanında da görürdük, orada hiç yok." },
+      { rumuz: "katmankazici", tarih: "25 Temmuz 2026", metin: "@fircadarbesi mezar katmanında var ama — dedenin defterinin 41. sayfasındaki eskizde, lahit kenarında. Oyun defteri de kanıt sayıyor bence, sonuçta aynı evren." },
+      { rumuz: "gugukkusu", tarih: "26 Temmuz 2026", metin: "İkiniz de haklı olabilirsiniz: kırık ay 'kayıp' demekse hem borçta hem yasta kullanılır. Tahıl kaybı = borç, insan kaybı = yas. Çeviri tablosuna 'kayıp' yazalım, bağlam gerisini halleder." },
+      { rumuz: "tozlufirca", tarih: "26 Temmuz 2026", metin: "@gugukkusu bu yorum için üye oldum. Katman Yapım'ın istediği tam da bu galiba — tek doğru çeviri yok, bağlam var. Oyunun kendisi gibi." },
+      { rumuz: "malakadar", tarih: "27 Temmuz 2026", metin: "Tabloyu bozmayayım ama beşinci katmanda dalga işaretinin TERS çizildiği bir tablet buldum. Ters su... kuraklık mı? Kimsede var mı?" }
+    ]
+  },
+  {
+    id: "meydan-denge",
+    baslik: "1.7 yaması: Pehlivan nerfi haklı mı?",
+    acan: "meydanokuyan",
+    tarih: "27 Temmuz 2026",
+    mesaj: "Yama notları çıktı: Pehlivan'ın tutuş menzili yüzde on beş kısaldı, toprak sarsması artık büyüyle iptal edilebiliyor. Kolektif 'kullanım oranı çok yüksekti' diyor. Turnuva sahnesinden kazan-oranı verileriyle tartışalım: bu nerf haklı mı, yoksa panik yaması mı?",
+    yorumlar: [
+      { rumuz: "kispetli", tarih: "27 Temmuz 2026", metin: "Kazan oranı yüzde elli ikiydi, elli iki! Baş tacı falan değildi, sadece HERKES oynuyordu çünkü oynaması keyifliydi. Popülerliği güce çevirip nerflemek matematik değil halkla ilişkiler." },
+      { rumuz: "sazandisi", tarih: "27 Temmuz 2026", metin: "Pehlivan'ı nerflemek meydanın ruhunu bilmemektir. Sorun karakterde değil, düz yürüyen bir devden kaçamayanlarda. Yenilgiyi yamada değil aynada arayın." },
+      { rumuz: "ruzgarokuyan", tarih: "27 Temmuz 2026", metin: "@sazandisi 'aynada arayın' demek kolay, Pehlivan köşeye sıkıştırınca üç saniye boyunca oyun oynamıyorsun, seyrediyorsun. Karşı-hamlesi olmayan güç güç değildir, tasarım hatasıdır." },
+      { rumuz: "sazandisi", tarih: "27 Temmuz 2026", metin: "@ruzgarokuyan karşı-hamlesi VAR: tutuşa girmeden peşrevde mesafeyi açacaksın. Millet büyüye basıp kaçmayı taktik sanıyor, meydan bu değil. Peşrev okumayan Pehlivan'a yenilir, yenilmeli de." },
+      { rumuz: "meydanokuyan", tarih: "27 Temmuz 2026", metin: "@sazandisi veriyi getirdim: turnuvada Pehlivan pick oranı yüzde kırk bir, YASAKLANMA oranı yüzde otuz sekiz. Elli iki kazanç oranı, herkes ona göre takım kurduğu için 'sadece' elli iki. Nerf haklı." },
+      { rumuz: "yedekkulubesi", tarih: "27 Temmuz 2026", metin: "İki gündür bu başlıktayım ve fikrimi dört kez değiştirdim. Meydan'ın asıl başarısı bu galiba: dengesiz bile olsa hepimiz hâlâ buradayız." }
+    ]
   }
+];
+
+/* Günün Tartışması: gün-of-ay'a göre bu adaylardan biri manşete çıkar. */
+const TARTISMA_ADAYLARI = [
+  { konuId: "meydan-denge", yorum: 1 },
+  { konuId: "kul-ve-fener-final", yorum: 2 },
+  { konuId: "son-otobus-sonlar", yorum: 3 }
 ];

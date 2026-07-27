@@ -608,6 +608,65 @@ main {
   font-size: 0.85rem;
 }
 
+/* ---------- Günün Tartışması ---------- */
+
+.gunun-tartismasi {
+  margin: 1.5rem 0 0;
+  padding: 1.2rem 1.5rem 1.1rem;
+  border: 1px solid rgba(255, 122, 77, 0.45);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255, 122, 77, 0.10), rgba(39, 67, 199, 0.12));
+  animation: korNefes 3.4s ease-in-out infinite alternate;
+}
+
+.gunun-tartismasi .eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: #ff9a70;
+  margin: 0 0 0.6rem;
+}
+
+.gunun-tartismasi blockquote {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.45;
+  margin: 0 0 0.6rem;
+  max-width: 62ch;
+}
+
+.gunun-tartismasi .alt-bilgi { margin: 0; color: var(--soluk); font-size: 0.9rem; }
+.gunun-tartismasi .alt-bilgi .rumuz { font-weight: 700; color: var(--murekkep); }
+
+@keyframes korNefes {
+  from { box-shadow: 0 0 12px rgba(255, 122, 77, 0.10); }
+  to { box-shadow: 0 0 30px rgba(255, 122, 77, 0.28); }
+}
+
+/* ---------- Canlandırma ---------- */
+
+@keyframes belir {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.js-reveal { opacity: 0; }
+.js-reveal.gorunur { animation: belir 0.55s ease forwards; }
+
+.hero-icerik { animation: belir 0.7s ease both; }
+.hero .puan-rozet { animation: belir 0.7s 0.15s ease both; }
+
+@keyframes heroNefes {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+.hero-gorsel { animation: heroNefes 26s ease-in-out infinite alternate; }
+
+.forum-liste .isaret { transition: transform 150ms ease; }
+.forum-liste a:hover .isaret { transform: translateX(5px); }
+
 /* ---------- Duyarlılık ve erişilebilirlik ---------- */
 
 @media (max-width: 640px) {
@@ -624,7 +683,10 @@ main {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .kart, .kart-kapak img, .begeni-btn, .yorum-form button { transition: none; }
-  .kart:hover, .yorum-form button:hover { transform: none; }
+  .kart, .kart-kapak img, .begeni-btn, .yorum-form button, .forum-liste .isaret { transition: none; }
+  .kart:hover, .yorum-form button:hover, .forum-liste a:hover .isaret { transform: none; }
   .kart:hover .kart-kapak img { transform: none; }
+  .hero-gorsel, .gunun-tartismasi, .hero-icerik, .hero .puan-rozet { animation: none; }
+  .js-reveal { opacity: 1; }
+  .js-reveal.gorunur { animation: none; }
 }
