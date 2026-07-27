@@ -191,6 +191,27 @@ const OYUNLAR = [
     arti: ["Tutuş + büyü iptalinin taktik derinliği", "Erken erişime göre sağlam ağ kodu", "Takım kimyasının gerçekten hissedilmesi"],
     eksi: ["Yamalarla savrulan denge", "Dik öğrenme eğrisi", "Tek başına eşleşmenin acımasızlığı"],
     konuId: "meydan-denge"
+  },
+  {
+    id: "ocakbasi",
+    gorsel: "img/ocakbasi.jpg",
+    ad: "Ocakbaşı",
+    tur: "Kooperatif / Parti",
+    studyo: "Közhane Interactive",
+    cikis: "Temmuz 2026",
+    platformlar: ["PC", "Konsol"],
+    puan: 8.0,
+    ozet: "Dört arkadaş, bir ocakbaşı, sonsuz sipariş: dostluğunuzun gerçek testi mangal dumanında.",
+    manset: false,
+    inceleme: [
+      "Ocakbaşı'nın önermesi tek cümle: dört kişilik bir ocakbaşı lokantasını batırmadan sabahı edin. Biri şişleri diziyor, biri közün başında ter döküyor, biri servis koşturuyor, biri bulaşığa gömülüyor — ve üç dakika sonra herkes aynı anda bağırıyor. Közhane Interactive, 'arkadaşlıkla stres testi' türüne Türk mutfağının ritmini getirmiş.",
+      "Sistemler basit ama acımasız: köz düşerse şiş yanar, şiş yanarsa müşteri gider, müşteri giderse akşamın sonunda dükkânın kirası çıkmaz. En zekice dokunuş közün gerçek bir kaynak olması — közü canlı tutmak başlı başına bir görev ve 'köz kimde' kavgası, oyunun gayriresmî beşinci oyuncusu.",
+      "Seslendirme ve mizah tam yerinde: müşterilerin sabırsız tıklamaları, ustanın dükkân kapanınca söylediği yorgun türkü, cam buğusuna yazılan skorlar. Tek kişilik mod da var ama bu oyun kalabalıkla, tercihen aynı kanepede oynanmak için yapılmış.",
+      "Sekizinci akşamdan sonra sipariş çeşitliliği inceliyor ve bazı haritalarda servis yolu haksız derecede dar. Ama Ocakbaşı, yılın en samimi kooperatif oyunu: kavga ettiriyor, güldürüyor, bir tur daha dedirtiyor."
+    ],
+    arti: ["Közün gerçek kaynak olarak işlenmesi", "Kanepe kooperatifinin kaotik keyfi", "Ses ve mizah ayarı"],
+    eksi: ["Sipariş çeşitliliğinin geç oyunda incelmesi", "Bazı haritalarda dar servis yolu"],
+    konuId: "ocakbasi-gorev-dagilimi"
   }
 ];
 
@@ -316,6 +337,20 @@ const KONULAR = [
       { rumuz: "sazandisi", tarih: "27 Temmuz 2026", metin: "@ruzgarokuyan karşı-hamlesi VAR: tutuşa girmeden peşrevde mesafeyi açacaksın. Millet büyüye basıp kaçmayı taktik sanıyor, meydan bu değil. Peşrev okumayan Pehlivan'a yenilir, yenilmeli de." },
       { rumuz: "meydanokuyan", tarih: "27 Temmuz 2026", metin: "@sazandisi veriyi getirdim: turnuvada Pehlivan pick oranı yüzde kırk bir, YASAKLANMA oranı yüzde otuz sekiz. Elli iki kazanç oranı, herkes ona göre takım kurduğu için 'sadece' elli iki. Nerf haklı." },
       { rumuz: "yedekkulubesi", tarih: "27 Temmuz 2026", metin: "İki gündür bu başlıktayım ve fikrimi dört kez değiştirdim. Meydan'ın asıl başarısı bu galiba: dengesiz bile olsa hepimiz hâlâ buradayız." }
+    ]
+  },
+  {
+    id: "ocakbasi-gorev-dagilimi",
+    baslik: "Ocakbaşı: 4 kişilik vardiyada görev dağılımı (kavgasız rehber)",
+    acan: "sisci",
+    tarih: "27 Temmuz 2026",
+    mesaj: "Her akşam aynı kavga: herkes köze geçmek istiyor, kimse bulaşığa girmiyor. Bizim ekipte oturttuğumuz düzen şu: en soğukkanlı köze, en hızlı parmak servise, en konuşkan siparişe, en fedakâr bulaşığa. İki haftadır tek dükkân batırmadık. Sizin düzeniniz ne?",
+    yorumlar: [
+      { rumuz: "kozbekcisi", tarih: "27 Temmuz 2026", metin: "'En soğukkanlı köze' doğru ama eksik: köze geçen kişi ASLA servis çağrısına cevap vermeyecek. Bizim dükkân üç kez közcü 'geliyorum' dediği için yandı." },
+      { rumuz: "bulasikci_veli", tarih: "27 Temmuz 2026", metin: "Bulaşığı fedakârlık sananlara itirazım var. Bulaşık bu oyunun kalecisidir: iyi bulaşıkçı hiç görünmez ama o olmadan hiçbir servis çıkmaz. Kendime saygım tam." },
+      { rumuz: "sisci", tarih: "27 Temmuz 2026", metin: "@bulasikci_veli haklısın, 'fedakâr' kelimesini geri alıyorum — bulaşık bir sanattır. Rehberi 'en sabırlı bulaşığa' diye güncelliyorum." },
+      { rumuz: "cifte_sis", tarih: "27 Temmuz 2026", metin: "Kimse söylememiş: iki kişilik oynuyorsanız görevleri BÖLMEYİN, ikiniz de her işi yapın ama dükkânın yarısını paylaşın. Bölge sistemi rol sisteminden iyi çalışıyor, deneyin." },
+      { rumuz: "acemi_ciragi", tarih: "27 Temmuz 2026", metin: "@cifte_sis bunu okuyup kardeşimle denedim, ilk kez kira çıktı. Bu forum resmen aile terapisi." }
     ]
   }
 ];

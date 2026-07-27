@@ -1083,6 +1083,64 @@ main {
 
 .forum-konu .son-mesaj .rumuz { color: var(--vurgu); font-weight: 700; }
 
+/* Tartışmaya git baloncuğu: sohbet balonu ruhunda, sol alt köşesi sivri */
+.tartisma-git {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+  background: var(--vurgu-derin);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  border-radius: 18px;
+  border-bottom-left-radius: 5px;
+  padding: 0.5rem 1.1rem;
+  transition: gap 180ms ease, box-shadow 180ms ease;
+}
+
+.tartisma-git:hover { gap: 0.85rem; box-shadow: var(--parilti); }
+.tartisma-git .ok-mini { font-size: 1rem; line-height: 1; }
+
+.forum-konu.dikey .konu-govde { display: flex; flex-direction: column; flex: 1; }
+.forum-konu.dikey .tartisma-git { margin-top: auto; align-self: flex-start; }
+.forum-konu.dikey .konu-alt-baslik { margin-bottom: 0.9rem; }
+
+/* Sayfalama baloncukları */
+.sayfalama {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 2rem;
+}
+
+.sayfa-dugme {
+  display: inline-flex;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  color: var(--murekkep);
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.05rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.sayfa-dugme:hover { border-color: var(--vurgu); box-shadow: var(--parilti); }
+
+.sayfa-dugme.aktif {
+  background: var(--vurgu-derin);
+  border-color: var(--vurgu-derin);
+  color: #fff;
+}
+
+.sayfa-dugme.pasif { opacity: 0.38; pointer-events: none; }
+
 /* ---------- Üyelik sayfası ---------- */
 
 .uye-kart {

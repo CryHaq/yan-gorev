@@ -169,11 +169,20 @@ function forumSayfasi() {
     toplam: k.yorumlar.length + kullaniciYorumlari(k.id).length
   }));
   const oneCikan = veriler.reduce((a, b) => (b.toplam > a.toplam ? b : a));
-  icerik.append(konuKarti(oneCikan, true));
+  const digerleri = veriler.filter(v => v !== oneCikan);
+
+  /* Sayfalama: manşet yalnız 1. sayfada; kalan konular SAYFA_BOYU'na bölünür. */
+  const SAYFA_BOYU = 6;
+  const toplamSayfa = Math.ceil(digerleri.length / SAYFA_BOYU);
+  let sayfaNo = parseInt(new URLSearchParams(location.search).get("sayfa"), 10);
+  if (!(sayfaNo >= 1 && sayfaNo <= toplamSayfa)) sayfaNo = 1;
+
+  if (sayfaNo === 1) icerik.append(konuKarti(oneCikan, true));
 
   const izgara = el("div", "forum-izgara");
-  veriler.filter(v => v !== oneCikan).forEach(v => izgara.append(konuKarti(v, false)));
-  icerik.append(izgara);
+  digerleri.slice((sayfaNo - 1) * SAYFA_BOYU, sayfaNo * SAYFA_BOYU)
+    .forEach(v => izgara.append(konuKarti(v, false)));
+  icerik.append(izgara, sayfalama(sayfaNo, toplamSayfa));
   canlandir();
 }
 
@@ -193,6 +202,7 @@ function konuKarti(veri, oneCikan) {
     kutu.append(kapak);
   }
 
+  /* Sade kart: yalnız başlık (oyun) + alt başlık (konu) + tartışma baloncuğu. */
   const govde = el("div", "konu-govde");
   if (oneCikan) govde.append(el("p", "one-cikan-eyebrow", "🔥 Günün En Çok Tartışılanı"));
   if (oyun) {
@@ -207,16 +217,34 @@ function konuKarti(veri, oneCikan) {
   a.href = "konu.html?id=" + k.id;
   h2.append(a);
   govde.append(h2);
-  govde.append(el("p", "meta", k.acan + " açtı · " + k.tarih + " · " + veri.toplam + " yorum"));
-  govde.append(el("p", "onizleme", k.mesaj));
-  const kullaniciSon = kullaniciYorumlari(k.id).slice(-1)[0];
-  const son = kullaniciSon || k.yorumlar[k.yorumlar.length - 1];
-  if (son) {
-    const sonEl = el("p", "son-mesaj");
-    sonEl.append(el("span", "rumuz", "Son söz — " + son.rumuz + ": "), document.createTextNode(kisalt(son.metin, oneCikan ? 140 : 80)));
-    govde.append(sonEl);
-  }
+  const git = el("a", "tartisma-git");
+  git.href = "konu.html?id=" + k.id;
+  git.append(document.createTextNode("Tartışmaya git"), el("span", "ok-mini", "→"));
+  govde.append(git);
   kutu.append(govde);
+  return kutu;
+}
+
+function sayfalama(sayfaNo, toplamSayfa) {
+  const kutu = el("nav", "sayfalama");
+  kutu.setAttribute("aria-label", "Forum sayfaları");
+  const dugme = (hedef, metin) => {
+    const a = el("a", "sayfa-dugme", metin);
+    if (hedef >= 1 && hedef <= toplamSayfa) {
+      a.href = "forum.html" + (hedef > 1 ? "?sayfa=" + hedef : "");
+    } else {
+      a.classList.add("pasif");
+      a.setAttribute("aria-disabled", "true");
+    }
+    return a;
+  };
+  kutu.append(dugme(sayfaNo - 1, "← Önceki sayfa"));
+  for (let n = 1; n <= toplamSayfa; n++) {
+    const d = dugme(n, String(n));
+    if (n === sayfaNo) { d.classList.add("aktif"); d.setAttribute("aria-current", "page"); }
+    kutu.append(d);
+  }
+  kutu.append(dugme(sayfaNo + 1, "Sonraki sayfa →"));
   return kutu;
 }
 
