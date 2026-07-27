@@ -26,15 +26,36 @@
 
 html { scroll-behavior: smooth; }
 
+html { background: var(--zemin); }
+
 body {
   margin: 0;
-  background:
-    radial-gradient(1100px 500px at 70% -100px, rgba(39, 67, 199, 0.22), transparent 70%),
-    var(--zemin);
+  background: transparent;
   color: var(--murekkep);
   font-family: var(--grotesk);
   font-size: 1.0625rem;
   line-height: 1.65;
+}
+
+/* Oyun menüsü atmosferi: yavaşça süzülen renk bulutları, içerik panellerinin arkasında. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -22%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 38% at 18% 22%, rgba(39, 67, 199, 0.34), transparent 70%),
+    radial-gradient(36% 34% at 82% 12%, rgba(124, 58, 190, 0.22), transparent 70%),
+    radial-gradient(40% 40% at 78% 78%, rgba(18, 122, 128, 0.20), transparent 70%),
+    radial-gradient(32% 30% at 10% 88%, rgba(255, 122, 77, 0.13), transparent 70%);
+  animation: auroraKay 38s ease-in-out infinite alternate;
+}
+
+@keyframes auroraKay {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(2.5%, -2%, 0) rotate(2deg) scale(1.07); }
+  100% { transform: translate3d(-2.5%, 2%, 0) rotate(-2deg) scale(1.03); }
 }
 
 a { color: var(--vurgu); text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -820,8 +841,54 @@ main {
   background: var(--panel);
   border: 1px solid var(--cizgi);
   border-radius: 14px;
-  padding: 1.5rem 1.7rem 1.3rem;
+  padding: 1.4rem 1.6rem 1.3rem;
+  display: flex;
+  gap: 1.4rem;
+  align-items: flex-start;
   transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.konu-kapak {
+  flex: none;
+  width: 158px;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  display: block;
+}
+
+.konu-kapak img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.forum-konu:hover .konu-kapak img { transform: scale(1.06); }
+
+.konu-govde { flex: 1; min-width: 0; }
+
+.konu-oyun {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin: 0 0 0.15rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.konu-oyun a { color: inherit; text-decoration: none; }
+.konu-oyun a:hover { color: var(--vurgu); }
+
+.tur-etiket {
+  font-family: var(--grotesk);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--vurgu);
 }
 
 .forum-konu:hover {
@@ -835,11 +902,12 @@ main {
   letter-spacing: 0.16em; color: var(--vurgu); margin: 0 0 0.5rem;
 }
 
-.forum-konu h2 {
+.forum-konu h2.konu-alt-baslik {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
-  line-height: 1.12;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  line-height: 1.2;
+  color: #c9cfec;
   margin: 0 0 0.45rem;
 }
 
@@ -1004,6 +1072,8 @@ main {
   .forum-liste .meta { display: none; }
   .site-header { flex-direction: column; gap: 0.4rem; }
   .balon { max-width: 92%; }
+  .forum-konu { flex-direction: column; }
+  .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1012,8 +1082,10 @@ main {
   .kart:hover, .yorum-form button:hover, .forum-liste a:hover .isaret { transform: none; }
   .kart:hover .kart-kapak img { transform: none; }
   .hero-gorsel, .gunun-tartismasi, .hero-icerik, .hero .puan-rozet { animation: none; }
-  .forum-konu, .renk-secenek, .hero-cta, .hero-cta .ok { transition: none; }
+  body::before { animation: none; }
+  .forum-konu, .renk-secenek, .hero-cta, .hero-cta .ok, .konu-kapak img { transition: none; }
   .forum-konu:hover, .renk-secenek:hover, .hero-cta:hover .ok { transform: none; }
+  .forum-konu:hover .konu-kapak img { transform: none; }
   .kelime-ic { transform: none; animation: none; }
   .js-reveal { opacity: 1; }
   .js-reveal.gorunur { animation: none; }

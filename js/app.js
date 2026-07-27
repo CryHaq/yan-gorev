@@ -164,22 +164,43 @@ function forumSayfasi() {
   KONULAR.forEach(k => {
     const oyun = OYUNLAR.find(o => o.konuId === k.id);
     const kutu = el("article", "forum-konu js-reveal");
-    if (oyun) kutu.append(el("p", "eyebrow", oyun.ad + " · " + oyun.tur));
-    const h2 = el("h2");
+
+    if (oyun) {
+      const kapak = el("a", "konu-kapak");
+      kapak.href = "oyun.html?id=" + oyun.id;
+      kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
+      const img = el("img");
+      img.src = oyun.gorsel;
+      img.alt = oyun.ad + " oyununun görseli";
+      img.loading = "lazy";
+      kapak.append(img);
+      kutu.append(kapak);
+    }
+
+    const govde = el("div", "konu-govde");
+    if (oyun) {
+      const oyunSatiri = el("p", "konu-oyun");
+      const oyunLink = el("a", null, oyun.ad);
+      oyunLink.href = "oyun.html?id=" + oyun.id;
+      oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur));
+      govde.append(oyunSatiri);
+    }
+    const h2 = el("h2", "konu-alt-baslik");
     const a = el("a", null, k.baslik);
     a.href = "konu.html?id=" + k.id;
     h2.append(a);
-    kutu.append(h2);
+    govde.append(h2);
     const toplam = k.yorumlar.length + kullaniciYorumlari(k.id).length;
-    kutu.append(el("p", "meta", k.acan + " açtı · " + k.tarih + " · " + toplam + " yorum"));
-    kutu.append(el("p", "onizleme", k.mesaj));
+    govde.append(el("p", "meta", k.acan + " açtı · " + k.tarih + " · " + toplam + " yorum"));
+    govde.append(el("p", "onizleme", k.mesaj));
     const kullaniciSon = kullaniciYorumlari(k.id).slice(-1)[0];
     const son = kullaniciSon || k.yorumlar[k.yorumlar.length - 1];
     if (son) {
       const sonEl = el("p", "son-mesaj");
       sonEl.append(el("span", "rumuz", "Son söz — " + son.rumuz + ": "), document.createTextNode(kisalt(son.metin, 90)));
-      kutu.append(sonEl);
+      govde.append(sonEl);
     }
+    kutu.append(govde);
     konular.append(kutu);
   });
   icerik.append(konular);
