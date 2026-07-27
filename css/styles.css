@@ -23,7 +23,7 @@
   --serif: "Besley", "Iowan Old Style", Georgia, serif;
   --grotesk: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --govde-olcu: 68ch;
-  --sayfa-genislik: 1080px;
+  --sayfa-genislik: 1340px;
 }
 
 /* ---------- Gündüz teması ---------- */
@@ -350,7 +350,7 @@ main {
 
 .kart-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1.4rem;
 }
 
@@ -979,7 +979,7 @@ main {
   margin-top: 1.4rem;
 }
 
-.forum-izgara .forum-konu.dikey { flex: 1 1 300px; max-width: 346px; }
+.forum-izgara .forum-konu.dikey { flex: 1 1 320px; max-width: 424px; }
 
 .forum-konu.dikey {
   flex-direction: column;
@@ -1326,7 +1326,7 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
 .ipucu-kart.dikey .konu-govde { padding: 1rem 1.3rem 0; display: flex; flex-direction: column; flex: 1; }
 .ipucu-kart.dikey .ipucu-liste { margin-bottom: 0.9rem; }
 .ipucu-kart.dikey .tartisma-git { margin-top: auto; align-self: flex-start; }
-.forum-izgara .ipucu-kart.dikey { flex: 1 1 300px; max-width: 346px; }
+.forum-izgara .ipucu-kart.dikey { flex: 1 1 320px; max-width: 424px; }
 
 /* Manşet ipucu: forum manşetiyle aynı çerçeve, içinde büyük serif alıntı */
 .ipucu-kart.forum-one-cikan { padding: 0; }
