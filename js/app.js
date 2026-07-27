@@ -58,7 +58,7 @@ function ipuclariSayfasi() {
     mansetGovde.append(mansetOyun, el("p", "buyuk-ipucu", "“" + adayIpucu.metin + "”"));
     const mansetGit = el("a", "tartisma-git");
     mansetGit.href = "konu.html?id=" + adayOyun.konuId;
-    mansetGit.append(document.createTextNode("Bu ipucunu tartış"), el("span", "ok-mini", "→"));
+    mansetGit.append(document.createTextNode("Tartışmaya git"), el("span", "ok-mini", "→"));
     mansetGovde.append(mansetGit);
     manset.append(mansetGovde);
     icerik.append(manset);
@@ -103,7 +103,7 @@ function ipuclariSayfasi() {
     detay.append(ul);
     const git = el("a", "tartisma-git");
     git.href = "konu.html?id=" + oyun.konuId;
-    git.append(document.createTextNode("Bu ipuçlarını tartış"), el("span", "ok-mini", "→"));
+    git.append(document.createTextNode("Tartışmaya git"), el("span", "ok-mini", "→"));
     detay.append(git);
 
     const gor = el("button", "tartisma-git ipucu-gor");
@@ -381,6 +381,21 @@ function konuKarti(veri, oneCikan) {
   a.href = "konu.html?id=" + k.id;
   h2.append(a);
   govde.append(h2);
+
+  /* Manşet karta bağlam satırı: ölü boşluk yerine yaşayan özet. */
+  if (oneCikan) {
+    const parcalar = [veri.toplam + " yorum"];
+    if (k.anket) {
+      const taban = k.anket.secenekler.reduce((t, s) => t + s.taban, 0);
+      const oyVar = localStorage.getItem("yg-anket-" + k.id) !== null;
+      parcalar.push((taban + (oyVar ? 1 : 0)) + " oy");
+    }
+    const baglam = el("p", "one-cikan-baglam", parcalar.join(" · "));
+    const son = kullaniciYorumlari(k.id).slice(-1)[0] || k.yorumlar[k.yorumlar.length - 1];
+    if (son) baglam.append(document.createTextNode(" — Son söz, " + son.rumuz + ": “" + kisalt(son.metin, 72) + "”"));
+    govde.append(baglam);
+  }
+
   const git = el("a", "tartisma-git");
   git.href = "konu.html?id=" + k.id;
   git.append(document.createTextNode("Tartışmaya git"), el("span", "ok-mini", "→"));
@@ -830,7 +845,7 @@ function yanKutuOyun(oyun) {
   bilgi.append(kunye);
   const tartis = el("a", "tartisma-git");
   tartis.href = "konu.html?id=" + oyun.konuId;
-  tartis.append(document.createTextNode("Forumda tartış"), el("span", "ok-mini", "→"));
+  tartis.append(document.createTextNode("Tartışmaya git"), el("span", "ok-mini", "→"));
   const rehber = el("a", "yan-baglanti");
   rehber.href = "ipuclari.html#ipucu-" + oyun.id;
   rehber.textContent = "İpuçları rehberine git →";
@@ -876,7 +891,10 @@ function konuSayfasi() {
   icerik.textContent = "";
 
   const baslik = el("header", "konu-baslik");
+  const geri = el("a", "geri-izi", "← Foruma dön");
+  geri.href = "forum.html";
   baslik.append(
+    geri,
     el("p", "eyebrow", "Yan Görev · Forum"),
     el("h1", null, konu.baslik),
     el("p", "meta", konu.acan + " açtı · " + konu.tarih)
@@ -900,6 +918,13 @@ function konuSayfasi() {
     ...kullaniciYorumlari(konu.id).map(y => ({ ...y, kullanici: true }))
   ];
   tumYorumlar.forEach((y, i) => liste.append(yorumSatiri(konu.id, y, i)));
+
+  /* Boş ekran davettir: sessiz boşluk yerine yönlendirme. */
+  if (!tumYorumlar.length) {
+    const bos = el("li", "bos-durum js-reveal");
+    bos.append(el("p", null, "Henüz kimse konuşmadı. İlk sözü sen söyle — meydan senin."));
+    liste.append(bos);
+  }
 
   const kolonlar = el("div", "iki-kolon");
   const sol = el("div", "kolon-icerik");

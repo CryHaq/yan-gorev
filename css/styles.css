@@ -25,6 +25,11 @@
   --grotesk: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --govde-olcu: 72ch;
   --sayfa-genislik: 1340px;
+  /* Yarıçap ölçeği: s=girdiler, m=kartlar/paneller, l=büyük sahneler, tam=hap */
+  --r-s: 8px;
+  --r-m: 14px;
+  --r-l: 24px;
+  --r-tam: 999px;
 }
 
 /* ---------- Gündüz teması ---------- */
@@ -327,7 +332,7 @@ main {
   font-weight: 700;
   color: var(--rozet-metin);
   border: 2.5px solid var(--vurgu);
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.35rem 0.8rem;
   transform: rotate(-2.5deg);
   background: var(--rozet-zemin);
@@ -358,7 +363,7 @@ main {
 .kart {
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -428,7 +433,7 @@ main {
   padding: 1rem 0.6rem;
   color: var(--murekkep);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--r-s);
   transition: background 140ms ease;
 }
 
@@ -658,7 +663,7 @@ main {
   font-weight: 600;
   color: var(--vurgu);
   background: rgba(107, 139, 255, 0.12);
-  border-radius: 999px;
+  border-radius: var(--r-tam);
   padding: 0.1rem 0.6rem;
   margin-bottom: 0.35rem;
 }
@@ -674,7 +679,7 @@ main {
   color: var(--soluk);
   background: none;
   border: 1px solid var(--cizgi);
-  border-radius: 999px;
+  border-radius: var(--r-tam);
   padding: 0.15rem 0.7rem;
   cursor: pointer;
   transition: color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
@@ -733,7 +738,7 @@ main {
   margin: 1.4rem 0 0;
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   padding: 1.2rem 1.4rem 1rem;
 }
 
@@ -794,7 +799,7 @@ main {
   margin-top: 2rem;
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   padding: 1.4rem;
   display: grid;
   gap: 0.8rem;
@@ -813,7 +818,7 @@ main {
   color: var(--murekkep);
   background: var(--zemin);
   border: 1px solid var(--cizgi);
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.6rem 0.8rem;
   width: 100%;
 }
@@ -831,7 +836,7 @@ main {
   color: #fff;
   background: linear-gradient(160deg, var(--vurgu), var(--vurgu-derin));
   border: none;
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.65rem 1.5rem;
   cursor: pointer;
   justify-self: start;
@@ -843,19 +848,133 @@ main {
 /* ---------- Footer ---------- */
 
 .site-footer {
-  border-top: 3px double var(--cizgi);
+  border-top: 1px solid var(--cizgi);
   max-width: var(--sayfa-genislik);
   margin: 0 auto;
-  padding: 1.4rem 1.25rem 2.4rem;
+  padding: 2.6rem 1.25rem 2rem;
   color: var(--soluk);
+  font-size: 0.9rem;
+}
+
+.footer-ust {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.4fr;
+  gap: 2rem;
+  padding-bottom: 1.8rem;
+  border-bottom: 1px solid var(--cizgi);
+}
+
+.footer-logo {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--vurgu-derin);
+  color: #fff;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+
+.footer-slogan {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--murekkep);
+  margin: 0.8rem 0 0;
+  max-width: 18ch;
+}
+
+.footer-kolon { display: grid; gap: 0.45rem; align-content: start; }
+
+.footer-baslik {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--vurgu);
+  margin: 0 0 0.3rem;
+}
+
+.footer-kolon a {
+  color: var(--soluk);
+  text-decoration: none;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.footer-kolon a:hover { color: var(--vurgu); }
+.footer-not { margin: 0; line-height: 1.55; }
+.footer-alt { margin: 1.4rem 0 0; font-size: 0.82rem; }
+
+@media (max-width: 900px) {
+  .footer-ust { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  .footer-ust { grid-template-columns: 1fr; }
+}
+
+/* ---------- Cila: skip-link, bağlam, boş durum, geri izi, rakamlar ---------- */
+
+.atla {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  z-index: 100;
+  background: var(--vurgu-derin);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.65rem 1.2rem;
+  border-radius: 0 0 var(--r-s) 0;
+  text-decoration: none;
+}
+
+.atla:focus { left: 0; }
+
+.forum-one-cikan { align-items: center; }
+
+.one-cikan-baglam {
+  margin: 0.7rem 0 0.2rem;
+  color: var(--soluk);
+  font-size: 0.9rem;
+  max-width: 60ch;
+}
+
+.bos-durum {
+  list-style: none;
+  border: 1px dashed var(--cizgi);
+  border-radius: var(--r-m);
+  padding: 1.6rem 1.4rem;
+  text-align: center;
+  color: var(--soluk);
+}
+
+.bos-durum p { margin: 0; }
+
+.geri-izi {
+  display: inline-block;
   font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--soluk);
+  text-decoration: none;
+  margin-bottom: 0.7rem;
+}
+
+.geri-izi:hover { color: var(--vurgu); }
+
+/* Sayı taşıyan her yüzey eş-genişlik rakam kullanır: sayaç değişince genişlik titremez. */
+.puan-rozet, .begeni-btn, .anket-oran, .anket-alt, .istatistik,
+.yan-kavga .sayi, .forum-liste .meta, .cevrimici, .one-cikan-baglam, .sayfa-dugme {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Prisma esintili manşet ---------- */
 
 .hero-prisma {
   min-height: min(86vh, 880px);
-  border-radius: 24px;
+  border-radius: var(--r-l);
 }
 
 .hero-video {
@@ -930,7 +1049,7 @@ main {
   color: #0c0f1e;
   font-weight: 700;
   text-decoration: none;
-  border-radius: 999px;
+  border-radius: var(--r-tam);
   padding: 0.35rem 0.4rem 0.35rem 1.3rem;
   transition: gap 200ms ease;
 }
@@ -966,10 +1085,13 @@ main {
   margin: 1.5rem 0 0;
   padding: 1.2rem 1.5rem 1.1rem;
   border: 1px solid rgba(255, 122, 77, 0.45);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   background: linear-gradient(135deg, rgba(255, 122, 77, 0.10), rgba(39, 67, 199, 0.12));
-  animation: korNefes 3.4s ease-in-out infinite alternate;
+  box-shadow: 0 0 18px rgba(255, 122, 77, 0.16);
 }
+
+/* Motion diyeti: sürekli nabız yerine yalnız ilgi anında nefes. */
+.gunun-tartismasi:hover { animation: korNefes 2.6s ease-in-out infinite alternate; }
 
 .gunun-tartismasi .eyebrow {
   font-size: 0.8rem;
@@ -1023,7 +1145,7 @@ main {
 
 .site-header nav .nav-uye {
   border: 1px solid var(--vurgu);
-  border-radius: 999px;
+  border-radius: var(--r-tam);
   padding: 0.25rem 0.85rem;
   color: var(--vurgu);
 }
@@ -1116,7 +1238,7 @@ main {
 .forum-konu {
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   padding: 1.4rem 1.6rem 1.3rem;
   display: flex;
   gap: 1.4rem;
@@ -1255,7 +1377,7 @@ main {
   font-weight: 600;
   font-size: 0.92rem;
   text-decoration: none;
-  border-radius: 999px;
+  border-radius: var(--r-tam);
   padding: 0.5rem 1.05rem;
   transition: border-color 150ms ease, box-shadow 150ms ease;
 }
@@ -1280,7 +1402,7 @@ main {
   color: var(--murekkep);
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 999px;
+  border-radius: var(--r-tam);
   padding: 0.6rem 1.2rem;
 }
 
@@ -1294,7 +1416,7 @@ main {
   z-index: 10;
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   overflow: hidden;
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
 }
@@ -1324,7 +1446,7 @@ main {
   gap: 0.7rem;
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   padding: 1.2rem;
 }
 
@@ -1337,7 +1459,7 @@ main {
   color: var(--murekkep);
   background: var(--zemin);
   border: 1px solid var(--cizgi);
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.55rem 0.8rem;
   width: 100%;
 }
@@ -1354,7 +1476,7 @@ main {
   color: #fff;
   background: linear-gradient(160deg, var(--vurgu), var(--vurgu-derin));
   border: none;
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.55rem 1.3rem;
   cursor: pointer;
   justify-self: start;
@@ -1374,8 +1496,8 @@ main {
   color: var(--soluk);
   text-decoration: none;
   border: 1px solid var(--cizgi);
-  border-radius: 999px;
-  padding: 0.28rem 0.85rem;
+  border-radius: var(--r-tam);
+  padding: 0.45rem 1rem;
   transition: border-color 140ms ease, color 140ms ease;
 }
 
@@ -1420,7 +1542,7 @@ main {
 .ipucu-kart {
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   padding: 1.4rem 1.6rem;
   display: flex;
   gap: 1.4rem;
@@ -1527,7 +1649,7 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
 .yan-panel {
   background: var(--panel);
   border: 1px solid var(--cizgi);
-  border-radius: 14px;
+  border-radius: var(--r-m);
   padding: 1.25rem 1.35rem;
 }
 
@@ -1583,7 +1705,7 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
   width: 84px;
   aspect-ratio: 16 / 10;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--r-s);
   flex: none;
 }
 
@@ -1768,7 +1890,7 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   color: var(--murekkep);
   background: var(--zemin);
   border: 1px solid var(--cizgi);
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.65rem 0.9rem;
   width: 100%;
 }
@@ -1807,7 +1929,7 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   color: #fff;
   background: linear-gradient(160deg, var(--vurgu), var(--vurgu-derin));
   border: none;
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.65rem 1.5rem;
   cursor: pointer;
   justify-self: start;
@@ -1822,7 +1944,7 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   color: var(--soluk);
   background: none;
   border: 1px solid var(--cizgi);
-  border-radius: 8px;
+  border-radius: var(--r-s);
   padding: 0.5rem 1.1rem;
   cursor: pointer;
   justify-self: start;
