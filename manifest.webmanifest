@@ -1,0 +1,14 @@
+{
+  "name": "Yan Görev — Oyun İncelemeleri ve Forum",
+  "short_name": "Yan Görev",
+  "description": "Kurgusal oyun inceleme dergisi ve topluluk forumu demosu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0f1e",
+  "theme_color": "#2743c7",
+  "lang": "tr",
+  "icons": [
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

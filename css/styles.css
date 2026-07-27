@@ -1141,6 +1141,144 @@ main {
 
 .sayfa-dugme.pasif { opacity: 0.38; pointer-events: none; }
 
+/* ---------- Arama + yeni konu + istatistik ---------- */
+
+.arama { position: relative; margin-top: 1.4rem; max-width: 440px; }
+
+.arama-girdi {
+  font: inherit;
+  width: 100%;
+  color: var(--murekkep);
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+}
+
+.arama-girdi:focus { border-color: var(--vurgu); outline: none; box-shadow: var(--parilti); }
+
+.arama-sonuclar {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.arama-sonuclar:empty { display: none; }
+
+.arama-sonuclar a {
+  display: block;
+  padding: 0.6rem 1.1rem;
+  color: var(--murekkep);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-bottom: 1px solid var(--cizgi);
+}
+
+.arama-sonuclar a:last-child { border-bottom: none; }
+.arama-sonuclar a:hover { background: var(--vurgu-zemin); color: var(--vurgu); }
+.arama-bos { margin: 0; padding: 0.6rem 1.1rem; color: var(--soluk); font-size: 0.9rem; }
+
+.konu-ac { margin-top: 1.1rem; }
+.konu-ac .tartisma-git { margin-top: 0; cursor: pointer; border: none; font: inherit; font-weight: 700; }
+
+.konu-ac-form {
+  margin-top: 1rem;
+  max-width: 560px;
+  display: grid;
+  gap: 0.7rem;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 14px;
+  padding: 1.2rem;
+}
+
+.konu-ac-form.gizli { display: none; }
+
+.konu-ac-form select,
+.konu-ac-form input,
+.konu-ac-form textarea {
+  font: inherit;
+  color: var(--murekkep);
+  background: var(--zemin);
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  width: 100%;
+}
+
+.konu-ac-form textarea { min-height: 90px; resize: vertical; }
+
+.konu-ac-form select:focus,
+.konu-ac-form input:focus,
+.konu-ac-form textarea:focus { border-color: var(--vurgu); outline: none; }
+
+.konu-ac-form button {
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(160deg, var(--vurgu), var(--vurgu-derin));
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.3rem;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.istatistik {
+  text-align: center;
+  color: var(--soluk);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  margin: 2rem 0 0;
+}
+
+/* ---------- Benzer görevler ---------- */
+
+.benzer-serit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+}
+
+.benzer-kart {
+  flex: 1 1 200px;
+  max-width: 240px;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.benzer-kart:hover { border-color: var(--vurgu); transform: translateY(-3px); }
+
+.benzer-kart img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+
+.benzer-kart .ad {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--murekkep);
+  padding: 0.6rem 0.9rem 0.1rem;
+}
+
+.benzer-kart .puan {
+  display: block;
+  color: var(--vurgu);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0 0.9rem 0.7rem;
+}
+
 /* ---------- Üyelik sayfası ---------- */
 
 .uye-kart {

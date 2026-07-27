@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", sayfayiKur);
 function sayfayiKur() {
   temaDugmesiKur();
   uyeNavGuncelle();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  if (!document.getElementById("icerik")) return; /* 404 gibi statik sayfalar kendi içeriğini taşır */
   const sayfa = location.pathname.split("/").pop() || "index.html";
   if (sayfa === "oyun.html") oyunSayfasi();
   else if (sayfa === "konu.html") konuSayfasi();
@@ -26,6 +28,18 @@ function el(tag, sinif, metin) {
   if (sinif) e.className = sinif;
   if (metin !== undefined) e.textContent = metin;
   return e;
+}
+
+/* Kart görselleri: 720px orta varyant varsayılan, retina/geniş için tam boy srcset. */
+function kapakGorseli(oyun, boyutlar) {
+  const img = el("img");
+  const orta = oyun.gorsel.replace("img/", "img/orta/");
+  img.src = orta;
+  img.srcset = orta + " 720w, " + oyun.gorsel + " 1400w";
+  img.sizes = boyutlar;
+  img.alt = oyun.ad + " oyununun görseli";
+  img.loading = "lazy";
+  return img;
 }
 
 function puanRozet(puan) {
@@ -106,11 +120,7 @@ function anaSayfa() {
     const kapak = el("a", "kart-kapak");
     kapak.href = "oyun.html?id=" + o.id;
     kapak.setAttribute("aria-label", o.ad + " incelemesine git");
-    const kapakImg = el("img");
-    kapakImg.src = o.gorsel;
-    kapakImg.alt = o.ad + " oyununun tanıtım görseli";
-    kapakImg.loading = "lazy";
-    kapak.append(kapakImg);
+    kapak.append(kapakGorseli(o, "(max-width: 640px) 100vw, 350px"));
     const govde = el("div", "kart-govde");
     govde.append(el("p", "tur", o.tur));
     const h3 = el("h3");
@@ -125,7 +135,7 @@ function anaSayfa() {
   const forumBaslik = el("h2", "bolum-baslik", "Yan Görevler · Forum");
   forumBaslik.id = "forum";
   const liste = el("ul", "forum-liste");
-  KONULAR.forEach(k => {
+  tumKonular().forEach(k => {
     const li = el("li", "js-reveal");
     const a = el("a");
     a.href = "konu.html?id=" + k.id;
@@ -159,13 +169,14 @@ function forumSayfasi() {
     el("h1", null, "Yan Görev Forum"),
     el("p", "alt", "Oyun biter, sohbet başlar. Kurgu topluluğumuzun meydanı.")
   );
+  baslik.append(aramaKutusu(), konuAcPaneli());
   icerik.append(baslik);
 
   /* En çok yorum alan konu manşete çıkar — kullanıcı yorumları da sayılır,
      yani topluluk yazdıkça manşet gerçekten el değiştirebilir. */
-  const veriler = KONULAR.map(k => ({
+  const veriler = tumKonular().map(k => ({
     konu: k,
-    oyun: OYUNLAR.find(o => o.konuId === k.id),
+    oyun: konuOyunu(k),
     toplam: k.yorumlar.length + kullaniciYorumlari(k.id).length
   }));
   const oneCikan = veriler.reduce((a, b) => (b.toplam > a.toplam ? b : a));
@@ -182,7 +193,12 @@ function forumSayfasi() {
   const izgara = el("div", "forum-izgara");
   digerleri.slice((sayfaNo - 1) * SAYFA_BOYU, sayfaNo * SAYFA_BOYU)
     .forEach(v => izgara.append(konuKarti(v, false)));
-  icerik.append(izgara, sayfalama(sayfaNo, toplamSayfa));
+  const toplamYorum = veriler.reduce((t, v) => t + v.toplam, 0);
+  icerik.append(
+    izgara,
+    sayfalama(sayfaNo, toplamSayfa),
+    el("p", "istatistik", OYUNLAR.length + " oyun · " + veriler.length + " konu · " + toplamYorum + " yorum · sınırsız kavga")
+  );
   canlandir();
 }
 
@@ -194,11 +210,7 @@ function konuKarti(veri, oneCikan) {
     const kapak = el("a", "konu-kapak");
     kapak.href = "oyun.html?id=" + oyun.id;
     kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
-    const img = el("img");
-    img.src = oyun.gorsel;
-    img.alt = oyun.ad + " oyununun görseli";
-    img.loading = "lazy";
-    kapak.append(img);
+    kapak.append(kapakGorseli(oyun, oneCikan ? "(max-width: 640px) 100vw, 480px" : "(max-width: 640px) 100vw, 346px"));
     kutu.append(kapak);
   }
 
@@ -245,6 +257,91 @@ function sayfalama(sayfaNo, toplamSayfa) {
     kutu.append(d);
   }
   kutu.append(dugme(sayfaNo + 1, "Sonraki sayfa →"));
+  return kutu;
+}
+
+/* Site içi arama: Türkçe küçük harfe çevirerek (İ/ı doğru) oyun + konu tarar. */
+function aramaKutusu() {
+  const kutu = el("div", "arama");
+  const girdi = el("input", "arama-girdi");
+  girdi.type = "search";
+  girdi.placeholder = "Oyun veya konu ara…";
+  girdi.setAttribute("aria-label", "Sitede ara");
+  const sonuclar = el("div", "arama-sonuclar");
+  girdi.addEventListener("input", () => {
+    const s = girdi.value.trim().toLocaleLowerCase("tr");
+    sonuclar.textContent = "";
+    if (s.length < 2) return;
+    const bulunan = [];
+    OYUNLAR.forEach(o => {
+      if (o.ad.toLocaleLowerCase("tr").includes(s)) bulunan.push({ metin: o.ad + " — inceleme", href: "oyun.html?id=" + o.id });
+    });
+    tumKonular().forEach(k => {
+      if (k.baslik.toLocaleLowerCase("tr").includes(s)) bulunan.push({ metin: k.baslik, href: "konu.html?id=" + k.id });
+    });
+    if (!bulunan.length) {
+      sonuclar.append(el("p", "arama-bos", "Sonuç yok — belki o görev henüz yazılmadı."));
+      return;
+    }
+    bulunan.slice(0, 8).forEach(b => {
+      const a = el("a", null, b.metin);
+      a.href = b.href;
+      sonuclar.append(a);
+    });
+  });
+  kutu.append(girdi, sonuclar);
+  return kutu;
+}
+
+/* Yeni konu açma: üyeyse form, değilse üyeliğe davet. Konu localStorage'a yazılır. */
+function konuAcPaneli() {
+  const kutu = el("div", "konu-ac");
+  const uye = uyeGetir();
+  if (!uye) {
+    const ipucu = el("p", "form-ipucu");
+    const git = el("a", null, "Konu açmak için üye ol →");
+    git.href = "uye.html";
+    ipucu.append(git);
+    kutu.append(ipucu);
+    return kutu;
+  }
+  const acButon = el("button", "tartisma-git");
+  acButon.type = "button";
+  acButon.append(document.createTextNode("Yeni konu aç"), el("span", "ok-mini", "+"));
+  const form = el("form", "konu-ac-form gizli");
+  const oyunSec = el("select");
+  oyunSec.name = "oyun";
+  oyunSec.setAttribute("aria-label", "Hangi oyun hakkında");
+  OYUNLAR.forEach(o => {
+    const secenek = el("option", null, o.ad);
+    secenek.value = o.id;
+    oyunSec.append(secenek);
+  });
+  const baslikGirdi = el("input");
+  baslikGirdi.name = "baslik"; baslikGirdi.placeholder = "Konu başlığı"; baslikGirdi.required = true; baslikGirdi.maxLength = 90;
+  const mesajGirdi = el("textarea");
+  mesajGirdi.name = "mesaj"; mesajGirdi.placeholder = "Tartışmayı başlat…"; mesajGirdi.required = true; mesajGirdi.maxLength = 1000;
+  const gonder = el("button", null, "Konuyu aç");
+  gonder.type = "submit";
+  form.append(oyunSec, baslikGirdi, mesajGirdi, gonder);
+  acButon.addEventListener("click", () => form.classList.toggle("gizli"));
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const yeni = {
+      id: "u-" + Date.now(),
+      oyunId: oyunSec.value,
+      baslik: baslikGirdi.value.trim(),
+      acan: uye.rumuz,
+      tarih: new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }),
+      mesaj: mesajGirdi.value.trim(),
+      yorumlar: []
+    };
+    const liste = kullaniciKonulari();
+    liste.push(yeni);
+    localStorage.setItem("yg-konular", JSON.stringify(liste));
+    location.href = "konu.html?id=" + yeni.id;
+  });
+  kutu.append(acButon, form);
   return kutu;
 }
 
@@ -461,13 +558,41 @@ function oyunSayfasi() {
   const cta = el("a", "forum-cta", "Bu oyunu forumda tartış →");
   cta.href = "konu.html?id=" + oyun.konuId;
   icerik.append(cta);
+
+  /* Benzer görevler: önce tür ailesi, boş kalırsa en yüksek puanlılar. */
+  const benzerler = OYUNLAR.filter(o => o.id !== oyun.id && o.tur.split(" ")[0] === oyun.tur.split(" ")[0]);
+  OYUNLAR.filter(o => o.id !== oyun.id && !benzerler.includes(o))
+    .sort((a, b) => b.puan - a.puan)
+    .forEach(o => { if (benzerler.length < 3) benzerler.push(o); });
+  if (benzerler.length) {
+    const bolum = el("h2", "bolum-baslik", "Benzer Görevler");
+    const serit = el("div", "benzer-serit");
+    benzerler.slice(0, 3).forEach(o => {
+      const a = el("a", "benzer-kart js-reveal");
+      a.href = "oyun.html?id=" + o.id;
+      a.append(kapakGorseli(o, "220px"), el("span", "ad", o.ad), el("span", "puan", String(o.puan).replace(".", ",") + " /10"));
+      serit.append(a);
+    });
+    icerik.append(bolum, serit);
+  }
   canlandir();
 }
 
 /* ---------- forum konusu ---------- */
 
+/* Kullanıcının açtığı konular: kurgu KONULAR ile aynı şemada, localStorage'da yaşar. */
+function kullaniciKonulari() {
+  try { return JSON.parse(localStorage.getItem("yg-konular")) || []; } catch (e) { return []; }
+}
+
+function tumKonular() { return KONULAR.concat(kullaniciKonulari()); }
+
+function konuOyunu(k) {
+  return OYUNLAR.find(o => o.konuId === k.id) || OYUNLAR.find(o => o.id === k.oyunId) || null;
+}
+
 function konuSayfasi() {
-  const konu = KONULAR.find(k => k.id === paramId(KONULAR[0].id)) || KONULAR[0];
+  const konu = tumKonular().find(k => k.id === paramId(KONULAR[0].id)) || KONULAR[0];
   document.title = konu.baslik + " — Yan Görev Forum";
   const icerik = document.getElementById("icerik");
   icerik.textContent = "";
