@@ -161,51 +161,63 @@ function forumSayfasi() {
   );
   icerik.append(baslik);
 
-  const konular = el("div", "forum-konular");
-  KONULAR.forEach(k => {
-    const oyun = OYUNLAR.find(o => o.konuId === k.id);
-    const kutu = el("article", "forum-konu js-reveal");
+  /* En çok yorum alan konu manşete çıkar — kullanıcı yorumları da sayılır,
+     yani topluluk yazdıkça manşet gerçekten el değiştirebilir. */
+  const veriler = KONULAR.map(k => ({
+    konu: k,
+    oyun: OYUNLAR.find(o => o.konuId === k.id),
+    toplam: k.yorumlar.length + kullaniciYorumlari(k.id).length
+  }));
+  const oneCikan = veriler.reduce((a, b) => (b.toplam > a.toplam ? b : a));
+  icerik.append(konuKarti(oneCikan, true));
 
-    if (oyun) {
-      const kapak = el("a", "konu-kapak");
-      kapak.href = "oyun.html?id=" + oyun.id;
-      kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
-      const img = el("img");
-      img.src = oyun.gorsel;
-      img.alt = oyun.ad + " oyununun görseli";
-      img.loading = "lazy";
-      kapak.append(img);
-      kutu.append(kapak);
-    }
-
-    const govde = el("div", "konu-govde");
-    if (oyun) {
-      const oyunSatiri = el("p", "konu-oyun");
-      const oyunLink = el("a", null, oyun.ad);
-      oyunLink.href = "oyun.html?id=" + oyun.id;
-      oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur));
-      govde.append(oyunSatiri);
-    }
-    const h2 = el("h2", "konu-alt-baslik");
-    const a = el("a", null, k.baslik);
-    a.href = "konu.html?id=" + k.id;
-    h2.append(a);
-    govde.append(h2);
-    const toplam = k.yorumlar.length + kullaniciYorumlari(k.id).length;
-    govde.append(el("p", "meta", k.acan + " açtı · " + k.tarih + " · " + toplam + " yorum"));
-    govde.append(el("p", "onizleme", k.mesaj));
-    const kullaniciSon = kullaniciYorumlari(k.id).slice(-1)[0];
-    const son = kullaniciSon || k.yorumlar[k.yorumlar.length - 1];
-    if (son) {
-      const sonEl = el("p", "son-mesaj");
-      sonEl.append(el("span", "rumuz", "Son söz — " + son.rumuz + ": "), document.createTextNode(kisalt(son.metin, 90)));
-      govde.append(sonEl);
-    }
-    kutu.append(govde);
-    konular.append(kutu);
-  });
-  icerik.append(konular);
+  const izgara = el("div", "forum-izgara");
+  veriler.filter(v => v !== oneCikan).forEach(v => izgara.append(konuKarti(v, false)));
+  icerik.append(izgara);
   canlandir();
+}
+
+function konuKarti(veri, oneCikan) {
+  const k = veri.konu, oyun = veri.oyun;
+  const kutu = el("article", (oneCikan ? "forum-konu forum-one-cikan" : "forum-konu dikey") + " js-reveal");
+
+  if (oyun) {
+    const kapak = el("a", "konu-kapak");
+    kapak.href = "oyun.html?id=" + oyun.id;
+    kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
+    const img = el("img");
+    img.src = oyun.gorsel;
+    img.alt = oyun.ad + " oyununun görseli";
+    img.loading = "lazy";
+    kapak.append(img);
+    kutu.append(kapak);
+  }
+
+  const govde = el("div", "konu-govde");
+  if (oneCikan) govde.append(el("p", "one-cikan-eyebrow", "🔥 Günün En Çok Tartışılanı"));
+  if (oyun) {
+    const oyunSatiri = el("p", "konu-oyun");
+    const oyunLink = el("a", null, oyun.ad);
+    oyunLink.href = "oyun.html?id=" + oyun.id;
+    oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur));
+    govde.append(oyunSatiri);
+  }
+  const h2 = el("h2", "konu-alt-baslik");
+  const a = el("a", null, k.baslik);
+  a.href = "konu.html?id=" + k.id;
+  h2.append(a);
+  govde.append(h2);
+  govde.append(el("p", "meta", k.acan + " açtı · " + k.tarih + " · " + veri.toplam + " yorum"));
+  govde.append(el("p", "onizleme", k.mesaj));
+  const kullaniciSon = kullaniciYorumlari(k.id).slice(-1)[0];
+  const son = kullaniciSon || k.yorumlar[k.yorumlar.length - 1];
+  if (son) {
+    const sonEl = el("p", "son-mesaj");
+    sonEl.append(el("span", "rumuz", "Son söz — " + son.rumuz + ": "), document.createTextNode(kisalt(son.metin, oneCikan ? 140 : 80)));
+    govde.append(sonEl);
+  }
+  kutu.append(govde);
+  return kutu;
 }
 
 function kisalt(metin, sinir) {

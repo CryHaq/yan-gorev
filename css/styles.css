@@ -928,7 +928,61 @@ main {
 
 .forum-basligi .alt { color: var(--soluk); font-size: 1.1rem; margin: 0; max-width: 52ch; }
 
-.forum-konular { display: flex; flex-direction: column; gap: 1.3rem; margin-top: 1.8rem; }
+/* Manşet kart: günün en çok tartışılanı, tam genişlik yatay */
+.forum-one-cikan {
+  margin-top: 1.8rem;
+  border-color: rgba(255, 122, 77, 0.45);
+  box-shadow: 0 0 26px rgba(255, 122, 77, 0.14);
+  padding: 0;
+  overflow: hidden;
+}
+
+.forum-one-cikan .konu-kapak {
+  width: 42%;
+  aspect-ratio: auto;
+  align-self: stretch;
+  min-height: 280px;
+  border-radius: 0;
+}
+
+.forum-one-cikan .konu-govde { padding: 1.6rem 1.8rem 1.4rem 0.4rem; }
+
+.one-cikan-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #ff9a70;
+  margin: 0 0 0.6rem;
+}
+
+.forum-one-cikan .konu-alt-baslik { font-size: clamp(1.5rem, 3vw, 2.1rem); color: var(--murekkep); }
+
+/* Izgara: kalan konular yan yana, ortalanmış dikey kartlar */
+.forum-izgara {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.4rem;
+  margin-top: 1.4rem;
+}
+
+.forum-izgara .forum-konu.dikey { flex: 1 1 300px; max-width: 346px; }
+
+.forum-konu.dikey {
+  flex-direction: column;
+  gap: 0;
+  padding: 0 0 1.2rem;
+  overflow: hidden;
+}
+
+.forum-konu.dikey .konu-kapak {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+}
+
+.forum-konu.dikey .konu-govde { padding: 1rem 1.3rem 0; }
 
 .forum-konu {
   background: var(--panel);
@@ -1167,6 +1221,8 @@ main {
   .balon { max-width: 92%; }
   .forum-konu { flex-direction: column; }
   .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
+  .forum-one-cikan .konu-kapak { width: 100%; aspect-ratio: 16 / 9; min-height: 0; }
+  .forum-one-cikan .konu-govde { padding: 1.1rem 1.3rem 1.2rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
