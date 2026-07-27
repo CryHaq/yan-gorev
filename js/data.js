@@ -111,10 +111,15 @@ const OYUNLAR = [
     puan: 8.2,
     ozet: "Uyuyan bir uzay kolonisinin ortak rüyasına dalıp, kimsenin hatırlamak istemediği şeyi bulman gerekiyor.",
     manset: false,
-    /* 🎓 KULLANICI KATKISI #2: inceleme, arti ve eksi alanlarını yeni ekip arkadaşı yazacak (Task 5). */
-    inceleme: [],
-    arti: [],
-    eksi: [],
+    /* 🎓 Bu inceleme yeni ekip arkadaşıyla birlikte yazıldı (Task 5, Katkı #2). */
+    inceleme: [
+      "Derin Uyku'nun evreninde insanlığın son gemisi yüz on iki yolcusuyla yıldızlara doğru süzülürken herkes uyuyor — ve hepsi aynı rüyayı görüyor. Siz, koloninin 'dalgıç'ı olarak bu ortak rüyaya inip geminin unutmaya çalıştığı şeyi bulmakla görevlisiniz. Mercan Yazılım'ın ilk büyük yapımı, daha ilk dalışta belli ediyor: burası bir korku oyunu değil; unutmanın da bir mühendislik olduğu, hüzünlü bir bilimkurgu.",
+      "Rüya katmanlarında yalnız değilsiniz: kolonistlerin rüyada başıboş kalmış kopyaları — yüzleri silinmiş, koridorlarda sürüyle gezinen 'uyurgezerler' — oyunun en gerilimli anlarını taşıyor. Onlardan kaçarken kullandığınız dalış mekanikleri ve rüya fiziği kusursuz ayarlanmış; görsel tarafta ise Mercan Yazılım, suyla uzayın karıştığı katmanlarda gerçekten büyüleyici işler çıkarmış.",
+      "Ne var ki hikâye aynı özeni her yerde gösteremiyor: bazı ipuçları hiçbir yere bağlanmıyor, orta bölümde kim olduğunuz sorusu askıda bırakılıyor. Revirdeki fazladan uyku kapsülü gibi ustaca ekilmiş sırlar bile, finale gelindiğinde hak ettikleri cevabı tam alamıyor.",
+      "Yine de dibe inmeyi göze alanları büyük bir ödül bekliyor: cevaplarını kolay vermeyen, ritmini aceleye getirmeyen bir dalış bu. Derin Uyku, sabırlı oyuncular için kaçırılmaz."
+    ],
+    arti: ["Dalış mekanikleri ve rüya fiziğinin ayarı", "Su ile uzayın karıştığı görsel katmanlar", "Uyurgezerlerin sessiz gerilimi"],
+    eksi: ["Hiçbir yere bağlanmayan ipuçları", "Orta bölümde askıda kalan kimlik sorusu"],
     konuId: "derin-uyku-teoriler"
   }
 ];
