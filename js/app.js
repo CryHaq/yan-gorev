@@ -779,16 +779,11 @@ function oyunSayfasi() {
   kapak.append(kapakImg);
   icerik.append(kapak);
 
+  const kolonlar = el("div", "iki-kolon");
+  const sol = el("div", "kolon-icerik");
+
   const baslik = el("header", "inceleme-baslik");
-  baslik.append(el("p", "eyebrow", "İnceleme"), el("h1", null, oyun.ad), puanRozet(oyun.puan));
-  const kunye = el("ul", "kunye");
-  [["Tür", oyun.tur], ["Stüdyo", oyun.studyo], ["Çıkış", oyun.cikis], ["Platform", oyun.platformlar.join(", ")]]
-    .forEach(([ad, deger]) => {
-      const li = el("li");
-      li.append(el("b", null, ad + ": "), document.createTextNode(deger));
-      kunye.append(li);
-    });
-  baslik.append(kunye);
+  baslik.append(el("p", "eyebrow", "İnceleme"), el("h1", null, oyun.ad));
 
   const govde = el("div", "inceleme-govde");
   if (oyun.inceleme.length === 0) {
@@ -796,8 +791,7 @@ function oyunSayfasi() {
   } else {
     oyun.inceleme.forEach(p => govde.append(el("p", null, p)));
   }
-
-  icerik.append(baslik, govde);
+  sol.append(baslik, govde);
 
   if (oyun.arti.length || oyun.eksi.length) {
     const kutu = el("div", "arti-eksi");
@@ -812,12 +806,36 @@ function oyunSayfasi() {
     oyun.eksi.forEach(x => eksiListe.append(el("li", null, x)));
     eksi.append(eksiListe);
     kutu.append(arti, eksi);
-    icerik.append(kutu);
+    sol.append(kutu);
   }
 
-  const cta = el("a", "forum-cta", "Bu oyunu forumda tartış →");
-  cta.href = "konu.html?id=" + oyun.konuId;
-  icerik.append(cta);
+  kolonlar.append(sol, yanKutuOyun(oyun));
+  icerik.append(kolonlar);
+  canlandir();
+}
+
+/* Sağ yapışkan panel: künye, puan, aksiyonlar ve benzer görevler tek bakışta. */
+function yanKutuOyun(oyun) {
+  const yan = el("aside", "yan-kutu js-reveal");
+
+  const bilgi = el("div", "yan-panel");
+  bilgi.append(puanRozet(oyun.puan));
+  const kunye = el("ul", "yan-kunye");
+  [["Tür", oyun.tur], ["Stüdyo", oyun.studyo], ["Çıkış", oyun.cikis], ["Platform", oyun.platformlar.join(", ")]]
+    .forEach(([ad, deger]) => {
+      const li = el("li");
+      li.append(el("b", null, ad), document.createTextNode(deger));
+      kunye.append(li);
+    });
+  bilgi.append(kunye);
+  const tartis = el("a", "tartisma-git");
+  tartis.href = "konu.html?id=" + oyun.konuId;
+  tartis.append(document.createTextNode("Forumda tartış"), el("span", "ok-mini", "→"));
+  const rehber = el("a", "yan-baglanti");
+  rehber.href = "ipuclari.html#ipucu-" + oyun.id;
+  rehber.textContent = "İpuçları rehberine git →";
+  bilgi.append(tartis, rehber);
+  yan.append(bilgi);
 
   /* Benzer görevler: önce tür ailesi, boş kalırsa en yüksek puanlılar. */
   const benzerler = OYUNLAR.filter(o => o.id !== oyun.id && o.tur.split(" ")[0] === oyun.tur.split(" ")[0]);
@@ -825,17 +843,17 @@ function oyunSayfasi() {
     .sort((a, b) => b.puan - a.puan)
     .forEach(o => { if (benzerler.length < 3) benzerler.push(o); });
   if (benzerler.length) {
-    const bolum = el("h2", "bolum-baslik", "Benzer Görevler");
-    const serit = el("div", "benzer-serit");
+    const panel = el("div", "yan-panel");
+    panel.append(el("p", "yan-baslik", "Benzer Görevler"));
     benzerler.slice(0, 3).forEach(o => {
-      const a = el("a", "benzer-kart js-reveal");
-      a.href = "oyun.html?id=" + o.id;
-      a.append(kapakGorseli(o, "220px"), el("span", "ad", o.ad), el("span", "puan", String(o.puan).replace(".", ",") + " /10"));
-      serit.append(a);
+      const satir = el("a", "yan-benzer");
+      satir.href = "oyun.html?id=" + o.id;
+      satir.append(kapakGorseli(o, "84px"), el("span", "ad", o.ad), el("span", "puan", String(o.puan).replace(".", ",")));
+      panel.append(satir);
     });
-    icerik.append(bolum, serit);
+    yan.append(panel);
   }
-  canlandir();
+  return yan;
 }
 
 /* ---------- forum konusu ---------- */
@@ -883,11 +901,55 @@ function konuSayfasi() {
   ];
   tumYorumlar.forEach((y, i) => liste.append(yorumSatiri(konu.id, y, i)));
 
-  icerik.append(baslik, acilis);
-  if (konu.anket) icerik.append(anketKutusu(konu));
-  icerik.append(liste, yorumFormu(konu));
+  const kolonlar = el("div", "iki-kolon");
+  const sol = el("div", "kolon-icerik");
+  sol.append(baslik, acilis);
+  if (konu.anket) sol.append(anketKutusu(konu));
+  sol.append(liste, yorumFormu(konu));
+  kolonlar.append(sol, yanKutuKonu(konu));
+  icerik.append(kolonlar);
   yaziyorBaslat(konu, liste);
   canlandir();
+}
+
+/* Konu sayfasının sağ paneli: tartışılan oyunun kartı + başka kavgalar. */
+function yanKutuKonu(konu) {
+  const yan = el("aside", "yan-kutu js-reveal");
+  const oyun = konuOyunu(konu);
+
+  if (oyun) {
+    const panel = el("div", "yan-panel");
+    const kapak = el("a", "yan-oyun-kapak");
+    kapak.href = "oyun.html?id=" + oyun.id;
+    kapak.append(kapakGorseli(oyun, "360px"));
+    panel.append(kapak);
+    const adSatiri = el("p", "yan-oyun-ad");
+    adSatiri.append(el("span", null, oyun.ad), puanRozet(oyun.puan));
+    panel.append(adSatiri, el("p", "yan-oyun-tur", oyun.tur + " · " + oyun.studyo));
+    const oku = el("a", "tartisma-git");
+    oku.href = "oyun.html?id=" + oyun.id;
+    oku.append(document.createTextNode("İncelemeyi oku"), el("span", "ok-mini", "→"));
+    const rehber = el("a", "yan-baglanti");
+    rehber.href = "ipuclari.html#ipucu-" + oyun.id;
+    rehber.textContent = "İpuçları rehberine git →";
+    panel.append(oku, rehber);
+    yan.append(panel);
+  }
+
+  const digerleri = tumKonular().filter(k => k.id !== konu.id).slice(0, 4);
+  if (digerleri.length) {
+    const panel = el("div", "yan-panel");
+    panel.append(el("p", "yan-baslik", "Başka Kavgalar"));
+    digerleri.forEach(k => {
+      const satir = el("a", "yan-kavga");
+      satir.href = "konu.html?id=" + k.id;
+      const toplam = k.yorumlar.length + kullaniciYorumlari(k.id).length;
+      satir.append(el("span", "ad", kisalt(k.baslik, 56)), el("span", "sayi", toplam + " yorum"));
+      panel.append(satir);
+    });
+    yan.append(panel);
+  }
+  return yan;
 }
 
 /* Anket: kurgu taban oylar + senin localStorage oyun; çubuklar oy verince dolar. */

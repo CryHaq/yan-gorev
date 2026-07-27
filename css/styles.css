@@ -23,7 +23,7 @@
   /* --serif adı tarihsel: artık başlık ailesi Bricolage Grotesque taşıyor. */
   --serif: "Bricolage Grotesque", "Avenir Next Condensed", "Arial Black", sans-serif;
   --grotesk: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
-  --govde-olcu: 68ch;
+  --govde-olcu: 72ch;
   --sayfa-genislik: 1340px;
 }
 
@@ -1503,6 +1503,138 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
 @media (max-width: 640px) {
   .ipucu-kart { flex-direction: column; }
   .ipucu-kart .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
+}
+
+/* ---------- İki kolonlu iskelet + yapışkan yan panel ---------- */
+
+.iki-kolon {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 1rem 3rem;
+  align-items: start;
+}
+
+.kolon-icerik { min-width: 0; }
+
+.yan-kutu {
+  position: sticky;
+  top: 96px;
+  display: grid;
+  gap: 1.3rem;
+  margin-top: 2.6rem;
+}
+
+.yan-panel {
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 14px;
+  padding: 1.25rem 1.35rem;
+}
+
+.yan-baslik {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--vurgu);
+  margin: 0 0 0.7rem;
+}
+
+.yan-kunye {
+  list-style: none;
+  margin: 1rem 0 1.1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.yan-kunye b {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--soluk);
+  margin-bottom: 0.1rem;
+}
+
+.yan-panel .tartisma-git { margin-top: 0.2rem; }
+
+.yan-baglanti {
+  display: block;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.yan-benzer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  text-decoration: none;
+  border-top: 1px solid var(--cizgi);
+}
+
+.yan-benzer:first-of-type { border-top: none; padding-top: 0.2rem; }
+
+.yan-benzer img {
+  width: 84px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 8px;
+  flex: none;
+}
+
+.yan-benzer .ad {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--murekkep);
+  min-width: 0;
+}
+
+.yan-benzer:hover .ad { color: var(--vurgu); }
+.yan-benzer .puan { margin-left: auto; color: var(--vurgu); font-weight: 700; font-size: 0.85rem; }
+
+.yan-oyun-kapak { display: block; border-radius: 10px; overflow: hidden; margin-bottom: 0.9rem; }
+.yan-oyun-kapak img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+
+.yan-oyun-ad {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin: 0 0 0.2rem;
+}
+
+.yan-oyun-ad .puan-rozet { transform: rotate(2deg); }
+.yan-oyun-ad .puan-rozet .sayi { font-size: 1.05rem; }
+
+.yan-oyun-tur { margin: 0 0 0.9rem; color: var(--soluk); font-size: 0.85rem; }
+
+.yan-kavga {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  text-decoration: none;
+  border-top: 1px solid var(--cizgi);
+}
+
+.yan-kavga:first-of-type { border-top: none; }
+.yan-kavga .ad { color: var(--murekkep); font-weight: 600; font-size: 0.92rem; min-width: 0; }
+.yan-kavga:hover .ad { color: var(--vurgu); }
+.yan-kavga .sayi { color: var(--soluk); font-size: 0.78rem; flex: none; }
+
+@media (max-width: 1024px) {
+  .iki-kolon { grid-template-columns: 1fr; }
+  .yan-kutu { position: static; margin-top: 1rem; }
 }
 
 /* ---------- Canlılık: çevrimiçi + yazıyor + aktivite ---------- */
