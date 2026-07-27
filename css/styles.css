@@ -620,6 +620,25 @@ main {
 .balon .tarih { color: var(--soluk); font-size: 0.75rem; }
 .yorum.kullanici .balon .tarih { color: #b9c4f5; }
 
+.rozet-mini {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--vurgu);
+  border: 1px solid rgba(107, 139, 255, 0.45);
+  border-radius: 4px;
+  padding: 0.06rem 0.38rem;
+  white-space: nowrap;
+}
+
+.rozet-mini.unvan {
+  color: #ffb26b;
+  border-color: rgba(255, 154, 112, 0.5);
+}
+
+.yorum.kullanici .balon .rozet-mini.unvan { color: #ffd7b8; border-color: rgba(255, 215, 184, 0.55); }
+
 .balon .sen {
   font-size: 0.65rem;
   font-weight: 700;

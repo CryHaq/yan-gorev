@@ -415,6 +415,21 @@ const IPUCLARI = [
   ]}
 ];
 
+/* Topluluk rozetleri: rumuz → unvan. Kurgu kullanıcının kimliği her konuda onunla gezer. */
+const ROZETLER = {
+  meydanokuyan: "Konuyu Açan",
+  sazandisi: "Pehlivan Savunucusu",
+  ruzgarokuyan: "Veri Kurdu",
+  fenerbekcisi: "Fener Bekçisi",
+  katmankazici: "Baş Kazıcı",
+  cimenbicen: "Rehber Yazarı",
+  elfreni: "Karayel Rehberi",
+  gecegezen: "Gece Nöbetçisi",
+  derindalgic: "Derin Dalgıç",
+  sisci: "Ocak Ustası",
+  bulasikci_veli: "Kadronun Kalecisi"
+};
+
 /* En Çok Aranan İpucu: ayın gününe göre döner — demo'da "arama verisi"nin dürüst hali. */
 const ARANAN_ADAYLAR = [
   { oyunId: "pas-ve-pervane", ipucu: 0 },

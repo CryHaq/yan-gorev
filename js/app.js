@@ -493,6 +493,18 @@ function uyeGetir() {
   try { return JSON.parse(localStorage.getItem("yg-uye")) || null; } catch (e) { return null; }
 }
 
+/* Unvan merdiveni: unvan satın alınmaz, yorumla kazanılır. */
+function uyeYorumSayisi() {
+  return tumKonular().reduce((t, k) => t + kullaniciYorumlari(k.id).length, 0);
+}
+
+function uyeUnvani() {
+  const n = uyeYorumSayisi();
+  if (n >= 10) return "Meydan Efsanesi";
+  if (n >= 3) return "Müdavim";
+  return "Çaylak";
+}
+
 /* Gece/gündüz düğmesi: nav'a JS ile eklenir, tercih localStorage'da yaşar.
    İlk boyamadan önce temayı head'deki tek satırlık betik uygular. */
 function temaDugmesiKur() {
@@ -543,7 +555,9 @@ function uyeSayfasi() {
   baslik.append(
     el("p", "eyebrow", "Yan Görev · Üyelik"),
     el("h1", null, uye ? "Merhaba, " + uye.rumuz : "Aramıza Katıl"),
-    el("p", "alt", uye ? "Profilini buradan güncelleyebilirsin." : "Bir rumuz seç, rengini kap, tartışmaya karış.")
+    el("p", "alt", uye
+      ? "Unvanın: " + uyeUnvani() + " (" + uyeYorumSayisi() + " yorum) — sıradaki basamak yorumla açılır."
+      : "Bir rumuz seç, rengini kap, tartışmaya karış.")
   );
   icerik.append(baslik);
 
@@ -816,7 +830,11 @@ function yorumSatiri(konuId, yorum, sira) {
   const balon = el("div", "balon");
   const ust = el("div", "ust");
   ust.append(el("span", "rumuz", yorum.rumuz), el("span", "tarih", yorum.tarih));
-  if (yorum.kullanici) ust.append(el("span", "sen", "sen"));
+  if (yorum.kullanici) {
+    ust.append(el("span", "sen", "sen"), el("span", "rozet-mini unvan", uyeUnvani()));
+  } else if (typeof ROZETLER !== "undefined" && ROZETLER[yorum.rumuz]) {
+    ust.append(el("span", "rozet-mini", ROZETLER[yorum.rumuz]));
+  }
   balon.append(ust);
 
   /* Gerçek yanıt: kaydedilmiş alıntı kutusu — tıklayınca kaynağa kayar. */
