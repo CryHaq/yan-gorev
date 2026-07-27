@@ -20,7 +20,8 @@
   --rozet-zemin: rgba(20, 26, 49, 0.85);
   --rozet-metin: #ffffff;
   --metin-yumusak: #c3c9e6;
-  --serif: "Besley", "Iowan Old Style", Georgia, serif;
+  /* --serif adı tarihsel: artık başlık ailesi Bricolage Grotesque taşıyor. */
+  --serif: "Bricolage Grotesque", "Avenir Next Condensed", "Arial Black", sans-serif;
   --grotesk: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --govde-olcu: 68ch;
   --sayfa-genislik: 1340px;
@@ -183,7 +184,7 @@ html[data-tema="gunduz"] .site-header {
 
 .logo {
   font-family: var(--serif);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.7rem;
   letter-spacing: -0.01em;
   color: var(--murekkep);
@@ -762,8 +763,8 @@ main {
 .hero h1.dev-baslik {
   font-size: clamp(3.4rem, 13.5vw, 11rem);
   line-height: 0.88;
-  letter-spacing: -0.05em;
-  font-weight: 600;
+  letter-spacing: -0.04em;
+  font-weight: 800;
   max-width: none;
   margin: 0;
 }
@@ -930,7 +931,7 @@ main {
 
 .forum-basligi h1 {
   font-family: var(--serif);
-  font-weight: 700;
+  font-weight: 800;
   font-size: clamp(2.6rem, 6.5vw, 4.6rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
