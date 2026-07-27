@@ -210,16 +210,20 @@ function yorumFormu(konu) {
 }
 
 /* ---------- kalıcılık ----------
-   🎓 KULLANICI KATKISI #1 (Task 5): aşağıdaki iki fonksiyonun gövdesini
-   yeni ekip arkadaşı yazacak. Karar: tüm yorumlar tek anahtarda mı,
-   konu başına ayrı anahtarda mı tutulacak? */
+   🎓 Strateji kararı (B: tek ortak anahtar) yeni ekip arkadaşına ait:
+   tüm yorumlar "yg-yorumlar" anahtarında {konuId: [yorumlar]} haritası olarak durur. */
+
+const YORUM_ANAHTARI = "yg-yorumlar";
 
 function yorumKaydet(konuId, rumuz, metin) {
-  /* TODO(yeni-arkadas): yorumu kalıcılaştır.
-     Tarih formatı: new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }) */
+  if (!rumuz || !metin) return;
+  const hepsi = JSON.parse(localStorage.getItem(YORUM_ANAHTARI) || "{}");
+  const tarih = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+  (hepsi[konuId] = hepsi[konuId] || []).push({ rumuz, tarih, metin });
+  localStorage.setItem(YORUM_ANAHTARI, JSON.stringify(hepsi));
 }
 
 function kullaniciYorumlari(konuId) {
-  /* TODO(yeni-arkadas): bu konuya ait kayıtlı yorumları [{rumuz, tarih, metin}] olarak döndür. */
-  return [];
+  const hepsi = JSON.parse(localStorage.getItem(YORUM_ANAHTARI) || "{}");
+  return hepsi[konuId] || [];
 }
