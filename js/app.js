@@ -43,18 +43,59 @@ function anaSayfa() {
   icerik.textContent = "";
 
   const manset = OYUNLAR.find(o => o.manset) || OYUNLAR[0];
-  const hero = el("section", "hero");
+  const hero = el("section", "hero hero-prisma");
+
   const heroGorsel = el("img", "hero-gorsel");
   heroGorsel.src = manset.gorsel;
   heroGorsel.alt = manset.ad + " oyununun tanıtım görseli";
+  hero.append(heroGorsel);
+
+  /* Video varsa görselin üzerine biner; hareket azaltma tercihinde hiç eklenmez. */
+  if (manset.video && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const video = document.createElement("video");
+    video.className = "hero-video";
+    video.src = manset.video;
+    video.poster = manset.gorsel;
+    video.autoplay = true;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    hero.append(video);
+  }
+
+  hero.append(puanRozet(manset.puan));
+
   const heroIcerik = el("div", "hero-icerik");
-  heroIcerik.append(el("p", "eyebrow", "Ana Görev · Haftanın İncelemesi"));
-  const h1 = el("h1");
-  const h1a = el("a", null, manset.ad);
+  const heroSol = el("div", "hero-sol");
+  heroSol.append(el("p", "eyebrow", "Ana Görev · Haftanın İncelemesi"));
+
+  /* Kelime kelime yükselen manşet: her kelime maskeli kutusundan süzülür. */
+  const h1 = el("h1", "dev-baslik");
+  const h1a = el("a");
   h1a.href = "oyun.html?id=" + manset.id;
+  const kelimeler = manset.ad.split(" ");
+  kelimeler.forEach((kelime, i) => {
+    const maske = el("span", "kelime");
+    const ic = el("span", "kelime-ic", kelime);
+    ic.style.animationDelay = (0.15 + i * 0.12) + "s";
+    if (i === kelimeler.length - 1) ic.append(el("sup", "yildiz", "*"));
+    maske.append(ic);
+    h1a.append(maske);
+  });
   h1.append(h1a);
-  heroIcerik.append(h1, el("p", "ozet", manset.ozet));
-  hero.append(heroGorsel, puanRozet(manset.puan), heroIcerik);
+  heroSol.append(h1);
+
+  const heroSag = el("div", "hero-sag");
+  heroSag.append(el("p", "ozet", manset.ozet));
+  const heroCta = el("a", "hero-cta");
+  heroCta.href = "oyun.html?id=" + manset.id;
+  heroCta.append(document.createTextNode("İncelemeyi oku"), el("span", "ok", "→"));
+  heroSag.append(heroCta);
+
+  heroIcerik.append(heroSol, heroSag);
+  hero.append(heroIcerik, el("p", "hero-dipnot", "*tamamı kurgusaldır"));
 
   const incelemeBaslik = el("h2", "bolum-baslik", "İncelemeler");
   incelemeBaslik.id = "incelemeler";

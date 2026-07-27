@@ -4,6 +4,7 @@ const OYUNLAR = [
   {
     id: "kul-ve-fener",
     gorsel: "img/kul-ve-fener.jpg",
+    video: "video/hero-fener.mp4",
     ad: "Kül ve Fener",
     tur: "Aksiyon-Macera",
     studyo: "Karakutu Interactive",
