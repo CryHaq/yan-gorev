@@ -1360,6 +1360,51 @@ main {
   justify-self: start;
 }
 
+.filtre-cubugu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.filtre-cip {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--soluk);
+  text-decoration: none;
+  border: 1px solid var(--cizgi);
+  border-radius: 999px;
+  padding: 0.28rem 0.85rem;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.filtre-cip:hover { color: var(--vurgu); border-color: var(--vurgu); }
+
+.filtre-cip.aktif {
+  color: #fff;
+  background: var(--vurgu-derin);
+  border-color: var(--vurgu-derin);
+}
+
+.filtre-ayrac { color: var(--soluk); }
+
+.etiket-mini {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--soluk);
+  border: 1px solid var(--cizgi);
+  border-radius: 4px;
+  padding: 0.06rem 0.38rem;
+  white-space: nowrap;
+}
+
+.forum-konu.okundu .konu-kapak img { opacity: 0.62; }
+.forum-konu.okundu .konu-alt-baslik { color: var(--soluk); }
+.forum-konu.okundu .konu-alt-baslik a::after { content: " ✓"; color: var(--vurgu); }
+
 .istatistik {
   text-align: center;
   color: var(--soluk);

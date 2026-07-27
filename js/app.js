@@ -290,35 +290,47 @@ function forumSayfasi() {
     el("h1", null, "Yan Görev Forum"),
     el("p", "alt", "Oyun biter, sohbet başlar. Kurgu topluluğumuzun meydanı.")
   );
-  baslik.append(aramaKutusu(), konuAcPaneli());
+  const parametreler = new URLSearchParams(location.search);
+  const etiketSecimi = parametreler.get("etiket") || "";
+  const siralama = parametreler.get("sirala") || "";
+
+  baslik.append(aramaKutusu(), konuAcPaneli(), filtreCubugu(etiketSecimi, siralama));
   icerik.append(baslik);
 
   /* En çok yorum alan konu manşete çıkar — kullanıcı yorumları da sayılır,
      yani topluluk yazdıkça manşet gerçekten el değiştirebilir. */
-  const veriler = tumKonular().map(k => ({
+  const tumVeriler = tumKonular().map(k => ({
     konu: k,
     oyun: konuOyunu(k),
     toplam: k.yorumlar.length + kullaniciYorumlari(k.id).length
   }));
-  const oneCikan = veriler.reduce((a, b) => (b.toplam > a.toplam ? b : a));
-  const digerleri = veriler.filter(v => v !== oneCikan);
+  const oneCikan = tumVeriler.reduce((a, b) => (b.toplam > a.toplam ? b : a));
 
-  /* Sayfalama: manşet yalnız 1. sayfada; kalan konular SAYFA_BOYU'na bölünür. */
+  /* Filtre + sıralama: durum URL'de yaşar, görünüm paylaşılabilir link olur. */
+  let veriler = tumVeriler;
+  if (etiketSecimi) veriler = veriler.filter(v => (v.konu.etiket || "Tartışma") === etiketSecimi);
+  if (siralama === "hareketli") veriler = [...veriler].sort((a, b) => b.toplam - a.toplam);
+  else if (siralama === "begenilen") veriler = [...veriler].sort((a, b) => kalpPuani(b.konu) - kalpPuani(a.konu));
+
+  /* Manşet yalnız varsayılan görünümde: filtre/sıralama aktifken saf liste. */
+  const varsayilan = !etiketSecimi && !siralama;
+  const digerleri = varsayilan ? veriler.filter(v => v !== oneCikan) : veriler;
+
   const SAYFA_BOYU = 6;
-  const toplamSayfa = Math.ceil(digerleri.length / SAYFA_BOYU);
-  let sayfaNo = parseInt(new URLSearchParams(location.search).get("sayfa"), 10);
+  const toplamSayfa = Math.max(1, Math.ceil(digerleri.length / SAYFA_BOYU));
+  let sayfaNo = parseInt(parametreler.get("sayfa"), 10);
   if (!(sayfaNo >= 1 && sayfaNo <= toplamSayfa)) sayfaNo = 1;
 
-  if (sayfaNo === 1) icerik.append(konuKarti(oneCikan, true));
+  if (varsayilan && sayfaNo === 1) icerik.append(konuKarti(oneCikan, true));
 
   const izgara = el("div", "forum-izgara");
   digerleri.slice((sayfaNo - 1) * SAYFA_BOYU, sayfaNo * SAYFA_BOYU)
     .forEach(v => izgara.append(konuKarti(v, false)));
-  const toplamYorum = veriler.reduce((t, v) => t + v.toplam, 0);
+  const toplamYorum = tumVeriler.reduce((t, v) => t + v.toplam, 0);
   icerik.append(
     izgara,
-    sayfalama(sayfaNo, toplamSayfa),
-    el("p", "istatistik", OYUNLAR.length + " oyun · " + veriler.length + " konu · " + toplamYorum + " yorum · sınırsız kavga")
+    sayfalama(sayfaNo, toplamSayfa, etiketSecimi, siralama),
+    el("p", "istatistik", OYUNLAR.length + " oyun · " + tumVeriler.length + " konu · " + toplamYorum + " yorum · sınırsız kavga")
   );
   canlandir();
 }
@@ -326,6 +338,7 @@ function forumSayfasi() {
 function konuKarti(veri, oneCikan) {
   const k = veri.konu, oyun = veri.oyun;
   const kutu = el("article", (oneCikan ? "forum-konu forum-one-cikan" : "forum-konu dikey") + " js-reveal");
+  if (okunanlar().has(k.id)) kutu.classList.add("okundu");
 
   if (oyun) {
     const kapak = el("a", "konu-kapak");
@@ -342,7 +355,7 @@ function konuKarti(veri, oneCikan) {
     const oyunSatiri = el("p", "konu-oyun");
     const oyunLink = el("a", null, oyun.ad);
     oyunLink.href = "oyun.html?id=" + oyun.id;
-    oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur));
+    oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur), el("span", "etiket-mini", k.etiket || "Tartışma"));
     govde.append(oyunSatiri);
   }
   const h2 = el("h2", "konu-alt-baslik");
@@ -358,13 +371,48 @@ function konuKarti(veri, oneCikan) {
   return kutu;
 }
 
-function sayfalama(sayfaNo, toplamSayfa) {
+/* Forum bağlantısı üretici: yalnız varsayılan-dışı durumlar URL'e yazılır. */
+function forumUrl(sayfa, etiket, sirala) {
+  const p = new URLSearchParams();
+  if (sayfa > 1) p.set("sayfa", sayfa);
+  if (etiket) p.set("etiket", etiket);
+  if (sirala) p.set("sirala", sirala);
+  const q = p.toString();
+  return "forum.html" + (q ? "?" + q : "");
+}
+
+/* Beğeni tabanlarının toplamı: "En Beğenilen" sıralamasının ölçütü. */
+function kalpPuani(k) {
+  return k.yorumlar.reduce((t, y) => t + (y.metin.length % 17) + 2, 0);
+}
+
+function filtreCubugu(etiketSecimi, siralama) {
+  const kutu = el("div", "filtre-cubugu");
+  ["", "Tartışma", "Rehber", "Teori"].forEach(e => {
+    const cip = el("a", "filtre-cip" + (etiketSecimi === e ? " aktif" : ""), e || "Tümü");
+    cip.href = forumUrl(1, e, siralama);
+    kutu.append(cip);
+  });
+  kutu.append(el("span", "filtre-ayrac", "·"));
+  [["", "Öne Çıkan"], ["hareketli", "En Hareketli"], ["begenilen", "En Beğenilen"]].forEach(([deger, ad]) => {
+    const cip = el("a", "filtre-cip" + (siralama === deger ? " aktif" : ""), ad);
+    cip.href = forumUrl(1, etiketSecimi, deger);
+    kutu.append(cip);
+  });
+  return kutu;
+}
+
+function okunanlar() {
+  try { return new Set(JSON.parse(localStorage.getItem("yg-okunan")) || []); } catch (e) { return new Set(); }
+}
+
+function sayfalama(sayfaNo, toplamSayfa, etiket, sirala) {
   const kutu = el("nav", "sayfalama");
   kutu.setAttribute("aria-label", "Forum sayfaları");
   const dugme = (hedef, metin) => {
     const a = el("a", "sayfa-dugme", metin);
     if (hedef >= 1 && hedef <= toplamSayfa) {
-      a.href = "forum.html" + (hedef > 1 ? "?sayfa=" + hedef : "");
+      a.href = forumUrl(hedef, etiket, sirala);
     } else {
       a.classList.add("pasif");
       a.setAttribute("aria-disabled", "true");
@@ -460,6 +508,7 @@ function konuAcPaneli() {
     e.preventDefault();
     const yeni = {
       id: "u-" + Date.now(),
+      etiket: "Tartışma",
       oyunId: oyunSec.value,
       baslik: baslikGirdi.value.trim(),
       acan: uye.rumuz,
@@ -759,6 +808,13 @@ function konuSayfasi() {
   );
 
   aktifYanit = null;
+
+  /* Okundu izi: ziyaret edilen konular forumda soluklaşır. */
+  const okunan = okunanlar();
+  if (!okunan.has(konu.id)) {
+    okunan.add(konu.id);
+    localStorage.setItem("yg-okunan", JSON.stringify([...okunan]));
+  }
 
   const acilis = el("div", "acilis-mesaj");
   acilis.append(el("p", null, konu.mesaj));

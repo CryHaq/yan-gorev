@@ -218,6 +218,7 @@ const OYUNLAR = [
 const KONULAR = [
   {
     id: "kul-ve-fener-final",
+    etiket: "Tartışma",
     baslik: "Kül ve Fener'in finali hakkında (spoiler)",
     acan: "fenerbekcisi",
     tarih: "24 Temmuz 2026",
@@ -232,6 +233,7 @@ const KONULAR = [
   },
   {
     id: "gece-vardiyasi-ipuclari",
+    etiket: "Rehber",
     baslik: "Gece Vardiyası — hangi müşteri insan değil? (ipucu derlemesi)",
     acan: "gecegezen",
     tarih: "19 Temmuz 2026",
@@ -246,6 +248,7 @@ const KONULAR = [
   },
   {
     id: "pas-ve-pervane-rotalar",
+    etiket: "Rehber",
     baslik: "Pas ve Pervane: vadideki gizli rüzgâr akımları (rota paylaşımı)",
     acan: "tamirci_aysel",
     tarih: "12 Temmuz 2026",
@@ -259,6 +262,7 @@ const KONULAR = [
   },
   {
     id: "son-otobus-sonlar",
+    etiket: "Tartışma",
     baslik: "Son Otobüs'ün dört sonu — sıralama ve tartışma",
     acan: "peron9",
     tarih: "5 Temmuz 2026",
@@ -272,6 +276,7 @@ const KONULAR = [
   },
   {
     id: "bahcivan-krali-taktik",
+    etiket: "Rehber",
     baslik: "Bahçıvan Kralı: ilk kış için tarh dizilimi (yeni başlayan rehberi)",
     acan: "cimenbicen",
     tarih: "15 Temmuz 2026",
@@ -286,6 +291,7 @@ const KONULAR = [
   },
   {
     id: "derin-uyku-teoriler",
+    etiket: "Teori",
     baslik: "Derin Uyku teorileri: koloni gerçekten uyuyor mu?",
     acan: "derindalgic",
     tarih: "22 Temmuz 2026",
@@ -299,6 +305,7 @@ const KONULAR = [
   },
   {
     id: "vites-kestirmeler",
+    etiket: "Rehber",
     baslik: "Vites: Karayel'in gizli kestirmeleri (harita paylaşımı)",
     acan: "elfreni",
     tarih: "26 Temmuz 2026",
@@ -312,6 +319,7 @@ const KONULAR = [
   },
   {
     id: "hoyuk-muhurler",
+    etiket: "Teori",
     baslik: "Höyük mühür alfabesi — topluluk çevirisi ilerlemesi",
     acan: "katmankazici",
     tarih: "25 Temmuz 2026",
@@ -326,6 +334,7 @@ const KONULAR = [
   },
   {
     id: "meydan-denge",
+    etiket: "Tartışma",
     baslik: "1.7 yaması: Pehlivan nerfi haklı mı?",
     acan: "meydanokuyan",
     tarih: "27 Temmuz 2026",
@@ -349,6 +358,7 @@ const KONULAR = [
   },
   {
     id: "ocakbasi-gorev-dagilimi",
+    etiket: "Rehber",
     baslik: "Ocakbaşı: 4 kişilik vardiyada görev dağılımı (kavgasız rehber)",
     acan: "sisci",
     tarih: "27 Temmuz 2026",
