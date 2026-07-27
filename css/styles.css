@@ -671,6 +671,103 @@ main {
 
 .yorum.kullanici .begeni-btn { color: #cdd7ff; border-color: rgba(255, 255, 255, 0.3); }
 
+/* ---------- Yanıt zinciri + tepkiler + anket ---------- */
+
+.balon-alt { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
+
+.yanitla-btn { margin-left: auto; }
+
+.yanit-alinti {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--metin-yumusak);
+  background: rgba(107, 139, 255, 0.10);
+  border: 1px solid rgba(107, 139, 255, 0.25);
+  border-radius: 10px;
+  padding: 0.45rem 0.7rem;
+  margin-bottom: 0.45rem;
+  cursor: pointer;
+}
+
+.yanit-alinti:hover { background: rgba(107, 139, 255, 0.18); }
+.yanit-alinti .rumuz { display: block; font-weight: 700; color: var(--vurgu); font-size: 0.78rem; }
+
+.yorum.vurgula .balon { outline: 2px solid var(--vurgu); box-shadow: var(--parilti); }
+
+#yanit-cubugu .yanit-cip { display: inline-flex; align-items: center; gap: 0.5rem; }
+
+.yanit-iptal {
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.1rem;
+}
+
+.anket {
+  max-width: var(--govde-olcu);
+  margin: 1.4rem 0 0;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem 1rem;
+}
+
+.anket h2 { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; margin: 0 0 0.9rem; }
+
+.anket-secenek {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  width: 100%;
+  font: inherit;
+  color: var(--murekkep);
+  background: var(--zemin);
+  border: 1px solid var(--cizgi);
+  border-radius: 9px;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 0.55rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: left;
+}
+
+.anket-secenek:not(.kilitli):hover { border-color: var(--vurgu); box-shadow: var(--parilti); }
+.anket-secenek.kilitli { cursor: default; }
+.anket-secenek.secili { border-color: var(--vurgu); font-weight: 700; }
+
+.anket-dolgu {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: rgba(107, 139, 255, 0.16);
+  transition: width 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.anket-secenek.secili .anket-dolgu { background: rgba(107, 139, 255, 0.30); }
+.anket-metin, .anket-oran { position: relative; }
+.anket-oran { font-weight: 700; color: var(--vurgu); flex: none; }
+
+.anket-alt { margin: 0.3rem 0 0; color: var(--soluk); font-size: 0.85rem; }
+
+.anket-geri {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--vurgu);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
 /* ---------- Yorum formu ---------- */
 
 .yorum-form {

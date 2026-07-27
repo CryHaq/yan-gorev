@@ -330,6 +330,14 @@ const KONULAR = [
     acan: "meydanokuyan",
     tarih: "27 Temmuz 2026",
     mesaj: "Yama notları çıktı: Pehlivan'ın tutuş menzili yüzde on beş kısaldı, toprak sarsması artık büyüyle iptal edilebiliyor. Kolektif 'kullanım oranı çok yüksekti' diyor. Turnuva sahnesinden kazan-oranı verileriyle tartışalım: bu nerf haklı mı, yoksa panik yaması mı?",
+    anket: {
+      soru: "Sence 1.7 Pehlivan nerfi?",
+      secenekler: [
+        { metin: "Haklı — veri ortada", taban: 128 },
+        { metin: "Panik yaması, geri alınsın", taban: 97 },
+        { metin: "Kararsızım, meydan konuşsun", taban: 41 }
+      ]
+    },
     yorumlar: [
       { rumuz: "kispetli", tarih: "27 Temmuz 2026", metin: "Kazan oranı yüzde elli ikiydi, elli iki! Baş tacı falan değildi, sadece HERKES oynuyordu çünkü oynaması keyifliydi. Popülerliği güce çevirip nerflemek matematik değil halkla ilişkiler." },
       { rumuz: "sazandisi", tarih: "27 Temmuz 2026", metin: "Pehlivan'ı nerflemek meydanın ruhunu bilmemektir. Sorun karakterde değil, düz yürüyen bir devden kaçamayanlarda. Yenilgiyi yamada değil aynada arayın." },

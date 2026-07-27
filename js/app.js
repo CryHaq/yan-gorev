@@ -3,6 +3,9 @@
 
 document.addEventListener("DOMContentLoaded", sayfayiKur);
 
+/* Aktif yanıt bağlamı: Yanıtla'ya basılınca dolar, gönderince sıfırlanır. */
+let aktifYanit = null;
+
 function sayfayiKur() {
   temaDugmesiKur();
   uyeNavGuncelle();
@@ -741,6 +744,8 @@ function konuSayfasi() {
     el("p", "meta", konu.acan + " açtı · " + konu.tarih)
   );
 
+  aktifYanit = null;
+
   const acilis = el("div", "acilis-mesaj");
   acilis.append(el("p", null, konu.mesaj));
 
@@ -751,8 +756,46 @@ function konuSayfasi() {
   ];
   tumYorumlar.forEach((y, i) => liste.append(yorumSatiri(konu.id, y, i)));
 
-  icerik.append(baslik, acilis, liste, yorumFormu(konu));
+  icerik.append(baslik, acilis);
+  if (konu.anket) icerik.append(anketKutusu(konu));
+  icerik.append(liste, yorumFormu(konu));
   canlandir();
+}
+
+/* Anket: kurgu taban oylar + senin localStorage oyun; çubuklar oy verince dolar. */
+function anketKutusu(konu) {
+  const kutu = el("section", "anket js-reveal");
+  const anahtar = "yg-anket-" + konu.id;
+  const govde = el("div");
+  kutu.append(el("h2", null, "📊 " + konu.anket.soru), govde);
+
+  const ciz = () => {
+    govde.textContent = "";
+    const oyum = localStorage.getItem(anahtar);
+    const oyVerildi = oyum !== null;
+    const toplam = konu.anket.secenekler.reduce((t, s) => t + s.taban, 0) + (oyVerildi ? 1 : 0);
+    konu.anket.secenekler.forEach((s, i) => {
+      const oySayisi = s.taban + (oyVerildi && Number(oyum) === i ? 1 : 0);
+      const oran = Math.round((oySayisi / toplam) * 100);
+      const secenek = el("button", "anket-secenek" + (oyVerildi ? " kilitli" : "") + (oyVerildi && Number(oyum) === i ? " secili" : ""));
+      secenek.type = "button";
+      const dolgu = el("span", "anket-dolgu");
+      if (oyVerildi) dolgu.style.width = oran + "%";
+      secenek.append(dolgu, el("span", "anket-metin", s.metin), el("span", "anket-oran", oyVerildi ? "%" + oran : ""));
+      if (!oyVerildi) secenek.addEventListener("click", () => { localStorage.setItem(anahtar, String(i)); ciz(); });
+      govde.append(secenek);
+    });
+    const alt = el("p", "anket-alt", toplam + " oy" + (oyVerildi ? "" : " · oy vermek için seç"));
+    if (oyVerildi) {
+      const geriAl = el("button", "anket-geri", "oyunu geri al");
+      geriAl.type = "button";
+      geriAl.addEventListener("click", () => { localStorage.removeItem(anahtar); ciz(); });
+      alt.append(document.createTextNode(" · "), geriAl);
+    }
+    govde.append(alt);
+  };
+  ciz();
+  return kutu;
 }
 
 /* Rumuzdan deterministik pastel renk: aynı kişi her sayfada aynı renkte görünür. */
@@ -764,6 +807,7 @@ function avatarRengi(rumuz) {
 
 function yorumSatiri(konuId, yorum, sira) {
   const li = el("li", "yorum js-reveal" + (yorum.kullanici ? " kullanici" : ""));
+  li.id = "yorum-" + konuId + "-" + sira;
   const avatar = el("span", "avatar", (yorum.rumuz || "?").charAt(0));
   const uye = uyeGetir();
   if (!yorum.kullanici) avatar.style.background = avatarRengi(yorum.rumuz || "?");
@@ -774,23 +818,54 @@ function yorumSatiri(konuId, yorum, sira) {
   ust.append(el("span", "rumuz", yorum.rumuz), el("span", "tarih", yorum.tarih));
   if (yorum.kullanici) ust.append(el("span", "sen", "sen"));
   balon.append(ust);
-  const yanit = (yorum.metin || "").match(/^@([\p{L}\p{N}_]+)/u);
-  if (yanit) balon.append(el("span", "yanit-cip", "↩ @" + yanit[1]));
-  balon.append(el("p", null, yorum.metin), begeniButonu(konuId, sira, yorum));
+
+  /* Gerçek yanıt: kaydedilmiş alıntı kutusu — tıklayınca kaynağa kayar. */
+  if (yorum.yanit) {
+    const alinti = el("button", "yanit-alinti");
+    alinti.type = "button";
+    alinti.append(el("span", "rumuz", yorum.yanit.rumuz), el("span", "ozet", kisalt(yorum.yanit.metin, 72)));
+    alinti.addEventListener("click", () => {
+      const hedefEl = document.getElementById("yorum-" + konuId + "-" + yorum.yanit.hedef);
+      if (hedefEl) {
+        hedefEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        hedefEl.classList.add("vurgula");
+        setTimeout(() => hedefEl.classList.remove("vurgula"), 1400);
+      }
+    });
+    balon.append(alinti);
+  }
+  const escip = (yorum.metin || "").match(/^@([\p{L}\p{N}_]+)/u);
+  if (!yorum.yanit && escip) balon.append(el("span", "yanit-cip", "↩ @" + escip[1]));
+
+  balon.append(el("p", null, yorum.metin));
+
+  const altSatir = el("div", "balon-alt");
+  altSatir.append(
+    tepkiButonu("begeni", "♥", konuId, sira, yorum),
+    tepkiButonu("alev", "🔥", konuId, sira, yorum),
+    tepkiButonu("tuz", "🧂", konuId, sira, yorum),
+    yanitlaButonu(konuId, sira, yorum)
+  );
+  balon.append(altSatir);
   li.append(balon);
   return li;
 }
 
-function begeniButonu(konuId, sira, yorum) {
-  const anahtar = "yg-begeni-" + konuId + "-" + sira;
-  /* Deterministik kurgu taban: sayaçlar canlı görünsün ama her yüklemede aynı kalsın. */
-  const taban = (yorum.metin.length % 17) + 2;
-  const btn = el("button", "begeni-btn");
+/* Üç tepki tek fabrikadan çıkar; ♥ eski localStorage anahtarını korur (kayıp beğeni olmaz). */
+function tepkiButonu(tur, simge, konuId, sira, yorum) {
+  const anahtar = (tur === "begeni" ? "yg-begeni-" : "yg-tepki-" + tur + "-") + konuId + "-" + sira;
+  const tabanlar = {
+    begeni: (yorum.metin.length % 17) + 2,
+    alev: (yorum.metin.length * 7) % 13,
+    tuz: (yorum.metin.length * 3) % 7
+  };
+  const taban = tabanlar[tur];
+  const btn = el("button", "begeni-btn tepki-" + tur);
   btn.type = "button";
   const ciz = () => {
     const acik = localStorage.getItem(anahtar) === "1";
     btn.setAttribute("aria-pressed", acik ? "true" : "false");
-    btn.textContent = "♥ " + (taban + (acik ? 1 : 0));
+    btn.textContent = simge + " " + (taban + (acik ? 1 : 0));
   };
   btn.addEventListener("click", () => {
     const acik = localStorage.getItem(anahtar) === "1";
@@ -799,6 +874,34 @@ function begeniButonu(konuId, sira, yorum) {
   });
   ciz();
   return btn;
+}
+
+function yanitlaButonu(konuId, sira, yorum) {
+  const btn = el("button", "begeni-btn yanitla-btn", "↩ Yanıtla");
+  btn.type = "button";
+  btn.addEventListener("click", () => {
+    aktifYanit = { rumuz: yorum.rumuz, metin: yorum.metin, hedef: sira };
+    yanitCubuguGuncelle();
+    const alan = document.querySelector(".yorum-form textarea");
+    if (alan) { alan.scrollIntoView({ behavior: "smooth", block: "center" }); alan.focus({ preventScroll: true }); }
+  });
+  return btn;
+}
+
+/* Formun üstündeki "şuna yanıt veriyorsun" çubuğu. */
+function yanitCubuguGuncelle() {
+  const cubuk = document.getElementById("yanit-cubugu");
+  if (!cubuk) return;
+  cubuk.textContent = "";
+  if (!aktifYanit) return;
+  const cip = el("span", "yanit-cip");
+  cip.append(document.createTextNode("↩ " + aktifYanit.rumuz + "'a yanıt veriyorsun — “" + kisalt(aktifYanit.metin, 46) + "”"));
+  const iptal = el("button", "yanit-iptal", "✕");
+  iptal.type = "button";
+  iptal.setAttribute("aria-label", "Yanıtı iptal et");
+  iptal.addEventListener("click", () => { aktifYanit = null; yanitCubuguGuncelle(); });
+  cip.append(iptal);
+  cubuk.append(cip);
 }
 
 function yorumFormu(konu) {
@@ -820,11 +923,13 @@ function yorumFormu(konu) {
     form.append(rumuz);
   }
 
+  const yanitCubugu = el("div");
+  yanitCubugu.id = "yanit-cubugu";
   const metin = el("textarea");
   metin.name = "metin"; metin.placeholder = "Yorumunu yaz…"; metin.required = true; metin.maxLength = 1000;
   const gonder = el("button", null, "Gönder");
   gonder.type = "submit";
-  form.append(metin, gonder);
+  form.append(yanitCubugu, metin, gonder);
 
   if (!uye) {
     const ipucu = el("p", "form-ipucu");
@@ -836,7 +941,8 @@ function yorumFormu(konu) {
 
   form.addEventListener("submit", e => {
     e.preventDefault();
-    yorumKaydet(konu.id, uye ? uye.rumuz : rumuz.value.trim(), metin.value.trim());
+    yorumKaydet(konu.id, uye ? uye.rumuz : rumuz.value.trim(), metin.value.trim(), aktifYanit);
+    aktifYanit = null;
     konuSayfasi(); // listeyi tazele
   });
   return form;
@@ -848,11 +954,14 @@ function yorumFormu(konu) {
 
 const YORUM_ANAHTARI = "yg-yorumlar";
 
-function yorumKaydet(konuId, rumuz, metin) {
+function yorumKaydet(konuId, rumuz, metin, yanit) {
   if (!rumuz || !metin) return;
   const hepsi = JSON.parse(localStorage.getItem(YORUM_ANAHTARI) || "{}");
   const tarih = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
-  (hepsi[konuId] = hepsi[konuId] || []).push({ rumuz, tarih, metin });
+  const kayit = { rumuz, tarih, metin };
+  /* Alıntı snapshot olarak saklanır: liste ileride değişse de alıntı doğru kalır. */
+  if (yanit) kayit.yanit = { rumuz: yanit.rumuz, metin: yanit.metin, hedef: yanit.hedef };
+  (hepsi[konuId] = hepsi[konuId] || []).push(kayit);
   localStorage.setItem(YORUM_ANAHTARI, JSON.stringify(hepsi));
 }
 
