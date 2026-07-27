@@ -1239,6 +1239,71 @@ main {
   margin: 2rem 0 0;
 }
 
+/* ---------- İpuçları ---------- */
+
+.ipucu-akisi { display: flex; flex-direction: column; gap: 1.3rem; margin-top: 1.8rem; }
+
+.ipucu-kart {
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 14px;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  gap: 1.4rem;
+  align-items: flex-start;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.ipucu-kart:hover { border-color: var(--vurgu); box-shadow: var(--parilti); }
+
+.ipucu-kart .konu-kapak { width: 132px; aspect-ratio: 1; border-radius: 12px; overflow: hidden; flex: none; }
+
+.ipucu-liste { list-style: none; margin: 0.3rem 0 0; padding: 0; display: grid; gap: 0.55rem; }
+
+.ipucu {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  line-height: 1.5;
+}
+
+.ipucu .isaret { color: var(--vurgu); font-weight: 700; flex: none; }
+
+.ipucu.spoiler { cursor: pointer; }
+.ipucu.spoiler .isaret { color: #ff9a70; }
+
+.ipucu.spoiler .metin {
+  filter: blur(6px);
+  user-select: none;
+  transition: filter 250ms ease;
+  position: relative;
+}
+
+.ipucu.spoiler:not(.acik):hover .metin { filter: blur(5px); }
+.ipucu.spoiler.acik .metin { filter: none; user-select: auto; }
+.ipucu.spoiler.acik { cursor: default; }
+
+.ipucu.spoiler:not(.acik)::after {
+  content: "spoiler — tıkla";
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #ff9a70;
+  border: 1px solid rgba(255, 122, 77, 0.5);
+  border-radius: 4px;
+  padding: 0.05rem 0.4rem;
+  align-self: center;
+  flex: none;
+}
+
+.ipucu-kart .tartisma-git { margin-top: 1rem; }
+
+@media (max-width: 640px) {
+  .ipucu-kart { flex-direction: column; }
+  .ipucu-kart .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
+}
+
 /* ---------- Benzer görevler ---------- */
 
 .benzer-serit {

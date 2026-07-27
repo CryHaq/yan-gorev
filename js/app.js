@@ -12,8 +12,71 @@ function sayfayiKur() {
   if (sayfa === "oyun.html") oyunSayfasi();
   else if (sayfa === "konu.html") konuSayfasi();
   else if (sayfa === "forum.html") forumSayfasi();
+  else if (sayfa === "ipuclari.html") ipuclariSayfasi();
   else if (sayfa === "uye.html") uyeSayfasi();
   else anaSayfa();
+}
+
+/* ---------- ipuçları sayfası ---------- */
+
+function ipuclariSayfasi() {
+  document.title = "İpuçları — Yan Görev";
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+
+  const baslik = el("header", "forum-basligi");
+  baslik.append(
+    el("p", "eyebrow", "Görev Rehberi · Topluluk Bilgeliği"),
+    el("h1", null, "İpuçları"),
+    el("p", "alt", "Kurgu oyunlarımızın can alıcı sırları — çoğunu forumdaki kavgalardan damıttık. Spoiler içerenler bulanık gelir; görmek isteyen tıklar.")
+  );
+  icerik.append(baslik);
+
+  const liste = el("div", "ipucu-akisi");
+  IPUCLARI.forEach(grup => {
+    const oyun = OYUNLAR.find(o => o.id === grup.oyunId);
+    if (!oyun) return;
+    const kart = el("article", "ipucu-kart js-reveal");
+
+    const kapak = el("a", "konu-kapak");
+    kapak.href = "oyun.html?id=" + oyun.id;
+    kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
+    kapak.append(kapakGorseli(oyun, "(max-width: 640px) 100vw, 200px"));
+    kart.append(kapak);
+
+    const govde = el("div", "konu-govde");
+    const oyunSatiri = el("p", "konu-oyun");
+    const oyunLink = el("a", null, oyun.ad);
+    oyunLink.href = "oyun.html?id=" + oyun.id;
+    oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur));
+    govde.append(oyunSatiri);
+
+    const ul = el("ul", "ipucu-liste");
+    grup.liste.forEach(ip => {
+      const li = el("li", "ipucu" + (ip.spoiler ? " spoiler" : ""));
+      li.append(el("span", "isaret", ip.spoiler ? "☠" : "▸"), el("span", "metin", ip.metin));
+      if (ip.spoiler) {
+        li.setAttribute("role", "button");
+        li.setAttribute("tabindex", "0");
+        li.setAttribute("aria-label", "Spoiler içeren ipucu — görmek için tıkla");
+        const ac = () => li.classList.add("acik");
+        li.addEventListener("click", ac);
+        li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ac(); } });
+      }
+      ul.append(li);
+    });
+    govde.append(ul);
+
+    const git = el("a", "tartisma-git");
+    git.href = "konu.html?id=" + oyun.konuId;
+    git.append(document.createTextNode("Bu ipuçlarını tartış"), el("span", "ok-mini", "→"));
+    govde.append(git);
+
+    kart.append(govde);
+    liste.append(kart);
+  });
+  icerik.append(liste);
+  canlandir();
 }
 
 /* ---------- yardımcılar ---------- */

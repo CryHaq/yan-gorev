@@ -355,6 +355,58 @@ const KONULAR = [
   }
 ];
 
+/* İpuçları: forum kanonuyla birebir tutarlı — çoğu, topluluğun keşfettiklerinin
+   derlenmiş hali. spoiler:true olanlar sayfada bulanık gelir, tıklayınca açılır. */
+const IPUCLARI = [
+  { oyunId: "kul-ve-fener", liste: [
+    { metin: "Akordeoncunun SUSTUĞU yerleri not edin — o sessizlikler müzik değil, harita." },
+    { metin: "Aynaları döndürmeden önce fenerin ışığının size gelmesini bekleyin; ışık sizden hızlıdır, siz yönünü seçin." },
+    { metin: "Müzik kutusu hatırasını sona saklayın: finalde bekçi kulübesindeki fotoğrafın kaderini o belirliyor.", spoiler: true }
+  ]},
+  { oyunId: "gece-vardiyasi", liste: [
+    { metin: "Sepeti boş olup poşet isteyen müşteriye fiş kesmeyin. Nedenini sormayın." },
+    { metin: "İsim anonsu yapılan müşteri markette değilse, birazdan gelecek demektir — reyona sırtınızı dönmeyin." },
+    { metin: "Kasada gözünüze bakan müşteri insan değildir. Vardiyayı sessizce bitirin, sabah konuşursunuz.", spoiler: true }
+  ]},
+  { oyunId: "pas-ve-pervane", liste: [
+    { metin: "Göl üstünde alçak uçuş 'balıkçı modu'nu açar: kanat çırpma bedavaya gelir." },
+    { metin: "Rotaya göre kaplama seçin: keten hız, muşamba termal tırmanış içindir." },
+    { metin: "Balıkçı modundayken pervaneyi tamamen durdurun — leylek kendi kendine süzülür ve gıcırtı kesilir. Oyunun en huzurlu yirmi saniyesi.", spoiler: true }
+  ]},
+  { oyunId: "son-otobus", liste: [
+    { metin: "İlk oynayışta koltuk değiştirmeyin: bir hikâyeyi tam dinlemek, yedisini yarım dinlemekten iyidir." },
+    { metin: "Öğretmenin mektubunu OKUMADAN inerseniz bambaşka bir sahne açılır. İkinci oynayışa değen tek sır bu.", spoiler: true }
+  ]},
+  { oyunId: "bahcivan-krali", liste: [
+    { metin: "Lavantayı gül çitinin İÇİNE değil dışına dizin; arılar önce çite uğrasın." },
+    { metin: "Korkulukları köşelere değil patika kesişimlerine dikin — moral aurası yolda yürüyen köylüye işler." },
+    { metin: "İlk yıl komşuya tohum borçlanMAyın: baharda faizi nadide fide olarak isterler, veremeyince akın moralli gelir." },
+    { metin: "Kraliyet serasındaki eski tahtı sakın satmayın. Sonbaharı bekleyin.", spoiler: true }
+  ]},
+  { oyunId: "derin-uyku", liste: [
+    { metin: "Katmanlardaki takvimlere bakın: zamanın hangi yöne aktığı, hikâyenin kendisidir." },
+    { metin: "Revirdeki uyku kapsüllerini sayın ve mürettebat listesiyle karşılaştırın. Fazlalık kimin?", spoiler: true }
+  ]},
+  { oyunId: "vites", liste: [
+    { metin: "Stadyum otoparkı maç günü dışında açıktır ve telsiz menzilinden tamamen çıkarır." },
+    { metin: "Tersane kapısı 23:00'ten sonra açık — ama artık herkes biliyor, devriye orada bekliyor. Vinç ışıkları sönükse riske değer." },
+    { metin: "Sahil iskelesine radyo Kıyı FM'deyken girin: gizli bir süre denemesi açılır. Ödülü söylemiyoruz.", spoiler: true }
+  ]},
+  { oyunId: "hoyuk", liste: [
+    { metin: "Kırık ay işaretini 'kayıp' diye çevirin: tahıl kaybı borç, insan kaybı yas olur — bağlam gerisini halleder." },
+    { metin: "Dedenizin defterindeki eskizler de kanıt sayılır; 41. sayfayı erken açın." }
+  ]},
+  { oyunId: "meydan", liste: [
+    { metin: "Pehlivan'a karşı büyüye değil peşreve güvenin: tutuşa hiç girmeyin, mesafeyi açın." },
+    { metin: "İlk on saati bir arkadaşla oynayın; öğrenme eğrisi ikiye bölünür, moral iki katına çıkar." }
+  ]},
+  { oyunId: "ocakbasi", liste: [
+    { metin: "Közcü servise KOŞMAZ. Köz başında 'geliyorum' diyen dükkân yakar." },
+    { metin: "İki kişilik oyunda rolleri değil dükkânı bölün: bölge sistemi rol sisteminden iyi çalışır." },
+    { metin: "Bulaşık fedakârlık değil kaleciliktir: iyi bulaşıkçı görünmez ama onsuz hiçbir servis çıkmaz." }
+  ]}
+];
+
 /* Günün Tartışması: gün-of-ay'a göre bu adaylardan biri manşete çıkar. */
 const TARTISMA_ADAYLARI = [
   { konuId: "meydan-denge", yorum: 1 },
