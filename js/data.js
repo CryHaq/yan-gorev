@@ -407,6 +407,13 @@ const IPUCLARI = [
   ]}
 ];
 
+/* En Çok Aranan İpucu: ayın gününe göre döner — demo'da "arama verisi"nin dürüst hali. */
+const ARANAN_ADAYLAR = [
+  { oyunId: "pas-ve-pervane", ipucu: 0 },
+  { oyunId: "gece-vardiyasi", ipucu: 1 },
+  { oyunId: "bahcivan-krali", ipucu: 0 }
+];
+
 /* Günün Tartışması: gün-of-ay'a göre bu adaylardan biri manşete çıkar. */
 const TARTISMA_ADAYLARI = [
   { konuId: "meydan-denge", yorum: 1 },

@@ -28,20 +28,49 @@ function ipuclariSayfasi() {
   baslik.append(
     el("p", "eyebrow", "Görev Rehberi · Topluluk Bilgeliği"),
     el("h1", null, "İpuçları"),
-    el("p", "alt", "Kurgu oyunlarımızın can alıcı sırları — çoğunu forumdaki kavgalardan damıttık. Spoiler içerenler bulanık gelir; görmek isteyen tıklar.")
+    el("p", "alt", "Kurgu oyunlarımızın can alıcı sırları — çoğunu forumdaki kavgalardan damıttık. Spoiler içerenler bulanık gelir; görmek isteyen tıklar."),
+    aramaKutusu()
   );
   icerik.append(baslik);
 
-  const liste = el("div", "ipucu-akisi");
+  /* En çok aranan ipucu: forum manşetiyle aynı kalıp, ayın gününe göre döner. */
+  const aday = ARANAN_ADAYLAR[new Date().getDate() % ARANAN_ADAYLAR.length];
+  const adayGrup = IPUCLARI.find(g => g.oyunId === aday.oyunId);
+  const adayOyun = OYUNLAR.find(o => o.id === aday.oyunId);
+  const adayIpucu = adayGrup && adayGrup.liste[aday.ipucu];
+  if (adayIpucu && adayOyun) {
+    const manset = el("article", "ipucu-kart forum-one-cikan js-reveal");
+    const mansetKapak = el("a", "konu-kapak");
+    mansetKapak.href = "oyun.html?id=" + adayOyun.id;
+    mansetKapak.setAttribute("aria-label", adayOyun.ad + " incelemesine git");
+    mansetKapak.append(kapakGorseli(adayOyun, "(max-width: 640px) 100vw, 480px"));
+    manset.append(mansetKapak);
+    const mansetGovde = el("div", "konu-govde");
+    mansetGovde.append(el("p", "one-cikan-eyebrow", "💡 En Çok Aranan İpucu"));
+    const mansetOyun = el("p", "konu-oyun");
+    const mansetLink = el("a", null, adayOyun.ad);
+    mansetLink.href = "oyun.html?id=" + adayOyun.id;
+    mansetOyun.append(mansetLink, el("span", "tur-etiket", adayOyun.tur));
+    mansetGovde.append(mansetOyun, el("p", "buyuk-ipucu", "“" + adayIpucu.metin + "”"));
+    const mansetGit = el("a", "tartisma-git");
+    mansetGit.href = "konu.html?id=" + adayOyun.konuId;
+    mansetGit.append(document.createTextNode("Bu ipucunu tartış"), el("span", "ok-mini", "→"));
+    mansetGovde.append(mansetGit);
+    manset.append(mansetGovde);
+    icerik.append(manset);
+  }
+
+  const liste = el("div", "forum-izgara");
   IPUCLARI.forEach(grup => {
     const oyun = OYUNLAR.find(o => o.id === grup.oyunId);
     if (!oyun) return;
-    const kart = el("article", "ipucu-kart js-reveal");
+    const kart = el("article", "ipucu-kart dikey js-reveal");
+    kart.id = "ipucu-" + oyun.id;
 
     const kapak = el("a", "konu-kapak");
     kapak.href = "oyun.html?id=" + oyun.id;
     kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
-    kapak.append(kapakGorseli(oyun, "(max-width: 640px) 100vw, 200px"));
+    kapak.append(kapakGorseli(oyun, "(max-width: 640px) 100vw, 346px"));
     kart.append(kapak);
 
     const govde = el("div", "konu-govde");
@@ -341,6 +370,16 @@ function aramaKutusu() {
     });
     tumKonular().forEach(k => {
       if (k.baslik.toLocaleLowerCase("tr").includes(s)) bulunan.push({ metin: k.baslik, href: "konu.html?id=" + k.id });
+    });
+    /* İpuçlarında da ara — ama spoiler'lar arama sonucuna SIZMAZ. */
+    IPUCLARI.forEach(grup => {
+      const oyun = OYUNLAR.find(o => o.id === grup.oyunId);
+      grup.liste.forEach(ip => {
+        if (ip.spoiler) return;
+        if (ip.metin.toLocaleLowerCase("tr").includes(s)) {
+          bulunan.push({ metin: "💡 " + (oyun ? oyun.ad + ": " : "") + kisalt(ip.metin, 64), href: "ipuclari.html#ipucu-" + grup.oyunId });
+        }
+      });
     });
     if (!bulunan.length) {
       sonuclar.append(el("p", "arama-bos", "Sonuç yok — belki o görev henüz yazılmadı."));

@@ -1299,6 +1299,24 @@ main {
 
 .ipucu-kart .tartisma-git { margin-top: 1rem; }
 
+/* Izgara varyantı: forumdaki dikey kartlarla aynı dil */
+.ipucu-kart.dikey { flex-direction: column; gap: 0; padding: 0 0 1.2rem; overflow: hidden; }
+.ipucu-kart.dikey .konu-kapak { width: 100%; aspect-ratio: 16 / 9; border-radius: 0; }
+.ipucu-kart.dikey .konu-govde { padding: 1rem 1.3rem 0; display: flex; flex-direction: column; flex: 1; }
+.ipucu-kart.dikey .ipucu-liste { margin-bottom: 0.9rem; }
+.ipucu-kart.dikey .tartisma-git { margin-top: auto; align-self: flex-start; }
+.forum-izgara .ipucu-kart.dikey { flex: 1 1 300px; max-width: 346px; }
+
+/* Manşet ipucu: forum manşetiyle aynı çerçeve, içinde büyük serif alıntı */
+.ipucu-kart.forum-one-cikan { padding: 0; }
+.buyuk-ipucu {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 2.6vw, 1.7rem);
+  line-height: 1.4;
+  margin: 0.4rem 0 0;
+  max-width: 56ch;
+}
+
 @media (max-width: 640px) {
   .ipucu-kart { flex-direction: column; }
   .ipucu-kart .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
