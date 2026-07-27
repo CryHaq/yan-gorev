@@ -37,25 +37,46 @@ body {
   line-height: 1.65;
 }
 
-/* Oyun menüsü atmosferi: yavaşça süzülen renk bulutları, içerik panellerinin arkasında. */
+/* Su gibi akan RGB zemin: iki bulanık ışık katmanı ters yönlerde süzülür,
+   hue-rotate ile renkler kobalt→mor→turkuaz arasında döner. */
 body::before {
   content: "";
   position: fixed;
-  inset: -22%;
+  inset: -30%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(45% 40% at 20% 25%, rgba(43, 86, 255, 0.55), transparent 66%),
+    radial-gradient(40% 38% at 82% 14%, rgba(158, 60, 255, 0.45), transparent 66%),
+    radial-gradient(46% 44% at 76% 80%, rgba(0, 190, 205, 0.42), transparent 66%),
+    radial-gradient(36% 32% at 10% 86%, rgba(255, 92, 140, 0.34), transparent 66%);
+  animation: suAk 26s ease-in-out infinite alternate;
+  will-change: transform, filter;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: -30%;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(42% 38% at 18% 22%, rgba(39, 67, 199, 0.34), transparent 70%),
-    radial-gradient(36% 34% at 82% 12%, rgba(124, 58, 190, 0.22), transparent 70%),
-    radial-gradient(40% 40% at 78% 78%, rgba(18, 122, 128, 0.20), transparent 70%),
-    radial-gradient(32% 30% at 10% 88%, rgba(255, 122, 77, 0.13), transparent 70%);
-  animation: auroraKay 38s ease-in-out infinite alternate;
+    radial-gradient(34% 30% at 58% 42%, rgba(84, 122, 255, 0.30), transparent 60%),
+    radial-gradient(30% 28% at 32% 68%, rgba(0, 220, 185, 0.26), transparent 60%);
+  animation: suAkKarsi 34s ease-in-out infinite alternate;
+  will-change: transform, filter;
 }
 
-@keyframes auroraKay {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate3d(2.5%, -2%, 0) rotate(2deg) scale(1.07); }
-  100% { transform: translate3d(-2.5%, 2%, 0) rotate(-2deg) scale(1.03); }
+@keyframes suAk {
+  0%   { transform: translate3d(-4%, -2%, 0) rotate(-3deg) scale(1);    filter: blur(58px) hue-rotate(0deg); }
+  50%  { transform: translate3d(3%, 3%, 0)   rotate(2deg)  scale(1.12); filter: blur(64px) hue-rotate(48deg); }
+  100% { transform: translate3d(-2%, 4%, 0)  rotate(-1deg) scale(1.05); filter: blur(58px) hue-rotate(-36deg); }
+}
+
+@keyframes suAkKarsi {
+  0%   { transform: translate3d(3%, 2%, 0)   rotate(2deg)  scale(1.06); filter: blur(70px) hue-rotate(0deg); }
+  50%  { transform: translate3d(-3%, -3%, 0) rotate(-2deg) scale(1);    filter: blur(76px) hue-rotate(-40deg); }
+  100% { transform: translate3d(2%, -4%, 0)  rotate(1deg)  scale(1.1);  filter: blur(70px) hue-rotate(30deg); }
 }
 
 a { color: var(--vurgu); text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -1082,7 +1103,7 @@ main {
   .kart:hover, .yorum-form button:hover, .forum-liste a:hover .isaret { transform: none; }
   .kart:hover .kart-kapak img { transform: none; }
   .hero-gorsel, .gunun-tartismasi, .hero-icerik, .hero .puan-rozet { animation: none; }
-  body::before { animation: none; }
+  body::before, body::after { animation: none; filter: blur(60px); }
   .forum-konu, .renk-secenek, .hero-cta, .hero-cta .ok, .konu-kapak img { transition: none; }
   .forum-konu:hover, .renk-secenek:hover, .hero-cta:hover .ok { transform: none; }
   .forum-konu:hover .konu-kapak img { transform: none; }
