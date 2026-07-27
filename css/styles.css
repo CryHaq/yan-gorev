@@ -1,1 +1,518 @@
-/* Yan Görev — tasarım sistemi Task 3'te gelecek */
+/* ============================================================
+   Yan Görev — tasarım sistemi
+   Kimlik: dergi = ANA GÖREV, forum = YAN GÖREVLER.
+   Tek vurgu rengi (çini kobaltı) kullanıcı katkısıyla seçildi.
+   ============================================================ */
+
+:root {
+  --zemin: #fafaf8;
+  --kagit: #ffffff;
+  --murekkep: #161513;
+  --soluk: #6d6a63;
+  --cizgi: #e3e1da;
+  --vurgu: #2743c7; /* 🎓 çini kobaltı — yeni ekip arkadaşının seçimi */
+  --vurgu-zemin: #eef0fb;
+  --serif: "Besley", "Iowan Old Style", Georgia, serif;
+  --grotesk: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --govde-olcu: 68ch;
+  --sayfa-genislik: 1080px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: var(--grotesk);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+}
+
+a { color: var(--vurgu); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--vurgu);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+img { max-width: 100%; }
+
+/* ---------- Üst bar ---------- */
+
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--sayfa-genislik);
+  margin: 0 auto;
+  padding: 1.4rem 1.25rem 1.1rem;
+  border-bottom: 3px double var(--murekkep);
+}
+
+.logo {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.7rem;
+  letter-spacing: -0.01em;
+  color: var(--murekkep);
+  text-decoration: none;
+}
+
+.logo::after {
+  content: "®";
+  font-size: 0.55em;
+  vertical-align: super;
+  color: var(--vurgu);
+}
+
+.site-header nav { display: flex; gap: 1.4rem; }
+
+.site-header nav a {
+  color: var(--murekkep);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.site-header nav a:hover { color: var(--vurgu); }
+
+/* ---------- Genel yerleşim ---------- */
+
+main {
+  max-width: var(--sayfa-genislik);
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+
+.bolum-baslik {
+  font-family: var(--grotesk);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--vurgu);
+  margin: 3.2rem 0 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bolum-baslik::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--cizgi);
+}
+
+/* ---------- Manşet (ANA GÖREV) ---------- */
+
+.hero {
+  padding: 3rem 0 2.6rem;
+  border-bottom: 1px solid var(--cizgi);
+  position: relative;
+}
+
+.hero .eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--vurgu);
+  margin: 0 0 1rem;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.1rem;
+  max-width: 14ch;
+}
+
+.hero h1 a { color: inherit; text-decoration: none; }
+.hero h1 a:hover { color: var(--vurgu); }
+
+.hero .ozet {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--soluk);
+  max-width: 46ch;
+  margin: 0 0 1.4rem;
+}
+
+/* ---------- Puan damgası ---------- */
+
+.puan-rozet {
+  display: inline-block;
+  font-family: var(--serif);
+  font-weight: 700;
+  color: var(--vurgu);
+  border: 2.5px solid var(--vurgu);
+  border-radius: 6px;
+  padding: 0.35rem 0.8rem;
+  transform: rotate(-2.5deg);
+  background: var(--kagit);
+  box-shadow: 2px 2px 0 var(--vurgu-zemin);
+}
+
+.puan-rozet .sayi { font-size: 1.6rem; line-height: 1; }
+.puan-rozet .bolen { font-size: 0.85rem; opacity: 0.7; }
+
+.hero .puan-rozet {
+  position: absolute;
+  top: 3.4rem;
+  right: 0;
+  transform: rotate(3deg);
+}
+
+.hero .puan-rozet .sayi { font-size: 2.2rem; }
+
+/* ---------- İnceleme kartları ---------- */
+
+.kart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.kart {
+  background: var(--kagit);
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  padding: 1.4rem 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.kart:hover { border-color: var(--vurgu); transform: translateY(-2px); }
+
+.kart .tur {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--soluk);
+  margin: 0;
+}
+
+.kart h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.kart h3 a { color: inherit; text-decoration: none; }
+.kart h3 a:hover { color: var(--vurgu); }
+
+.kart .ozet { margin: 0; color: var(--soluk); font-size: 0.95rem; flex: 1; }
+
+.kart .puan-rozet { align-self: flex-start; transform: rotate(-1.5deg); }
+.kart .puan-rozet .sayi { font-size: 1.15rem; }
+
+/* ---------- Forum listesi (YAN GÖREVLER) ---------- */
+
+.forum-liste { list-style: none; margin: 0; padding: 0; }
+
+.forum-liste li {
+  border-bottom: 1px solid var(--cizgi);
+}
+
+.forum-liste a {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 0.25rem;
+  color: var(--murekkep);
+  text-decoration: none;
+}
+
+.forum-liste a:hover { background: var(--vurgu-zemin); }
+
+.forum-liste .isaret {
+  color: var(--vurgu);
+  font-weight: 700;
+  flex: none;
+}
+
+.forum-liste .baslik { font-weight: 600; flex: 1; min-width: 0; }
+
+.forum-liste .meta {
+  color: var(--soluk);
+  font-size: 0.85rem;
+  flex: none;
+  white-space: nowrap;
+}
+
+/* ---------- İnceleme sayfası ---------- */
+
+.inceleme-baslik { padding: 2.6rem 0 1.6rem; border-bottom: 1px solid var(--cizgi); position: relative; }
+
+.inceleme-baslik .eyebrow {
+  font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.22em; color: var(--vurgu); margin: 0 0 0.9rem;
+}
+
+.inceleme-baslik h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.9rem;
+  max-width: 16ch;
+}
+
+.inceleme-baslik .puan-rozet { position: absolute; top: 2.9rem; right: 0; }
+.inceleme-baslik .puan-rozet .sayi { font-size: 1.9rem; }
+
+.kunye {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  color: var(--soluk);
+}
+
+.kunye b { color: var(--murekkep); font-weight: 600; }
+
+.inceleme-govde { max-width: var(--govde-olcu); padding-top: 1.8rem; }
+
+.inceleme-govde p { margin: 0 0 1.3rem; }
+
+.inceleme-govde p:first-of-type::first-letter {
+  font-family: var(--serif);
+  font-size: 3.2em;
+  float: left;
+  line-height: 0.85;
+  padding: 0.06em 0.12em 0 0;
+  color: var(--vurgu);
+}
+
+.arti-eksi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin: 2.2rem 0;
+  max-width: var(--govde-olcu);
+}
+
+.arti-eksi section {
+  background: var(--kagit);
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  padding: 1.1rem 1.3rem;
+}
+
+.arti-eksi h2 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin: 0 0 0.6rem;
+}
+
+.arti-eksi .arti h2 { color: var(--vurgu); }
+.arti-eksi .eksi h2 { color: var(--soluk); }
+
+.arti-eksi ul { margin: 0; padding-left: 1.1rem; }
+.arti-eksi li { margin-bottom: 0.35rem; }
+
+.forum-cta {
+  display: inline-block;
+  font-weight: 600;
+  margin-top: 0.6rem;
+}
+
+/* ---------- Forum konusu ---------- */
+
+.konu-baslik { padding: 2.6rem 0 1.4rem; border-bottom: 1px solid var(--cizgi); }
+
+.konu-baslik .eyebrow {
+  font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.22em; color: var(--vurgu); margin: 0 0 0.9rem;
+}
+
+.konu-baslik h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  margin: 0 0 0.6rem;
+}
+
+.konu-baslik .meta { color: var(--soluk); font-size: 0.9rem; margin: 0; }
+
+.acilis-mesaj {
+  max-width: var(--govde-olcu);
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--cizgi);
+  font-size: 1.1rem;
+}
+
+.yorumlar { list-style: none; margin: 0; padding: 0; max-width: var(--govde-olcu); }
+
+.yorum {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid var(--cizgi);
+}
+
+.yorum .avatar {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--vurgu-zemin);
+  color: var(--vurgu);
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.15rem;
+  display: grid;
+  place-items: center;
+  text-transform: uppercase;
+}
+
+.yorum.kullanici .avatar { background: var(--vurgu); color: #fff; }
+
+.yorum .govde { flex: 1; min-width: 0; }
+
+.yorum .ust {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.yorum .rumuz { font-weight: 700; font-size: 0.95rem; }
+.yorum .tarih { color: var(--soluk); font-size: 0.8rem; }
+
+.yorum .sen {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--vurgu);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+}
+
+.yorum p { margin: 0 0 0.5rem; }
+
+.begeni-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--soluk);
+  background: none;
+  border: 1px solid var(--cizgi);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.begeni-btn:hover { color: var(--vurgu); border-color: var(--vurgu); }
+
+.begeni-btn[aria-pressed="true"] {
+  color: #fff;
+  background: var(--vurgu);
+  border-color: var(--vurgu);
+}
+
+/* ---------- Yorum formu ---------- */
+
+.yorum-form {
+  max-width: var(--govde-olcu);
+  margin-top: 2rem;
+  background: var(--kagit);
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  padding: 1.4rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.yorum-form h2 {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.yorum-form input,
+.yorum-form textarea {
+  font: inherit;
+  color: var(--murekkep);
+  background: var(--zemin);
+  border: 1px solid var(--cizgi);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  width: 100%;
+}
+
+.yorum-form textarea { min-height: 110px; resize: vertical; }
+
+.yorum-form input:focus,
+.yorum-form textarea:focus { border-color: var(--vurgu); outline: none; }
+
+.yorum-form button {
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--vurgu);
+  border: none;
+  border-radius: 6px;
+  padding: 0.65rem 1.4rem;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.yorum-form button:hover { filter: brightness(1.12); }
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  border-top: 3px double var(--murekkep);
+  max-width: var(--sayfa-genislik);
+  margin: 0 auto;
+  padding: 1.4rem 1.25rem 2.4rem;
+  color: var(--soluk);
+  font-size: 0.85rem;
+}
+
+/* ---------- Duyarlılık ve erişilebilirlik ---------- */
+
+@media (max-width: 640px) {
+  .hero .puan-rozet,
+  .inceleme-baslik .puan-rozet {
+    position: static;
+    margin-bottom: 1rem;
+  }
+  .arti-eksi { grid-template-columns: 1fr; }
+  .forum-liste .meta { display: none; }
+  .site-header { flex-direction: column; gap: 0.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .kart, .begeni-btn { transition: none; }
+  .kart:hover { transform: none; }
+}
