@@ -3,6 +3,7 @@
 const OYUNLAR = [
   {
     id: "kul-ve-fener",
+    gorsel: "img/kul-ve-fener.jpg",
     ad: "Kül ve Fener",
     tur: "Aksiyon-Macera",
     studyo: "Karakutu Interactive",
@@ -23,6 +24,7 @@ const OYUNLAR = [
   },
   {
     id: "gece-vardiyasi",
+    gorsel: "img/gece-vardiyasi.jpg",
     ad: "Gece Vardiyası",
     tur: "Korku / Simülasyon",
     studyo: "Uykusuz Oyun",
@@ -43,6 +45,7 @@ const OYUNLAR = [
   },
   {
     id: "pas-ve-pervane",
+    gorsel: "img/pas-ve-pervane.jpg",
     ad: "Pas ve Pervane",
     tur: "Zanaat / Keşif",
     studyo: "Tersane Dijital",
@@ -63,6 +66,7 @@ const OYUNLAR = [
   },
   {
     id: "son-otobus",
+    gorsel: "img/son-otobus.jpg",
     ad: "Son Otobüs",
     tur: "Anlatı",
     studyo: "Peron İşleri",
@@ -83,6 +87,7 @@ const OYUNLAR = [
   },
   {
     id: "bahcivan-krali",
+    gorsel: "img/bahcivan-krali.jpg",
     ad: "Bahçıvan Kralı",
     tur: "Strateji / Şehir Kurma",
     studyo: "Yeşim Stüdyo",
@@ -103,6 +108,7 @@ const OYUNLAR = [
   },
   {
     id: "derin-uyku",
+    gorsel: "img/derin-uyku.jpg",
     ad: "Derin Uyku",
     tur: "Bilimkurgu / Keşif",
     studyo: "Mercan Yazılım",

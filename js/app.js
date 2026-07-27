@@ -41,24 +41,39 @@ function anaSayfa() {
 
   const manset = OYUNLAR.find(o => o.manset) || OYUNLAR[0];
   const hero = el("section", "hero");
-  hero.append(el("p", "eyebrow", "Ana Görev · Haftanın İncelemesi"));
+  const heroGorsel = el("img", "hero-gorsel");
+  heroGorsel.src = manset.gorsel;
+  heroGorsel.alt = manset.ad + " oyununun tanıtım görseli";
+  const heroIcerik = el("div", "hero-icerik");
+  heroIcerik.append(el("p", "eyebrow", "Ana Görev · Haftanın İncelemesi"));
   const h1 = el("h1");
   const h1a = el("a", null, manset.ad);
   h1a.href = "oyun.html?id=" + manset.id;
   h1.append(h1a);
-  hero.append(h1, puanRozet(manset.puan), el("p", "ozet", manset.ozet));
+  heroIcerik.append(h1, el("p", "ozet", manset.ozet));
+  hero.append(heroGorsel, puanRozet(manset.puan), heroIcerik);
 
   const incelemeBaslik = el("h2", "bolum-baslik", "İncelemeler");
   incelemeBaslik.id = "incelemeler";
   const grid = el("div", "kart-grid");
   OYUNLAR.filter(o => !o.manset).forEach(o => {
     const kart = el("article", "kart");
-    kart.append(el("p", "tur", o.tur));
+    const kapak = el("a", "kart-kapak");
+    kapak.href = "oyun.html?id=" + o.id;
+    kapak.setAttribute("aria-label", o.ad + " incelemesine git");
+    const kapakImg = el("img");
+    kapakImg.src = o.gorsel;
+    kapakImg.alt = o.ad + " oyununun tanıtım görseli";
+    kapakImg.loading = "lazy";
+    kapak.append(kapakImg);
+    const govde = el("div", "kart-govde");
+    govde.append(el("p", "tur", o.tur));
     const h3 = el("h3");
     const a = el("a", null, o.ad);
     a.href = "oyun.html?id=" + o.id;
     h3.append(a);
-    kart.append(h3, el("p", "ozet", o.ozet), puanRozet(o.puan));
+    govde.append(h3, el("p", "ozet", o.ozet), puanRozet(o.puan));
+    kart.append(kapak, govde);
     grid.append(kart);
   });
 
@@ -88,6 +103,13 @@ function oyunSayfasi() {
   document.title = oyun.ad + " incelemesi — Yan Görev";
   const icerik = document.getElementById("icerik");
   icerik.textContent = "";
+
+  const kapak = el("div", "inceleme-kapak");
+  const kapakImg = el("img");
+  kapakImg.src = oyun.gorsel;
+  kapakImg.alt = oyun.ad + " oyununun tanıtım görseli";
+  kapak.append(kapakImg);
+  icerik.append(kapak);
 
   const baslik = el("header", "inceleme-baslik");
   baslik.append(el("p", "eyebrow", "İnceleme"), el("h1", null, oyun.ad), puanRozet(oyun.puan));
@@ -158,15 +180,27 @@ function konuSayfasi() {
   icerik.append(baslik, acilis, liste, yorumFormu(konu));
 }
 
+/* Rumuzdan deterministik pastel renk: aynı kişi her sayfada aynı renkte görünür. */
+function avatarRengi(rumuz) {
+  let h = 0;
+  for (const harf of rumuz) h = (h * 31 + harf.charCodeAt(0)) % 360;
+  return "hsl(" + h + " 62% 66%)";
+}
+
 function yorumSatiri(konuId, yorum, sira) {
   const li = el("li", "yorum" + (yorum.kullanici ? " kullanici" : ""));
-  li.append(el("span", "avatar", (yorum.rumuz || "?").charAt(0)));
-  const govde = el("div", "govde");
+  const avatar = el("span", "avatar", (yorum.rumuz || "?").charAt(0));
+  if (!yorum.kullanici) avatar.style.background = avatarRengi(yorum.rumuz || "?");
+  li.append(avatar);
+  const balon = el("div", "balon");
   const ust = el("div", "ust");
   ust.append(el("span", "rumuz", yorum.rumuz), el("span", "tarih", yorum.tarih));
   if (yorum.kullanici) ust.append(el("span", "sen", "sen"));
-  govde.append(ust, el("p", null, yorum.metin), begeniButonu(konuId, sira, yorum));
-  li.append(govde);
+  balon.append(ust);
+  const yanit = (yorum.metin || "").match(/^@([\p{L}\p{N}_]+)/u);
+  if (yanit) balon.append(el("span", "yanit-cip", "↩ @" + yanit[1]));
+  balon.append(el("p", null, yorum.metin), begeniButonu(konuId, sira, yorum));
+  li.append(balon);
   return li;
 }
 
