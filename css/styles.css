@@ -160,6 +160,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- Üst bar ---------- */
 
+/* Cam header: arkadaki RGB akışı blur'un içinden geçer, çizgi yok. */
 .site-header {
   position: sticky;
   top: 0;
@@ -168,11 +169,14 @@ img { max-width: 100%; display: block; }
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.1rem 1.25rem 0.9rem;
-  background: var(--header-zemin);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 3px double var(--cizgi);
+  padding: 1.15rem 1.25rem 1rem;
+  background: linear-gradient(180deg, rgba(12, 15, 30, 0.52) 0%, rgba(12, 15, 30, 0.08) 100%);
+  backdrop-filter: blur(18px) saturate(1.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+}
+
+html[data-tema="gunduz"] .site-header {
+  background: linear-gradient(180deg, rgba(244, 243, 238, 0.62) 0%, rgba(244, 243, 238, 0.10) 100%);
 }
 
 .site-header > * { max-width: var(--sayfa-genislik); }
@@ -199,13 +203,21 @@ img { max-width: 100%; display: block; }
 .site-header nav a {
   color: var(--murekkep);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1.02rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.11em;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55);
 }
 
+html[data-tema="gunduz"] .site-header nav a { text-shadow: none; }
+
 .site-header nav a:hover { color: var(--vurgu); text-shadow: var(--parilti); }
+
+.site-header nav a.aktif {
+  color: var(--vurgu);
+  text-shadow: 0 0 16px rgba(107, 139, 255, 0.55);
+}
 
 /* ---------- Genel yerleşim ---------- */
 

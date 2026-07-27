@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", sayfayiKur);
 function sayfayiKur() {
   temaDugmesiKur();
   uyeNavGuncelle();
+  navAktifIsaretle();
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
   if (!document.getElementById("icerik")) return; /* 404 gibi statik sayfalar kendi içeriğini taşır */
   const sayfa = location.pathname.split("/").pop() || "index.html";
@@ -510,6 +511,15 @@ function temaDugmesiKur() {
   });
   ciz();
   nav.append(dugme);
+}
+
+/* Bulunulan sayfanın nav başlığı kobaltla işaretlenir. */
+function navAktifIsaretle() {
+  const sayfa = location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".site-header nav a:not(#nav-uye)").forEach(a => {
+    const hedef = (a.getAttribute("href") || "").split("#")[0];
+    if (hedef === sayfa) a.classList.add("aktif");
+  });
 }
 
 function uyeNavGuncelle() {
