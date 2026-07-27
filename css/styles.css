@@ -667,6 +667,222 @@ main {
 .forum-liste .isaret { transition: transform 150ms ease; }
 .forum-liste a:hover .isaret { transform: translateX(5px); }
 
+/* ---------- Üye navigasyonu ---------- */
+
+.site-header nav .nav-uye {
+  border: 1px solid var(--vurgu);
+  border-radius: 999px;
+  padding: 0.25rem 0.85rem;
+  color: var(--vurgu);
+}
+
+.site-header nav .nav-uye.girisli {
+  background: var(--vurgu-derin);
+  border-color: var(--vurgu-derin);
+  color: #fff;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Forum sayfası ---------- */
+
+.forum-basligi { padding: 2.6rem 0 1.6rem; border-bottom: 1px solid var(--cizgi); }
+
+.forum-basligi .eyebrow {
+  font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.22em; color: var(--vurgu); margin: 0 0 0.8rem;
+}
+
+.forum-basligi h1 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 6.5vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.7rem;
+  text-shadow: 0 0 30px rgba(107, 139, 255, 0.25);
+}
+
+.forum-basligi .alt { color: var(--soluk); font-size: 1.1rem; margin: 0; max-width: 52ch; }
+
+.forum-konular { display: flex; flex-direction: column; gap: 1.3rem; margin-top: 1.8rem; }
+
+.forum-konu {
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 14px;
+  padding: 1.5rem 1.7rem 1.3rem;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.forum-konu:hover {
+  border-color: var(--vurgu);
+  transform: translateY(-3px);
+  box-shadow: var(--parilti);
+}
+
+.forum-konu .eyebrow {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.16em; color: var(--vurgu); margin: 0 0 0.5rem;
+}
+
+.forum-konu h2 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  line-height: 1.12;
+  margin: 0 0 0.45rem;
+}
+
+.forum-konu h2 a { color: inherit; text-decoration: none; }
+.forum-konu h2 a:hover { color: var(--vurgu); }
+
+.forum-konu .meta { color: var(--soluk); font-size: 0.85rem; margin: 0 0 0.7rem; }
+
+.forum-konu .onizleme {
+  color: #c3c9e6;
+  margin: 0 0 0.8rem;
+  max-width: 78ch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.forum-konu .son-mesaj {
+  margin: 0;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--cizgi);
+  color: var(--soluk);
+  font-size: 0.9rem;
+}
+
+.forum-konu .son-mesaj .rumuz { color: var(--vurgu); font-weight: 700; }
+
+/* ---------- Üyelik sayfası ---------- */
+
+.uye-kart {
+  margin-top: 1.8rem;
+  max-width: 560px;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 16px;
+  padding: 1.8rem;
+  display: grid;
+  gap: 1.1rem;
+  justify-items: start;
+}
+
+.avatar.buyuk {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  color: #0c0f1e;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 2.3rem;
+  display: grid;
+  place-items: center;
+  text-transform: uppercase;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--parilti);
+}
+
+.uye-form { display: grid; gap: 1rem; width: 100%; }
+
+.uye-form input[name="rumuz"] {
+  font: inherit;
+  color: var(--murekkep);
+  background: var(--zemin);
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  width: 100%;
+}
+
+.uye-form input[name="rumuz"]:focus { border-color: var(--vurgu); outline: none; box-shadow: var(--parilti); }
+
+.renkler { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+
+.renk-secenek {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  transition: transform 130ms ease;
+}
+
+.renk-secenek:hover { transform: scale(1.12); }
+
+.renk-secenek input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.renk-secenek:has(input:checked) {
+  outline: 3px solid var(--vurgu);
+  outline-offset: 2px;
+}
+
+.uye-form button[type="submit"] {
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(160deg, var(--vurgu), var(--vurgu-derin));
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem 1.5rem;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.uye-form button[type="submit"]:hover { box-shadow: var(--parilti); }
+
+.cikis-btn {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--soluk);
+  background: none;
+  border: 1px solid var(--cizgi);
+  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  justify-self: start;
+}
+
+.cikis-btn:hover { color: var(--murekkep); border-color: var(--soluk); }
+
+.demo-not { color: var(--soluk); font-size: 0.85rem; margin: 0; max-width: 46ch; }
+
+.form-kimlik {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  color: var(--soluk);
+  font-size: 0.95rem;
+}
+
+.avatar.mini {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #0c0f1e;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: grid;
+  place-items: center;
+  text-transform: uppercase;
+}
+
+.form-ipucu { margin: 0; font-size: 0.85rem; }
+
 /* ---------- Duyarlılık ve erişilebilirlik ---------- */
 
 @media (max-width: 640px) {
@@ -687,6 +903,8 @@ main {
   .kart:hover, .yorum-form button:hover, .forum-liste a:hover .isaret { transform: none; }
   .kart:hover .kart-kapak img { transform: none; }
   .hero-gorsel, .gunun-tartismasi, .hero-icerik, .hero .puan-rozet { animation: none; }
+  .forum-konu, .renk-secenek { transition: none; }
+  .forum-konu:hover, .renk-secenek:hover { transform: none; }
   .js-reveal { opacity: 1; }
   .js-reveal.gorunur { animation: none; }
 }

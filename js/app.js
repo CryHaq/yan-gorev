@@ -4,9 +4,12 @@
 document.addEventListener("DOMContentLoaded", sayfayiKur);
 
 function sayfayiKur() {
+  uyeNavGuncelle();
   const sayfa = location.pathname.split("/").pop() || "index.html";
   if (sayfa === "oyun.html") oyunSayfasi();
   else if (sayfa === "konu.html") konuSayfasi();
+  else if (sayfa === "forum.html") forumSayfasi();
+  else if (sayfa === "uye.html") uyeSayfasi();
   else anaSayfa();
 }
 
@@ -95,8 +98,151 @@ function anaSayfa() {
 
   const tartisma = gununTartismasi();
   if (tartisma) icerik.append(tartisma);
-  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste);
+  const tumForum = el("a", "forum-cta", "Forumun tamamı: büyük başlıklar, büyük kavgalar →");
+  tumForum.href = "forum.html";
+  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, tumForum);
   canlandir();
+}
+
+/* ---------- forum sayfası ---------- */
+
+function forumSayfasi() {
+  document.title = "Yan Görev Forum";
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+
+  const baslik = el("header", "forum-basligi");
+  baslik.append(
+    el("p", "eyebrow", "Yan Görevler · Topluluk"),
+    el("h1", null, "Yan Görev Forum"),
+    el("p", "alt", "Oyun biter, sohbet başlar. Kurgu topluluğumuzun meydanı.")
+  );
+  icerik.append(baslik);
+
+  const konular = el("div", "forum-konular");
+  KONULAR.forEach(k => {
+    const oyun = OYUNLAR.find(o => o.konuId === k.id);
+    const kutu = el("article", "forum-konu js-reveal");
+    if (oyun) kutu.append(el("p", "eyebrow", oyun.ad + " · " + oyun.tur));
+    const h2 = el("h2");
+    const a = el("a", null, k.baslik);
+    a.href = "konu.html?id=" + k.id;
+    h2.append(a);
+    kutu.append(h2);
+    const toplam = k.yorumlar.length + kullaniciYorumlari(k.id).length;
+    kutu.append(el("p", "meta", k.acan + " açtı · " + k.tarih + " · " + toplam + " yorum"));
+    kutu.append(el("p", "onizleme", k.mesaj));
+    const kullaniciSon = kullaniciYorumlari(k.id).slice(-1)[0];
+    const son = kullaniciSon || k.yorumlar[k.yorumlar.length - 1];
+    if (son) {
+      const sonEl = el("p", "son-mesaj");
+      sonEl.append(el("span", "rumuz", "Son söz — " + son.rumuz + ": "), document.createTextNode(kisalt(son.metin, 90)));
+      kutu.append(sonEl);
+    }
+    konular.append(kutu);
+  });
+  icerik.append(konular);
+  canlandir();
+}
+
+function kisalt(metin, sinir) {
+  return metin.length > sinir ? metin.slice(0, sinir - 1).trimEnd() + "…" : metin;
+}
+
+/* ---------- demo üyelik ----------
+   Dürüst sahtelik: üyelik yalnızca bu tarayıcının localStorage'ında yaşar,
+   sunucuya hiçbir şey gitmez; bu yüzden şifre de İSTEMİYORUZ. */
+
+const AVATAR_RENKLERI = [
+  "hsl(8 72% 62%)", "hsl(35 82% 58%)", "hsl(95 45% 55%)", "hsl(160 52% 52%)",
+  "hsl(200 68% 58%)", "hsl(231 70% 68%)", "hsl(280 55% 65%)", "hsl(330 65% 65%)"
+];
+
+function uyeGetir() {
+  try { return JSON.parse(localStorage.getItem("yg-uye")) || null; } catch (e) { return null; }
+}
+
+function uyeNavGuncelle() {
+  const nav = document.getElementById("nav-uye");
+  if (!nav) return;
+  const uye = uyeGetir();
+  nav.textContent = uye ? uye.rumuz : "Üye Ol";
+  nav.classList.toggle("girisli", !!uye);
+}
+
+function uyeSayfasi() {
+  document.title = "Üyelik — Yan Görev";
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+  const uye = uyeGetir();
+
+  const baslik = el("header", "forum-basligi");
+  baslik.append(
+    el("p", "eyebrow", "Yan Görev · Üyelik"),
+    el("h1", null, uye ? "Merhaba, " + uye.rumuz : "Aramıza Katıl"),
+    el("p", "alt", uye ? "Profilini buradan güncelleyebilirsin." : "Bir rumuz seç, rengini kap, tartışmaya karış.")
+  );
+  icerik.append(baslik);
+
+  const kart = el("section", "uye-kart");
+  const onizleme = el("span", "avatar buyuk", (uye ? uye.rumuz : "?").charAt(0));
+  onizleme.style.background = uye ? uye.renk : AVATAR_RENKLERI[5];
+  kart.append(onizleme);
+
+  const form = el("form", "uye-form");
+  const rumuzInput = el("input");
+  rumuzInput.name = "rumuz";
+  rumuzInput.placeholder = "Rumuzun";
+  rumuzInput.required = true;
+  rumuzInput.maxLength = 24;
+  rumuzInput.value = uye ? uye.rumuz : "";
+  rumuzInput.addEventListener("input", () => {
+    onizleme.textContent = (rumuzInput.value.trim() || "?").charAt(0);
+  });
+
+  const renkler = el("div", "renkler");
+  AVATAR_RENKLERI.forEach((renk, i) => {
+    const etiket = el("label", "renk-secenek");
+    etiket.style.background = renk;
+    etiket.setAttribute("aria-label", "Avatar rengi " + (i + 1));
+    const radyo = el("input");
+    radyo.type = "radio";
+    radyo.name = "renk";
+    radyo.value = renk;
+    radyo.checked = uye ? uye.renk === renk : i === 5;
+    radyo.addEventListener("change", () => { onizleme.style.background = renk; });
+    etiket.append(radyo);
+    renkler.append(etiket);
+  });
+
+  const gonder = el("button", null, uye ? "Profili Güncelle" : "Üye Ol");
+  gonder.type = "submit";
+  form.append(rumuzInput, renkler, gonder);
+
+  if (uye) {
+    const cikis = el("button", "cikis-btn", "Çıkış yap");
+    cikis.type = "button";
+    cikis.addEventListener("click", () => {
+      localStorage.removeItem("yg-uye");
+      uyeNavGuncelle();
+      uyeSayfasi();
+    });
+    form.append(cikis);
+  }
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const rumuz = rumuzInput.value.trim();
+    if (!rumuz) return;
+    const secili = form.querySelector("input[name=renk]:checked");
+    localStorage.setItem("yg-uye", JSON.stringify({ rumuz: rumuz, renk: secili ? secili.value : AVATAR_RENKLERI[5] }));
+    uyeNavGuncelle();
+    uyeSayfasi();
+  });
+
+  kart.append(form);
+  kart.append(el("p", "demo-not", "Demo üyelik: bilgin yalnızca bu tarayıcının localStorage'ında saklanır, sunucuya hiçbir şey gönderilmez. Bu yüzden şifre de istemiyoruz."));
+  icerik.append(kart);
 }
 
 /* Günün Tartışması: adaylar arasından ayın gününe göre seçilir — her gün başka alıntı. */
@@ -231,7 +377,9 @@ function avatarRengi(rumuz) {
 function yorumSatiri(konuId, yorum, sira) {
   const li = el("li", "yorum js-reveal" + (yorum.kullanici ? " kullanici" : ""));
   const avatar = el("span", "avatar", (yorum.rumuz || "?").charAt(0));
+  const uye = uyeGetir();
   if (!yorum.kullanici) avatar.style.background = avatarRengi(yorum.rumuz || "?");
+  else if (uye && uye.renk) avatar.style.background = uye.renk;
   li.append(avatar);
   const balon = el("div", "balon");
   const ust = el("div", "ust");
@@ -266,19 +414,41 @@ function begeniButonu(konuId, sira, yorum) {
 }
 
 function yorumFormu(konu) {
+  const uye = uyeGetir();
   const form = el("form", "yorum-form");
   form.id = "yorum-form";
   form.append(el("h2", null, "Söze karış"));
-  const rumuz = el("input");
-  rumuz.name = "rumuz"; rumuz.placeholder = "Rumuzun"; rumuz.required = true; rumuz.maxLength = 24;
+
+  let rumuz = null;
+  if (uye) {
+    const kimlik = el("p", "form-kimlik");
+    const mini = el("span", "avatar mini", uye.rumuz.charAt(0));
+    mini.style.background = uye.renk || AVATAR_RENKLERI[5];
+    kimlik.append(mini, document.createTextNode(uye.rumuz + " olarak yazıyorsun"));
+    form.append(kimlik);
+  } else {
+    rumuz = el("input");
+    rumuz.name = "rumuz"; rumuz.placeholder = "Rumuzun"; rumuz.required = true; rumuz.maxLength = 24;
+    form.append(rumuz);
+  }
+
   const metin = el("textarea");
   metin.name = "metin"; metin.placeholder = "Yorumunu yaz…"; metin.required = true; metin.maxLength = 1000;
   const gonder = el("button", null, "Gönder");
   gonder.type = "submit";
-  form.append(rumuz, metin, gonder);
+  form.append(metin, gonder);
+
+  if (!uye) {
+    const ipucu = el("p", "form-ipucu");
+    const git = el("a", null, "Üye olursan rumuzun ve rengin hatırlanır →");
+    git.href = "uye.html";
+    ipucu.append(git);
+    form.append(ipucu);
+  }
+
   form.addEventListener("submit", e => {
     e.preventDefault();
-    yorumKaydet(konu.id, rumuz.value.trim(), metin.value.trim());
+    yorumKaydet(konu.id, uye ? uye.rumuz : rumuz.value.trim(), metin.value.trim());
     konuSayfasi(); // listeyi tazele
   });
   return form;
