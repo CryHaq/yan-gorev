@@ -1505,6 +1505,61 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
   .ipucu-kart .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
 }
 
+/* ---------- Canlılık: çevrimiçi + yazıyor + aktivite ---------- */
+
+.canli-nokta {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  margin-right: 0.35rem;
+  animation: nabiz 2.2s ease-in-out infinite;
+}
+
+@keyframes nabiz {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+}
+
+.cevrimici { margin: 0.8rem 0 0; color: #6ee7b7; font-weight: 600; font-size: 0.92rem; }
+html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
+
+.yorum.yaziyor .balon { display: flex; align-items: center; gap: 0.6rem; }
+.yorum.yaziyor .rumuz { font-weight: 600; font-size: 0.85rem; color: var(--soluk); }
+
+.yaziyor-noktalar { display: inline-flex; gap: 4px; }
+
+.yaziyor-noktalar span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--soluk);
+  animation: zipla 1.1s ease-in-out infinite;
+}
+
+.yaziyor-noktalar span:nth-child(2) { animation-delay: 0.15s; }
+.yaziyor-noktalar span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes zipla {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.aktivite {
+  margin-top: 1.6rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: 12px;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.aktivite-satiri { margin: 0; font-size: 0.9rem; color: var(--soluk); }
+.aktivite-satiri b { color: var(--murekkep); }
+.aktivite-satiri a { font-weight: 600; }
+
 /* ---------- Benzer görevler ---------- */
 
 .benzer-serit {
@@ -1698,6 +1753,8 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
   .forum-konu:hover, .renk-secenek:hover, .hero-cta:hover .ok { transform: none; }
   .forum-konu:hover .konu-kapak img { transform: none; }
   .kelime-ic { transform: none; animation: none; }
+  .canli-nokta, .yaziyor-noktalar span { animation: none; }
+  .anket-dolgu { transition: none; }
   .js-reveal { opacity: 1; }
   .js-reveal.gorunur { animation: none; }
 }

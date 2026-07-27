@@ -271,9 +271,26 @@ function anaSayfa() {
 
   const tartisma = gununTartismasi();
   if (tartisma) icerik.append(tartisma);
+  /* Son aktivite şeridi: bugünün konularının son sözleri, kurgu zaman damgalarıyla. */
+  const aktivite = el("div", "aktivite js-reveal");
+  const sureler = ["az önce", "4 dk önce", "11 dk önce"];
+  tumKonular().filter(k => k.tarih === "27 Temmuz 2026" && k.yorumlar.length).slice(0, 3).forEach((k, i) => {
+    const son = k.yorumlar[k.yorumlar.length - 1];
+    const satir = el("p", "aktivite-satiri");
+    const git = el("a", null, kisalt(k.baslik, 46));
+    git.href = "konu.html?id=" + k.id;
+    satir.append(
+      el("span", "canli-nokta"),
+      el("b", null, " " + son.rumuz),
+      document.createTextNode(" " + (sureler[i] || "bugün") + " yazdı → "),
+      git
+    );
+    aktivite.append(satir);
+  });
+
   const tumForum = el("a", "forum-cta", "Forumun tamamı: büyük başlıklar, büyük kavgalar →");
   tumForum.href = "forum.html";
-  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, tumForum);
+  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, aktivite, tumForum);
   canlandir();
 }
 
@@ -288,7 +305,8 @@ function forumSayfasi() {
   baslik.append(
     el("p", "eyebrow", "Yan Görevler · Topluluk"),
     el("h1", null, "Yan Görev Forum"),
-    el("p", "alt", "Oyun biter, sohbet başlar. Kurgu topluluğumuzun meydanı.")
+    el("p", "alt", "Oyun biter, sohbet başlar. Kurgu topluluğumuzun meydanı."),
+    cevrimiciSayaci()
   );
   const parametreler = new URLSearchParams(location.search);
   const etiketSecimi = parametreler.get("etiket") || "";
@@ -400,6 +418,45 @@ function filtreCubugu(etiketSecimi, siralama) {
     kutu.append(cip);
   });
   return kutu;
+}
+
+/* Deterministik "çevrimiçi" sayacı: saate bağlı, herkes aynı sayıyı görür — yalan rastgelelik yok. */
+function cevrimiciSayaci() {
+  const simdi = new Date();
+  const sayi = 28 + (simdi.getHours() * 7 + simdi.getDay() * 5) % 41;
+  const p = el("p", "cevrimici");
+  p.append(el("span", "canli-nokta"), document.createTextNode(" Şu an " + sayi + " oyuncu meydanda"));
+  return p;
+}
+
+/* "Yazıyor…" balonu: konudaki gerçek rumuzlardan sırayla; reduced-motion'da hiç başlamaz. */
+let yaziyorZamanlayici = null;
+
+function yaziyorBaslat(konu, liste) {
+  if (yaziyorZamanlayici) { clearTimeout(yaziyorZamanlayici); yaziyorZamanlayici = null; }
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const rumuzlar = [...new Set(konu.yorumlar.map(y => y.rumuz))];
+  if (!rumuzlar.length) return;
+  let tur = 0;
+  const dongu = () => {
+    const rumuz = rumuzlar[tur % rumuzlar.length];
+    tur++;
+    const li = el("li", "yorum yaziyor");
+    const avatar = el("span", "avatar", rumuz.charAt(0));
+    avatar.style.background = avatarRengi(rumuz);
+    const balon = el("div", "balon");
+    balon.append(el("span", "rumuz", rumuz + " yazıyor"));
+    const noktalar = el("span", "yaziyor-noktalar");
+    noktalar.append(el("span"), el("span"), el("span"));
+    balon.append(noktalar);
+    li.append(avatar, balon);
+    liste.append(li);
+    yaziyorZamanlayici = setTimeout(() => {
+      li.remove();
+      yaziyorZamanlayici = setTimeout(dongu, 12000 + (tur % 3) * 5000);
+    }, 3800);
+  };
+  yaziyorZamanlayici = setTimeout(dongu, 6000);
 }
 
 function okunanlar() {
@@ -829,6 +886,7 @@ function konuSayfasi() {
   icerik.append(baslik, acilis);
   if (konu.anket) icerik.append(anketKutusu(konu));
   icerik.append(liste, yorumFormu(konu));
+  yaziyorBaslat(konu, liste);
   canlandir();
 }
 
