@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oyun — Radar · Yan Görev</title>
+  <meta name="description" content="Radar oyun sayfası: tanım, Radar Notu, tanıtım videosu ve meydan konuları.">
+  <script>document.documentElement.dataset.tema = localStorage.getItem("yg-tema") || "gece";</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0c0f1e">
+  <meta property="og:site_name" content="Yan Görev">
+  <meta property="og:title" content="Oyun — Radar · Yan Görev">
+  <meta property="og:description" content="Dünyada şu an en çok oynanan gerçek oyunlar.">
+  <meta property="og:image" content="https://yan-gorev.vercel.app/og.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="atla" href="#icerik">İçeriğe atla</a>
+  <header class="site-header">
+    <a class="logo" href="index.html"><img class="logo-isaret" src="favicon.svg" alt="">Yan Görev</a>
+    <nav>
+      <a href="index.html#incelemeler">İncelemeler</a>
+      <a href="forum.html">Forum</a>
+      <a href="ipuclari.html">İpuçları</a>
+      <a href="radar.html">Radar</a>
+      <a href="uye.html" id="nav-profil" class="nav-profil" aria-label="Giriş ve üyelik"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.2 4.8-6 8-6s6.5 1.8 8 6"/></svg></a>
+    </nav>
+  </header>
+  <main id="icerik"></main>
+  <footer class="site-footer">
+    <div class="footer-ust">
+      <div class="footer-marka">
+        <img class="footer-logo" src="favicon.svg" alt="Yan Görev logosu">
+        <p class="footer-slogan">Oyun biter, sohbet başlar.</p>
+      </div>
+      <nav class="footer-kolon" aria-label="Bölümler">
+        <p class="footer-baslik">Bölümler</p>
+        <a href="index.html#incelemeler">İncelemeler</a>
+        <a href="forum.html">Forum</a>
+        <a href="ipuclari.html">İpuçları</a>
+        <a href="radar.html">Radar</a>
+      </nav>
+      <nav class="footer-kolon" aria-label="Topluluk">
+        <p class="footer-baslik">Topluluk</p>
+        <a href="uye.html">Üye ol</a>
+        <a href="forum.html?sirala=hareketli">En hareketli kavgalar</a>
+        <a href="konu.html?id=meydan-denge">Pehlivan kavgası</a>
+      </nav>
+      <div class="footer-kolon">
+        <p class="footer-baslik">Hakkında</p>
+        <a href="ekip.html">Ekip ve künye</a>
+        <p class="footer-not">Yan Görev kurgusal bir demo yayınıdır. Tüm oyunlar, stüdyolar ve kullanıcılar hayal ürünüdür.</p>
+      </div>
+    </div>
+    <p class="footer-alt">Yan Görev® — ışıklar fenerden.</p>
+  </footer>
+  <script src="js/data.js" defer></script>
+  <script src="js/radar-verisi.js" defer></script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

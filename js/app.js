@@ -24,6 +24,7 @@ function sayfayiKur() {
     else if (sayfa === "profil.html") profilSayfasi();
     else if (sayfa === "ekip.html") ekipSayfasi();
     else if (sayfa === "radar.html") radarSayfasi();
+    else if (sayfa === "radar-oyun.html") radarOyunSayfasi();
     else anaSayfa();
   } catch (hata) {
     console.error("Yan Görev render hatası:", hata);
@@ -1167,9 +1168,7 @@ function radarSayfasi() {
   const izgara = el("div", "forum-izgara ipucu-izgara");
   RADAR.oyunlar.forEach(o => {
     const kart = el("a", "radar-kart js-reveal");
-    kart.href = "https://store.steampowered.com/app/" + o.appid;
-    kart.target = "_blank";
-    kart.rel = "noopener noreferrer";
+    kart.href = "radar-oyun.html?appid=" + o.appid;
     const kapak = el("span", "radar-kapak");
     const img = el("img");
     img.src = "https://cdn.akamai.steamstatic.com/steam/apps/" + o.appid + "/header.jpg";
@@ -1186,6 +1185,150 @@ function radarSayfasi() {
   icerik.append(izgara);
   icerik.append(el("p", "radar-not", "Veriler ve görseller Steam'e aittir · anlık görüntü: " + RADAR.guncelleme + " · araç/istemci girdileri (ör. Wallpaper Engine) listeden elenmiştir."));
   canlandir();
+}
+
+/* Radar oyun sayfası: sol üst tanım + Radar Notu, sağ üst tanıtım videosu,
+   altta meydanın o oyun için açtığı konular. */
+function radarOyunSayfasi() {
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+  if (typeof RADAR === "undefined") return;
+  const appid = parseInt(new URLSearchParams(location.search).get("appid"), 10);
+  const o = RADAR.oyunlar.find(x => x.appid === appid) || RADAR.oyunlar[0];
+  document.title = o.ad + " — Radar · Yan Görev";
+
+  const baslik = el("header", "forum-basligi");
+  const geri = el("a", "geri-izi", "← Radar'a dön");
+  geri.href = "radar.html";
+  baslik.append(geri, el("p", "eyebrow radar-eyebrow", "Gerçek Dünya · #" + o.sira + " · " + o.tur), el("h1", null, o.ad));
+  icerik.append(baslik);
+
+  const kolonlar = el("div", "iki-kolon radar-detay");
+  const sol = el("div", "kolon-icerik");
+
+  /* Tanım İLK, sonra sitenin görüşü (Radar Notu), sonra künye. */
+  sol.append(el("p", "radar-tanim", o.tanim));
+  const notPanel = el("section", "yan-panel radar-notu");
+  notPanel.append(el("p", "yan-baslik", "✦ Radar Notu — Yan Görev'in görüşü"), el("p", null, o.not));
+  sol.append(notPanel);
+  const kunye = el("ul", "kunye radar-kunye");
+  [["Geliştirici", o.gelistirici], ["Çıkış", o.cikis], ["Tür", o.tur], ["Bugünkü zirve", o.zirve.toLocaleString("tr-TR") + " oyuncu"]]
+    .forEach(([ad, deger]) => {
+      const li = el("li");
+      li.append(el("b", null, ad + ": "), document.createTextNode(deger));
+      kunye.append(li);
+    });
+  sol.append(kunye);
+
+  const sag = el("aside", "yan-kutu");
+  const videoPanel = el("div", "yan-panel radar-video-paneli");
+  videoPanel.append(el("p", "yan-baslik", "Tanıtım Videosu"));
+  const cerceve = el("div", "radar-video");
+  if (o.video && o.video.mp4) {
+    const video = document.createElement("video");
+    video.src = o.video.mp4;
+    video.controls = true;
+    video.muted = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.poster = "https://cdn.akamai.steamstatic.com/steam/apps/" + o.appid + "/header.jpg";
+    cerceve.append(video);
+    videoPanel.append(cerceve, el("p", "radar-not", "Video: Steam mağaza fragmanı (yayıncıya aittir)."));
+  } else if (o.video && o.video.yt) {
+    const iframe = document.createElement("iframe");
+    iframe.src = "https://www.youtube-nocookie.com/embed/" + o.video.yt;
+    iframe.title = o.ad + " resmî fragman";
+    iframe.loading = "lazy";
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.setAttribute("allow", "accelerometer; encrypted-media; picture-in-picture");
+    cerceve.append(iframe);
+    videoPanel.append(cerceve, el("p", "radar-not", "Video: YouTube resmî gömme (yayıncıya aittir)."));
+  }
+  const steamLink = el("a", "tartisma-git");
+  steamLink.href = "https://store.steampowered.com/app/" + o.appid;
+  steamLink.target = "_blank";
+  steamLink.rel = "noopener noreferrer";
+  steamLink.append(document.createTextNode("Steam'de aç"), el("span", "ok-mini", "↗"));
+  videoPanel.append(steamLink);
+  sag.append(videoPanel);
+  kolonlar.append(sol, sag);
+  icerik.append(kolonlar);
+
+  /* Alt: meydanın bu oyun için açtığı konular. */
+  const forumBaslik = el("h2", "bolum-baslik", "Meydanda Bu Oyun");
+  icerik.append(forumBaslik);
+  const konular = kullaniciKonulari().filter(k => k.radarAppid === o.appid);
+  if (konular.length) {
+    const liste = el("ul", "forum-liste");
+    konular.forEach(k => {
+      const li = el("li");
+      const a = el("a");
+      a.href = "konu.html?id=" + k.id;
+      const toplam = k.yorumlar.length + kullaniciYorumlari(k.id).length;
+      a.append(el("span", "isaret", "▸"), el("span", "baslik", k.baslik), el("span", "meta", k.acan + " · " + toplam + " yorum"));
+      li.append(a);
+      liste.append(li);
+    });
+    icerik.append(liste);
+  } else {
+    const bos = el("div", "bos-durum");
+    bos.append(el("p", null, "Meydan bu oyun hakkında henüz konuşmadı. İlk konuyu sen aç."));
+    icerik.append(bos);
+  }
+  icerik.append(radarKonuAcPaneli(o));
+  canlandir();
+}
+
+/* Radar oyununa konu açma: kurgu evrendekiyle aynı depo, radarAppid imzalı. */
+function radarKonuAcPaneli(o) {
+  const kutu = el("div", "konu-ac");
+  const uye = uyeGetir();
+  if (!uye) {
+    const ipucu = el("p", "form-ipucu");
+    const git = el("a", null, "Konu açmak için üye ol →");
+    git.href = "uye.html";
+    ipucu.append(git);
+    kutu.append(ipucu);
+    return kutu;
+  }
+  const acButon = el("button", "tartisma-git");
+  acButon.type = "button";
+  acButon.append(document.createTextNode(o.ad + " için konu aç"), el("span", "ok-mini", "+"));
+  const form = el("form", "konu-ac-form gizli");
+  const baslikGirdi = el("input");
+  baslikGirdi.name = "baslik"; baslikGirdi.placeholder = "Konu başlığı"; baslikGirdi.required = true; baslikGirdi.maxLength = 90;
+  const mesajGirdi = el("textarea");
+  mesajGirdi.name = "mesaj"; mesajGirdi.placeholder = "Tartışmayı başlat…"; mesajGirdi.required = true; mesajGirdi.maxLength = 1000;
+  const gonder = el("button", null, "Konuyu aç");
+  gonder.type = "submit";
+  form.append(baslikGirdi, mesajGirdi, gonder);
+  acButon.addEventListener("click", () => form.classList.toggle("gizli"));
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const yeni = {
+      id: "u-" + Date.now(),
+      etiket: "Radar",
+      radarAppid: o.appid,
+      baslik: baslikGirdi.value.trim(),
+      acan: uye.rumuz,
+      tarih: new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" }),
+      mesaj: mesajGirdi.value.trim(),
+      yorumlar: []
+    };
+    if (!yeni.baslik || !yeni.mesaj) { formHata(form, "Başlık ve mesaj boş olamaz."); return; }
+    const liste = kullaniciKonulari();
+    liste.push(yeni);
+    if (!guvenliYaz("yg-konular", JSON.stringify(liste))) {
+      formHata(form, "Konu kaydedilemedi — tarayıcı depolaması kapalı ya da dolu olabilir.");
+      return;
+    }
+    location.href = "konu.html?id=" + yeni.id;
+  });
+  kutu.append(acButon, form);
+  return kutu;
 }
 
 /* ---------- ekip / künye sayfası ---------- */

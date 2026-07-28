@@ -2067,6 +2067,39 @@ html[data-tema="gunduz"] .radar-sira { color: #b3592a; }
 
 .radar-sayi { color: var(--soluk); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
 
+.radar-tanim {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--metin-yumusak);
+  max-width: 62ch;
+  margin: 0.4rem 0 1.4rem;
+}
+
+.radar-notu { max-width: 62ch; margin-bottom: 1.4rem; }
+.radar-notu .yan-baslik { color: #ffb26b; }
+html[data-tema="gunduz"] .radar-notu .yan-baslik { color: #b3592a; }
+.radar-notu p:last-child { margin: 0; font-size: 1.02rem; }
+
+.radar-kunye { margin-top: 0.4rem; }
+
+.radar-video {
+  border-radius: var(--r-s);
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  margin-bottom: 0.7rem;
+}
+
+.radar-video video, .radar-video iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+.radar-video-paneli .radar-not { margin: 0 0 0.9rem; }
+.radar-detay { margin-top: 0.5rem; }
+
 .radar-not {
   margin: 1.8rem 0 0;
   color: var(--soluk);
