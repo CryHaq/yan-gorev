@@ -581,6 +581,17 @@ function konuKarti(veri, oneCikan) {
     kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
     kapak.append(kapakGorseli(oyun, oneCikan ? "(max-width: 640px) 100vw, 480px" : "(max-width: 640px) 100vw, 346px", oneCikan));
     kutu.append(kapak);
+  } else if (k.radarAppid) {
+    /* Radar konusu: kapak Steam'in kendi CDN'inden, gerçek dünya sayfasına gider. */
+    const kapak = el("a", "konu-kapak");
+    kapak.href = "radar-oyun.html?appid=" + k.radarAppid;
+    kapak.setAttribute("aria-label", (k.radarAd || "Radar oyunu") + " sayfasına git");
+    const img = el("img");
+    img.src = "https://cdn.akamai.steamstatic.com/steam/apps/" + k.radarAppid + "/header.jpg";
+    img.alt = (k.radarAd || "Radar oyunu") + " — Steam görseli";
+    img.loading = "lazy";
+    kapak.append(img);
+    kutu.append(kapak);
   }
 
   /* Sade kart: yalnız başlık (oyun) + alt başlık (konu) + tartışma baloncuğu. */
@@ -591,6 +602,12 @@ function konuKarti(veri, oneCikan) {
     const oyunLink = el("a", null, oyun.ad);
     oyunLink.href = "oyun.html?id=" + oyun.id;
     oyunSatiri.append(oyunLink, el("span", "tur-etiket", oyun.tur), el("span", "etiket-mini", k.etiket || "Tartışma"));
+    govde.append(oyunSatiri);
+  } else if (k.radarAppid) {
+    const oyunSatiri = el("p", "konu-oyun");
+    const oyunLink = el("a", null, k.radarAd || "Radar oyunu");
+    oyunLink.href = "radar-oyun.html?appid=" + k.radarAppid;
+    oyunSatiri.append(oyunLink, el("span", "tur-etiket gercek", "Gerçek Dünya"), el("span", "etiket-mini", "Radar"));
     govde.append(oyunSatiri);
   }
   const h2 = el("h2", "konu-alt-baslik");
@@ -638,7 +655,7 @@ function kalpPuani(k) {
 
 function filtreCubugu(etiketSecimi, siralama) {
   const kutu = el("div", "filtre-cubugu");
-  ["", "Tartışma", "Rehber", "Teori", "Canlı"].forEach(e => {
+  ["", "Tartışma", "Rehber", "Teori", "Canlı", "Radar"].forEach(e => {
     const cip = el("a", "filtre-cip" + (etiketSecimi === e ? " aktif" : ""), e || "Tümü");
     cip.href = forumUrl(1, e, siralama);
     kutu.append(cip);
@@ -1260,7 +1277,7 @@ function radarOyunSayfasi() {
   /* Alt: meydanın bu oyun için açtığı konular. */
   const forumBaslik = el("h2", "bolum-baslik", "Meydanda Bu Oyun");
   icerik.append(forumBaslik);
-  const konular = kullaniciKonulari().filter(k => k.radarAppid === o.appid);
+  const konular = tumKonular().filter(k => k.radarAppid === o.appid);
   if (konular.length) {
     const liste = el("ul", "forum-liste");
     konular.forEach(k => {
@@ -1583,6 +1600,27 @@ function konuSayfasi() {
 function yanKutuKonu(konu) {
   const yan = el("aside", "yan-kutu js-reveal");
   const oyun = konuOyunu(konu);
+
+  if (!oyun && konu.radarAppid) {
+    /* Radar konusu: yan panel gerçek oyunun kartını taşır. */
+    const panel = el("div", "yan-panel");
+    const kapak = el("a", "yan-oyun-kapak");
+    kapak.href = "radar-oyun.html?appid=" + konu.radarAppid;
+    const img = el("img");
+    img.src = "https://cdn.akamai.steamstatic.com/steam/apps/" + konu.radarAppid + "/header.jpg";
+    img.alt = (konu.radarAd || "Radar oyunu") + " — Steam görseli";
+    img.loading = "lazy";
+    kapak.append(img);
+    panel.append(kapak);
+    const adSatiri = el("p", "yan-oyun-ad");
+    adSatiri.append(el("span", null, konu.radarAd || "Radar oyunu"));
+    panel.append(adSatiri, el("p", "yan-oyun-tur", "Gerçek Dünya · Radar"));
+    const git = el("a", "tartisma-git");
+    git.href = "radar-oyun.html?appid=" + konu.radarAppid;
+    git.append(document.createTextNode("Radar sayfasına git"), el("span", "ok-mini", "→"));
+    panel.append(git);
+    yan.append(panel);
+  }
 
   if (oyun) {
     const panel = el("div", "yan-panel");

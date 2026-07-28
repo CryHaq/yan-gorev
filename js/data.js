@@ -370,6 +370,129 @@ const KONULAR = [
       { rumuz: "cifte_sis", tarih: "27 Temmuz 2026", metin: "Kimse söylememiş: iki kişilik oynuyorsanız görevleri BÖLMEYİN, ikiniz de her işi yapın ama dükkânın yarısını paylaşın. Bölge sistemi rol sisteminden iyi çalışıyor, deneyin." },
       { rumuz: "acemi_ciragi", tarih: "27 Temmuz 2026", metin: "@cifte_sis bunu okuyup kardeşimle denedim, ilk kez kira çıktı. Bu forum resmen aile terapisi." }
     ]
+  },
+
+  /* ---- RADAR konuları: meydan sakinleri GERÇEK oyunları konuşuyor.
+     etiket "Radar" + radarAppid/radarAd — kurgu evrenden ayrı işaretlenir. ---- */
+  {
+    id: "radar-730", etiket: "Radar", radarAppid: 730, radarAd: "Counter-Strike 2",
+    baslik: "CS2 Premier: rank sistemi adil mi, şans mı?",
+    acan: "meydanokuyan", tarih: "28 Temmuz 2026",
+    mesaj: "Veriyle konuşalım: yüz maçlık serimde kazanç oranım yüzde elli iki ama puanım yerinde sayıyor. Sistem mi beni tartıyor, ben mi kendimi kandırıyorum? Premier deneyimlerinizi sayılarla bekliyorum.",
+    yorumlar: [
+      { rumuz: "kispetli", tarih: "28 Temmuz 2026", metin: "Herkes kendi elo cehennemini anlatır, kimse düşürdüğü bombayı anlatmaz. Sayı istiyorsan: benimki yüzde kırk dokuz ve hak ediyorum." },
+      { rumuz: "sazandisi", tarih: "28 Temmuz 2026", metin: "Rank sistemi aynadır. Beğenmeyen aynaya değil peşreve baksın — bu oyunda peşrev, ekonomi turudur." },
+      { rumuz: "ruzgarokuyan", tarih: "28 Temmuz 2026", metin: "@sazandisi bir kere anlaşıyoruz: eko turu okumayan, rank konuşmasın. Ama sistemin takım yükünü bireye yazması ayrı bir gerçek." },
+      { rumuz: "yedekkulubesi", tarih: "28 Temmuz 2026", metin: "İki gündür Premier'deyim ve fikrimi dört kez değiştirdim. CS böyle bir oyun; alışın." }
+    ]
+  },
+  {
+    id: "radar-578080", etiket: "Radar", radarAppid: 578080, radarAd: "PUBG: BATTLEGROUNDS",
+    baslik: "PUBG'ye 2026'da dönüş: o gerginlik hâlâ orada mı?",
+    acan: "gecegezen", tarih: "28 Temmuz 2026",
+    mesaj: "Yıllar sonra döndüm ve ilk çemberde kalbim yine ağzıma geldi. Yeni başlayan kalabalığı gitmiş, kalanlar keskinleşmiş. Dönenler: neyi özlemişsiniz, neyi özlememişsiniz?",
+    yorumlar: [
+      { rumuz: "sonmusteri", tarih: "28 Temmuz 2026", metin: "Sessiz on dakika, kalp krizi on saniye — bu formül eskimiyor. Özlemediğim tek şey: envanter ekranında vurulmak." },
+      { rumuz: "karayelli", tarih: "28 Temmuz 2026", metin: "Erangel'e inince ev gibi hissettim. Devriye yok ama üç ev ötede biri hep var." },
+      { rumuz: "uykusuz42", tarih: "28 Temmuz 2026", metin: "Gece vardiyasından çıkıp gece PUBG açmak... anons teorim burada da işliyor: sesi duyulan, birazdan gelir." },
+      { rumuz: "peron9", tarih: "28 Temmuz 2026", metin: "Dört sonu olan oyunlar sevdiğimi sanırdım; PUBG'nin tek sonu var ve hâlâ en dürüstü." }
+    ]
+  },
+  {
+    id: "radar-570", etiket: "Radar", radarAppid: 570, radarAd: "Dota 2",
+    baslik: "Dota 2'ye yeni başlayan arkadaşa ilk beş kahraman",
+    acan: "gugukkusu", tarih: "28 Temmuz 2026",
+    mesaj: "Kardeşimi Dota'ya başlatıyorum ve kahraman havuzu okyanus. Uzlaşmacı bir liste arıyorum: öğretici ama küstürmeyen beş kahraman. Sizinkiler?",
+    yorumlar: [
+      { rumuz: "katmankazici", tarih: "28 Temmuz 2026", metin: "Katman katman gidin: önce hattı tutmayı öğreten biri, sonra harita okutan biri. İsimden önce rol öğretin." },
+      { rumuz: "fircadarbesi", tarih: "28 Temmuz 2026", metin: "@katmankazici doğru ama bir eğlence kahramanı şart — ilk hafta eğlenmeyen ikinci haftayı görmüyor." },
+      { rumuz: "malakadar", tarih: "28 Temmuz 2026", metin: "Tabloyu bozmayayım ama: ilk elli maç hangi kahraman olduğunuzun önemi yok, haritanın neresinde öldüğünüzün önemi var." },
+      { rumuz: "tozlufirca", tarih: "28 Temmuz 2026", metin: "Bu başlık için üye olmuştum zaten; kardeşinize söyleyin, defter tutsun. Dota defter oyunudur." }
+    ]
+  },
+  {
+    id: "radar-1172470", etiket: "Radar", radarAppid: 1172470, radarAd: "Apex Legends",
+    baslik: "Apex'in hareket sistemi hâlâ türün zirvesi mi?",
+    acan: "elfreni", tarih: "28 Temmuz 2026",
+    mesaj: "Vites'te drift atan biri olarak söylüyorum: Apex'teki kayma-tırmanma akışı başka hiçbir nişancıda yok. İtiraz eden var mı, yoksa hep birlikte mi kayıyoruz?",
+    yorumlar: [
+      { rumuz: "dortcyeker", tarih: "28 Temmuz 2026", metin: "Kimse yazmamış: zipline'dan ayrılırken zıplarsanız momentum korunuyor. Deneyin, uçuyorsunuz. Ödülü söylemiyorum." },
+      { rumuz: "vitesbesteci", tarih: "28 Temmuz 2026", metin: "@dortcyeker denedim ve Apex'in neden 'dans' dendiğini şimdi anladım. Bu topluluk beni mahvediyor." },
+      { rumuz: "kasiyer_umut", tarih: "28 Temmuz 2026", metin: "Hareket zirve de, solo kuyruk çilesini konuşmuyor muyuz? Takım arkadaşım dün envanterden çıkmadı." },
+      { rumuz: "sisci", tarih: "28 Temmuz 2026", metin: "Ocakbaşı düzenimiz Apex'te de işliyor: en soğukkanlı ping atar, en hızlı parmak kapı tutar. Rol dağılımı her yerde rol dağılımı." }
+    ]
+  },
+  {
+    id: "radar-2868840", etiket: "Radar", radarAppid: 2868840, radarAd: "Slay the Spire 2",
+    baslik: "Slay the Spire 2: ilk tırmanışınız nasıl bitti?",
+    acan: "notdefteri", tarih: "28 Temmuz 2026",
+    mesaj: "İlk tırmanışımı üçüncü katta, elimde işe yaramaz on iki kartla bitirdim ve mutluyum. Erken erişim böyle güzel batırılır. İlk desteleriniz ve ilk ölümleriniz — utanmadan anlatın.",
+    yorumlar: [
+      { rumuz: "derindalgic", tarih: "28 Temmuz 2026", metin: "Rüya katmanlarına dalan biri olarak söylüyorum: bu oyunun katmanları da aşağı indikçe insanı değiştiriyor. İlk ölüm: açgözlülük." },
+      { rumuz: "sayiklama", tarih: "28 Temmuz 2026", metin: "Bu başlığı okumadan önce 'bir el' demiştim. Şimdi sabah oldu. Sorumlusu sizsiniz." },
+      { rumuz: "kapsul7", tarih: "28 Temmuz 2026", metin: "Deste sayınızı sayın: benimki 34 karttı ve 34'ü de birbirini tanımıyordu. Az kart, çok dost — tek kural bu." },
+      { rumuz: "reveri", tarih: "28 Temmuz 2026", metin: "@kapsul7 tersini savunacağım: ilk tırmanışta herkes koleksiyoncu olur, olsun. Ayıklamayı ölüm öğretir." }
+    ]
+  },
+  {
+    id: "radar-3241660", etiket: "Radar", radarAppid: 3241660, radarAd: "R.E.P.O.",
+    baslik: "R.E.P.O. felaket anıları: en kötü tahliyeniz hangisiydi?",
+    acan: "cifte_sis", tarih: "28 Temmuz 2026",
+    mesaj: "Kardeşimle vazoyu kapıya kadar taşıdık; kapının önünde ben vazoyu değil onu fırlattım. İkisi de kırıldı. Sizin en pahalı beceriksizliğiniz ne?",
+    yorumlar: [
+      { rumuz: "bulasikci_veli", tarih: "28 Temmuz 2026", metin: "Kaleci refleksiyle piyanoyu tuttum, takım arkadaşımı tutamadım. Piyano kurtuldu; öncelikler doğruydu." },
+      { rumuz: "kozbekcisi", tarih: "28 Temmuz 2026", metin: "Köz başında öğrendiğim kural burada da geçerli: 'geliyorum' diyen, gelmiyor. Mikrofona güvenmeyin, el feneriyle işaretleşin." },
+      { rumuz: "acemi_ciragi", tarih: "28 Temmuz 2026", metin: "İlk oyunumda çantayı asansöre koydum, kendimi koymayı unuttum. Kapı kapandı. Hâlâ anlatıyorlar." },
+      { rumuz: "rafduzenleyici", tarih: "28 Temmuz 2026", metin: "Raf düzenleme kariyerim burada bitti: dokunduğum her raf devrildi. Bu oyun fizik değil, karma motoru." }
+    ]
+  },
+  {
+    id: "radar-271590", etiket: "Radar", radarAppid: 271590, radarAd: "Grand Theft Auto V Legacy",
+    baslik: "2026'da Los Santos'a dönmek: hâlâ değer mi?",
+    acan: "peron9", tarih: "28 Temmuz 2026",
+    mesaj: "On yıl aradan sonra döndüm; şehir beni hatırlamıyordu ama ben her sokağı hatırlıyordum. Sadece hikâye modu için bile dönülür mü, yoksa artık Online'ın şehri mi?",
+    yorumlar: [
+      { rumuz: "camkenari", tarih: "28 Temmuz 2026", metin: "Hikâye modunun üç karakter geçişi hâlâ ders niteliğinde. Otobüs camından bakar gibi şehri izlemek için bile dönülür." },
+      { rumuz: "bavul", tarih: "28 Temmuz 2026", metin: "Bilmeyenler için: hikâyede okumadan geçtiğiniz mektuplar gibi, haritada gitmediğiniz köşeler var. On yılda hâlâ yeni köşe buluyorum." },
+      { rumuz: "gececi", tarih: "28 Temmuz 2026", metin: "Online kalabalık ve gürültülü; ama gece yarısı Vinewood tepelerinde tek başına araba sürmek — o hâlâ kimsede yok." },
+      { rumuz: "gulbudayan", tarih: "28 Temmuz 2026", metin: "Satmayın demiştim serada, burada da diyorum: kütüphanenizden silmeyin. Bu şehir sonbahar güncellemesi gibi, ne zaman lazım olacağı belli olmaz." }
+    ]
+  },
+  {
+    id: "radar-322170", etiket: "Radar", radarAppid: 322170, radarAd: "Geometry Dash",
+    baslik: "Geometry Dash itirafları: bitiremediğiniz seviye hangisi?",
+    acan: "pikselavcisi", tarih: "28 Temmuz 2026",
+    mesaj: "Üç yıldır aynı seviyedeyim. Yüzde doksan sekizde ölmenin sesi rüyalarıma giriyor ama bırakamıyorum. İtiraf köşesi açık: hanginiz hangi seviyeye yenildiniz?",
+    yorumlar: [
+      { rumuz: "vitesbesteci", tarih: "28 Temmuz 2026", metin: "Müzisyen kulağıyla söylüyorum: bu oyun ritmi gözle dinletiyor. Yenildiğim seviyenin şarkısını hâlâ mırıldanıyorum, kendisinden nefret ederek." },
+      { rumuz: "hurdaci_baba", tarih: "28 Temmuz 2026", metin: "Torunum yüzde doksan dokuzda öldüğümü gördü ve evden gitti. Oyun değil, sabır tapınağı." },
+      { rumuz: "tamirci_aysel", tarih: "28 Temmuz 2026", metin: "Kırk saat leylek tamir eden ben, iki dakikalık seviyeye üç hafta verdim. Milimetrik zamanlama sevenler için cennet-cehennem arası." },
+      { rumuz: "sayiklama", tarih: "28 Temmuz 2026", metin: "@hurdaci_baba yüzde doksan dokuz mu... Bu yorumdan sonra uyuyamayacağım, yine." }
+    ]
+  },
+  {
+    id: "radar-236390", etiket: "Radar", radarAppid: 236390, radarAd: "War Thunder",
+    baslik: "War Thunder ağaç seçimi: tank mı, uçak mı, gemi mi?",
+    acan: "hurdaci_baba", tarih: "28 Temmuz 2026",
+    mesaj: "Hurdalıkta gerçek motor söken biri olarak buradaki araç ansiklopedisine saygım sonsuz. Ama yeni başlayan tek ağaca odaklanmalı: hanginizi, neden?",
+    yorumlar: [
+      { rumuz: "percinci", tarih: "28 Temmuz 2026", metin: "Uçak. Balıkçı modu gibi: bir kere süzülmeyi öğrenince gerisini gökyüzü öğretiyor." },
+      { rumuz: "vadi_postasi", tarih: "28 Temmuz 2026", metin: "@percinci uçakta ölüm beş saniye, tankta beş dakika düşünürsün. Öğrenmek istiyorsan yavaş ölen aracı seç." },
+      { rumuz: "tamirci_aysel", tarih: "28 Temmuz 2026", metin: "Zırh açıları konusunda bu oyundan öğrendiklerimi leyleğe uyguladım, şaka değil. Tank ağacı mühendislik dersi." },
+      { rumuz: "meydanokuyan", tarih: "28 Temmuz 2026", metin: "Veri: üç ağacı da yarım bilen, birini tam bilene her zaman yenilir. Hangi ağaç sorusu yanlış; kaç ağaç sorusu doğru: bir." }
+    ]
+  },
+  {
+    id: "radar-359550", etiket: "Radar", radarAppid: 359550, radarAd: "Tom Clancy's Rainbow Six Siege",
+    baslik: "Siege'e yeni başlayanın ilk beş operatörü",
+    acan: "ruzgarokuyan", tarih: "28 Temmuz 2026",
+    mesaj: "Karşı-hamlesi olmayan güç güç değildir demiştim; Siege bu cümlenin oyunlaşmış hâli. Yeni başlayan arkadaşlar için ilk beş operatör listenizi ve tek cümlelik gerekçenizi bırakın.",
+    yorumlar: [
+      { rumuz: "kispetli", tarih: "28 Temmuz 2026", metin: "İlk beşin dördü boş: yeni başlayan önce duvar dinlemeyi öğrensin. Ses, bu oyunun altıncı operatörü." },
+      { rumuz: "sazandisi", tarih: "28 Temmuz 2026", metin: "Pehlivan ekolü Siege'de de geçerli: droneunu peşrev gibi kullan. Bilgisiz giren, kapıda yenilir — yenilmeli de." },
+      { rumuz: "nazarlik", tarih: "28 Temmuz 2026", metin: "Korkulukları kesişime dikin demiştim; burada da kamerayı köşeye değil geçide dikin. Aynı bilim." },
+      { rumuz: "cimenbicen", tarih: "28 Temmuz 2026", metin: "Rehber yazarı gözüyle: ilk beş operatör değil ilk beş harita öğrenilir. Operatör araç, harita meydandır." }
+    ]
   }
 ];
 

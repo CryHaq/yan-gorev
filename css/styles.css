@@ -2067,6 +2067,12 @@ html[data-tema="gunduz"] .radar-sira { color: #b3592a; }
 
 .radar-sayi { color: var(--soluk); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
 
+/* Radar detayında video geniş sahne alır. */
+.iki-kolon.radar-detay { grid-template-columns: minmax(0, 1fr) 560px; }
+
+.tur-etiket.gercek { color: #ffb26b; }
+html[data-tema="gunduz"] .tur-etiket.gercek { color: #b3592a; }
+
 .radar-tanim {
   font-size: 1.2rem;
   line-height: 1.6;
