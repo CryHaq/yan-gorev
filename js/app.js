@@ -13,12 +13,24 @@ function sayfayiKur() {
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
   if (!document.getElementById("icerik")) return; /* 404 gibi statik sayfalar kendi içeriğini taşır */
   const sayfa = location.pathname.split("/").pop() || "index.html";
-  if (sayfa === "oyun.html") oyunSayfasi();
-  else if (sayfa === "konu.html") konuSayfasi();
-  else if (sayfa === "forum.html") forumSayfasi();
-  else if (sayfa === "ipuclari.html") ipuclariSayfasi();
-  else if (sayfa === "uye.html") uyeSayfasi();
-  else anaSayfa();
+  /* Sevk kalkanı (denetim #6): herhangi bir render çökerse boş sayfa yerine
+     açıklanmış hata — kullanıcı da geliştirici de karanlıkta kalmaz. */
+  try {
+    if (sayfa === "oyun.html") oyunSayfasi();
+    else if (sayfa === "konu.html") konuSayfasi();
+    else if (sayfa === "forum.html") forumSayfasi();
+    else if (sayfa === "ipuclari.html") ipuclariSayfasi();
+    else if (sayfa === "uye.html") uyeSayfasi();
+    else anaSayfa();
+  } catch (hata) {
+    console.error("Yan Görev render hatası:", hata);
+    const icerik = document.getElementById("icerik");
+    if (icerik && !icerik.childElementCount) {
+      const kutu = el("div", "bos-durum");
+      kutu.append(el("p", null, "Bir şeyler ters gitti. Sayfayı yenilemeyi dene; sorun sürerse tarayıcının site verilerini temizlemek çözebilir."));
+      icerik.append(kutu);
+    }
+  }
 }
 
 /* ---------- ipuçları sayfası ---------- */
@@ -42,6 +54,7 @@ function ipuclariSayfasi() {
   const adayGrup = IPUCLARI.find(g => g.oyunId === aday.oyunId);
   const adayOyun = OYUNLAR.find(o => o.id === aday.oyunId);
   const adayIpucu = adayGrup && adayGrup.liste[aday.ipucu];
+  if (!adayIpucu || !adayOyun) console.warn("En Çok Aranan İpucu adayı veriyle eşleşmiyor:", aday);
   if (adayIpucu && adayOyun) {
     const manset = el("article", "ipucu-kart forum-one-cikan js-reveal");
     const mansetKapak = el("a", "konu-kapak");
@@ -226,7 +239,11 @@ function anaSayfa() {
       hero.insertBefore(video, heroResim.nextSibling);
     };
     if (heroGorsel.complete) videoEkle();
-    else heroGorsel.addEventListener("load", videoEkle, { once: true });
+    else {
+      heroGorsel.addEventListener("load", videoEkle, { once: true });
+      /* Denetim #10: görsel kırılırsa video (kendi poster'ı var) yine denenir. */
+      heroGorsel.addEventListener("error", videoEkle, { once: true });
+    }
   }
 
   hero.append(puanRozet(manset.puan));
@@ -534,7 +551,8 @@ function yaziyorBaslat(konu, liste) {
 }
 
 function okunanlar() {
-  try { return new Set(JSON.parse(localStorage.getItem("yg-okunan")) || []); } catch (e) { return new Set(); }
+  const dizi = guvenliOku("yg-okunan", []);
+  return new Set(Array.isArray(dizi) ? dizi : []);
 }
 
 function sayfalama(sayfaNo, toplamSayfa, etiket, sirala) {
@@ -647,9 +665,16 @@ function konuAcPaneli() {
       mesaj: mesajGirdi.value.trim(),
       yorumlar: []
     };
+    if (!yeni.baslik || !yeni.mesaj) {
+      formHata(form, "Başlık ve mesaj boş olamaz.");
+      return;
+    }
     const liste = kullaniciKonulari();
     liste.push(yeni);
-    localStorage.setItem("yg-konular", JSON.stringify(liste));
+    if (!guvenliYaz("yg-konular", JSON.stringify(liste))) {
+      formHata(form, "Konu kaydedilemedi — tarayıcı depolaması kapalı ya da dolu olabilir.");
+      return;
+    }
     location.href = "konu.html?id=" + yeni.id;
   });
   kutu.append(acButon, form);
@@ -670,7 +695,9 @@ const AVATAR_RENKLERI = [
 ];
 
 function uyeGetir() {
-  try { return JSON.parse(localStorage.getItem("yg-uye")) || null; } catch (e) { return null; }
+  /* Şekil denetimi (denetim #5): geçerli-JSON-yanlış-şekil "Merhaba, undefined" üretmesin. */
+  const uye = guvenliOku("yg-uye", null);
+  return uye && typeof uye.rumuz === "string" && uye.rumuz.trim() ? uye : null;
 }
 
 /* Unvan merdiveni: unvan satın alınmaz, yorumla kazanılır. */
@@ -700,9 +727,11 @@ function temaDugmesiKur() {
   };
   dugme.addEventListener("click", () => {
     const yeni = document.documentElement.dataset.tema === "gunduz" ? "gece" : "gunduz";
+    /* Denetim #4: görünüm ve düğme ÖNCE tutarlı hale gelir; kalıcılık başarısız
+       olsa bile arayüz yarım durumda kalmaz. */
     document.documentElement.dataset.tema = yeni;
-    localStorage.setItem("yg-tema", yeni);
     ciz();
+    guvenliYaz("yg-tema", yeni);
   });
   ciz();
   nav.append(dugme);
@@ -790,9 +819,15 @@ function uyeSayfasi() {
   form.addEventListener("submit", e => {
     e.preventDefault();
     const rumuz = rumuzInput.value.trim();
-    if (!rumuz) return;
+    if (!rumuz) {
+      formHata(form, "Rumuz boş olamaz.");
+      return;
+    }
     const secili = form.querySelector("input[name=renk]:checked");
-    localStorage.setItem("yg-uye", JSON.stringify({ rumuz: rumuz, renk: secili ? secili.value : AVATAR_RENKLERI[5] }));
+    if (!guvenliYaz("yg-uye", JSON.stringify({ rumuz: rumuz, renk: secili ? secili.value : AVATAR_RENKLERI[5] }))) {
+      formHata(form, "Kaydedilemedi — tarayıcı depolaması kapalı ya da dolu olabilir.");
+      return;
+    }
     uyeNavGuncelle();
     uyeSayfasi();
   });
@@ -807,7 +842,10 @@ function gununTartismasi() {
   const aday = TARTISMA_ADAYLARI[new Date().getDate() % TARTISMA_ADAYLARI.length];
   const konu = KONULAR.find(k => k.id === aday.konuId);
   const yorum = konu && konu.yorumlar[aday.yorum];
-  if (!yorum) return null;
+  if (!yorum) {
+    console.warn("Günün Tartışması adayı veriyle eşleşmiyor:", aday);
+    return null;
+  }
   const kutu = el("section", "gunun-tartismasi");
   kutu.append(el("p", "eyebrow", "🔥 Günün Tartışması"));
   kutu.append(el("blockquote", null, "“" + yorum.metin + "”"));
@@ -934,7 +972,8 @@ function yanKutuOyun(oyun) {
 
 /* Kullanıcının açtığı konular: kurgu KONULAR ile aynı şemada, localStorage'da yaşar. */
 function kullaniciKonulari() {
-  try { return JSON.parse(localStorage.getItem("yg-konular")) || []; } catch (e) { return []; }
+  const liste = guvenliOku("yg-konular", []);
+  return Array.isArray(liste) ? liste : [];
 }
 
 function tumKonular() { return KONULAR.concat(kullaniciKonulari()); }
@@ -965,7 +1004,7 @@ function konuSayfasi() {
   const okunan = okunanlar();
   if (!okunan.has(konu.id)) {
     okunan.add(konu.id);
-    localStorage.setItem("yg-okunan", JSON.stringify([...okunan]));
+    guvenliYaz("yg-okunan", JSON.stringify([...okunan]));
   }
 
   const acilis = el("div", "acilis-mesaj");
@@ -1045,13 +1084,19 @@ function anketKutusu(konu) {
 
   const ciz = () => {
     govde.textContent = "";
-    const oyum = localStorage.getItem(anahtar);
+    /* Denetim #8: bozuk/aralık-dışı oy değeri "seçimsiz kilitli anket" üretmesin. */
+    const ham = localStorage.getItem(anahtar);
+    let oyum = ham === null ? null : Number(ham);
+    if (oyum !== null && !(Number.isInteger(oyum) && oyum >= 0 && oyum < konu.anket.secenekler.length)) {
+      try { localStorage.removeItem(anahtar); } catch (e) {}
+      oyum = null;
+    }
     const oyVerildi = oyum !== null;
     const toplam = konu.anket.secenekler.reduce((t, s) => t + s.taban, 0) + (oyVerildi ? 1 : 0);
     konu.anket.secenekler.forEach((s, i) => {
-      const oySayisi = s.taban + (oyVerildi && Number(oyum) === i ? 1 : 0);
+      const oySayisi = s.taban + (oyVerildi && oyum === i ? 1 : 0);
       const oran = Math.round((oySayisi / toplam) * 100);
-      const secenek = el("button", "anket-secenek" + (oyVerildi ? " kilitli" : "") + (oyVerildi && Number(oyum) === i ? " secili" : ""));
+      const secenek = el("button", "anket-secenek" + (oyVerildi ? " kilitli" : "") + (oyVerildi && oyum === i ? " secili" : ""));
       secenek.type = "button";
       const dolgu = el("span", "anket-dolgu");
       if (oyVerildi) dolgu.style.width = oran + "%";
@@ -1089,7 +1134,7 @@ function yorumSatiri(konuId, yorum, sira) {
   li.append(avatar);
   const balon = el("div", "balon");
   const ust = el("div", "ust");
-  ust.append(el("span", "rumuz", yorum.rumuz), el("span", "tarih", yorum.tarih));
+  ust.append(el("span", "rumuz", yorum.rumuz || "?"), el("span", "tarih", yorum.tarih || ""));
   if (yorum.kullanici) {
     ust.append(el("span", "sen", "sen"), el("span", "rozet-mini unvan", uyeUnvani()));
   } else if (typeof ROZETLER !== "undefined" && ROZETLER[yorum.rumuz]) {
@@ -1115,7 +1160,7 @@ function yorumSatiri(konuId, yorum, sira) {
   const escip = (yorum.metin || "").match(/^@([\p{L}\p{N}_]+)/u);
   if (!yorum.yanit && escip) balon.append(el("span", "yanit-cip", "↩ @" + escip[1]));
 
-  balon.append(el("p", null, yorum.metin));
+  balon.append(el("p", null, yorum.metin || ""));
 
   const altSatir = el("div", "balon-alt");
   altSatir.append(
@@ -1132,10 +1177,11 @@ function yorumSatiri(konuId, yorum, sira) {
 /* Üç tepki tek fabrikadan çıkar; ♥ eski localStorage anahtarını korur (kayıp beğeni olmaz). */
 function tepkiButonu(tur, simge, konuId, sira, yorum) {
   const anahtar = (tur === "begeni" ? "yg-begeni-" : "yg-tepki-" + tur + "-") + konuId + "-" + sira;
+  const uzunluk = (yorum.metin || "").length; /* Denetim #9: alansız kayıt sayfayı düşürmesin */
   const tabanlar = {
-    begeni: (yorum.metin.length % 17) + 2,
-    alev: (yorum.metin.length * 7) % 13,
-    tuz: (yorum.metin.length * 3) % 7
+    begeni: (uzunluk % 17) + 2,
+    alev: (uzunluk * 7) % 13,
+    tuz: (uzunluk * 3) % 7
   };
   const taban = tabanlar[tur];
   const btn = el("button", "begeni-btn tepki-" + tur);
@@ -1182,6 +1228,17 @@ function yanitCubuguGuncelle() {
   cubuk.append(cip);
 }
 
+/* Form içi hata satırı: sessiz başarısızlık yerine görünür, ekran-okur dostu mesaj. */
+function formHata(form, mesaj) {
+  let satir = form.querySelector(".form-hata");
+  if (!satir) {
+    satir = el("p", "form-hata");
+    satir.setAttribute("role", "alert");
+    form.append(satir);
+  }
+  satir.textContent = mesaj;
+}
+
 function yorumFormu(konu) {
   const uye = uyeGetir();
   const form = el("form", "yorum-form");
@@ -1219,9 +1276,23 @@ function yorumFormu(konu) {
 
   form.addEventListener("submit", e => {
     e.preventDefault();
-    yorumKaydet(konu.id, uye ? uye.rumuz : rumuz.value.trim(), metin.value.trim(), aktifYanit);
+    /* Denetim #3: boşluk-rumuz sessizce yutulup metni SİLİYORDU — önce doğrula. */
+    const kim = uye ? uye.rumuz : rumuz.value.trim();
+    const soz = metin.value.trim();
+    if (!kim || !soz) {
+      formHata(form, "Rumuz ve yorum boş olamaz.");
+      return;
+    }
+    if (!yorumKaydet(konu.id, kim, soz, aktifYanit)) {
+      formHata(form, "Yorum kaydedilemedi — tarayıcı depolaması kapalı ya da dolu olabilir.");
+      return;
+    }
     aktifYanit = null;
-    konuSayfasi(); // listeyi tazele
+    try { konuSayfasi(); } catch (hata) {
+      /* Kayıt BAŞARILI; tazeleme çökerse boş sayfa yerine yeniden yükle. */
+      console.error(hata);
+      location.reload();
+    }
   });
   return form;
 }
@@ -1232,18 +1303,44 @@ function yorumFormu(konu) {
 
 const YORUM_ANAHTARI = "yg-yorumlar";
 
+/* Depolama emniyeti (sessiz-hata denetimi #1-2, #4):
+   - Bozuk JSON ASLA üzerine yazılmaz: önce "-bozuk" anahtarına yedeklenir,
+     sonra temizlenir — kurtarılabilir veri kaybolmaz.
+   - Yazma hataları (kota dolu / depolama engelli) boolean olarak yüzeye çıkar,
+     formlar kullanıcıya söyleyebilir. */
+function guvenliOku(anahtar, varsayilan) {
+  try {
+    const ham = localStorage.getItem(anahtar);
+    if (ham === null) return varsayilan;
+    const deger = JSON.parse(ham);
+    return deger === null || deger === undefined ? varsayilan : deger;
+  } catch (e) {
+    try {
+      localStorage.setItem(anahtar + "-bozuk", localStorage.getItem(anahtar));
+      localStorage.removeItem(anahtar);
+    } catch (e2) { /* depolama tamamen engelli: varsayılana düş */ }
+    return varsayilan;
+  }
+}
+
+function guvenliYaz(anahtar, deger) {
+  try { localStorage.setItem(anahtar, deger); return true; } catch (e) { return false; }
+}
+
 function yorumKaydet(konuId, rumuz, metin, yanit) {
-  if (!rumuz || !metin) return;
-  const hepsi = JSON.parse(localStorage.getItem(YORUM_ANAHTARI) || "{}");
+  if (!rumuz || !metin) return false;
+  let hepsi = guvenliOku(YORUM_ANAHTARI, {});
+  if (typeof hepsi !== "object" || hepsi === null || Array.isArray(hepsi)) hepsi = {};
   const tarih = new Date().toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
   const kayit = { rumuz, tarih, metin };
   /* Alıntı snapshot olarak saklanır: liste ileride değişse de alıntı doğru kalır. */
   if (yanit) kayit.yanit = { rumuz: yanit.rumuz, metin: yanit.metin, hedef: yanit.hedef };
-  (hepsi[konuId] = hepsi[konuId] || []).push(kayit);
-  localStorage.setItem(YORUM_ANAHTARI, JSON.stringify(hepsi));
+  (hepsi[konuId] = Array.isArray(hepsi[konuId]) ? hepsi[konuId] : []).push(kayit);
+  return guvenliYaz(YORUM_ANAHTARI, JSON.stringify(hepsi));
 }
 
 function kullaniciYorumlari(konuId) {
-  const hepsi = JSON.parse(localStorage.getItem(YORUM_ANAHTARI) || "{}");
-  return hepsi[konuId] || [];
+  const hepsi = guvenliOku(YORUM_ANAHTARI, {});
+  const dizi = hepsi && hepsi[konuId];
+  return Array.isArray(dizi) ? dizi : [];
 }

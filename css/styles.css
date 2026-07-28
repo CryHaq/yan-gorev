@@ -879,6 +879,16 @@ main:empty { min-height: 100vh; }
 
 .yorum-form button:hover { box-shadow: var(--parilti); transform: translateY(-1px); }
 
+/* Form hata satırı: hata özür dilemez, sebebi ve çıkış yolunu söyler. */
+.form-hata {
+  margin: 0;
+  color: #ff8f7a;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+html[data-tema="gunduz"] .form-hata { color: #b3402a; }
+
 /* ---------- Footer ---------- */
 
 .site-footer {
