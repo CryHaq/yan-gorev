@@ -616,13 +616,14 @@ main {
 
 .balon .ust {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.55rem;
+  gap: 0.3rem 0.55rem;
   margin-bottom: 0.2rem;
 }
 
 .balon .rumuz { font-weight: 700; font-size: 0.9rem; }
-.balon .tarih { color: var(--soluk); font-size: 0.75rem; }
+.balon .tarih { color: var(--soluk); font-size: 0.75rem; white-space: nowrap; }
 .yorum.kullanici .balon .tarih { color: #b9c4f5; }
 
 .rozet-mini {
@@ -2028,7 +2029,11 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   .inceleme-kapak { aspect-ratio: 16 / 10; }
   .arti-eksi { grid-template-columns: 1fr; }
   .forum-liste .meta { display: none; }
-  .site-header { flex-direction: column; gap: 0.4rem; }
+  .site-header { flex-direction: column; gap: 0.5rem; align-items: center; }
+  .site-header nav { flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.1rem; }
+  .site-header nav a { font-size: 0.88rem; }
+  .hero .eyebrow { padding-right: 5.4rem; }
+  .filtre-ayrac { display: none; }
   .balon { max-width: 92%; }
   .forum-konu { flex-direction: column; }
   .konu-kapak { width: 100%; aspect-ratio: 16 / 9; }
