@@ -329,8 +329,6 @@ function anaSayfa() {
    dönüşür (konu açma / yanıt). Rastgelelik yok: aynı an siteye bakan herkes
    aynı akışı görür; dönünce meydan "sen yokken yaşamış" olur. */
 
-const NABIZ_ARALIK = 20000;
-
 const NABIZ_KONU_SABLONLARI = [
   "«{oyun}» için gizli bir detay buldum, kimse fark etmemiş",
   "{oyun} hakkında tuhaf bir teorim var, gelin tartışalım",
@@ -367,43 +365,103 @@ function kurguRumuzlari() {
   return [...kume];
 }
 
-function nabizOlayi(tik) {
-  const r = tohumluRastgele((tik % 2147483647) ^ 0x9E3779B9);
+/* ---------- Canlı konu simülasyonu ----------
+   Her 10 dakikada bir GERÇEK bir konu doğar (açılabilir sayfa, forumda listelenir);
+   doğumdan sonra ~2 dk'da bir yanıt alır. Son 6 konu ayakta kalır, eskiyen
+   pencereden düşer. Tümü zaman-tohumlu: herkes aynı meydanı görür. */
+
+const SIM_KONU_ARALIK = 600000;   /* 10 dk'da bir yeni konu */
+const SIM_YANIT_ARALIK = 120000;  /* doğum sonrası yanıt temposu */
+const SIM_PENCERE = 6;            /* ayakta kalan canlı konu sayısı */
+const SIM_YANIT_TAVAN = 5;        /* kürasyonun (6+) altında: manşet editoryal kalır */
+
+const SIM_MESAJLAR = [
+  "Az önce fark ettim ve tartışmaya değer: {oyun} bu konuda türdeşlerinden ayrılıyor. İlk elden deneyenler yazsın.",
+  "Kısa tutacağım: {oyun} hakkında bir gözlemim var ve yanılıyor olabilirim. Meydan karar versin.",
+  "{oyun} oynarken bir şey dikkatimi çekti, başlığı ona ayırıyorum. Benzerini yaşayan var mı?",
+  "İddialı olacak ama söylüyorum: {oyun} bu haliyle hak ettiği ilgiyi görmüyor. Nedenlerini tartışalım.",
+  "{oyun} için elimde küçük bir liste birikti; paylaşıyorum, siz de ekleyin."
+];
+
+function saatYaz(zaman) {
+  const d = new Date(zaman);
+  return "bugün " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+}
+
+function simKonulari(simdi) {
+  simdi = simdi || Date.now();
+  const sonSlot = Math.floor(simdi / SIM_KONU_ARALIK);
   const rumuzlar = kurguRumuzlari();
-  const kisi = rumuzlar[Math.floor(r() * rumuzlar.length)];
-  const oyun = OYUNLAR[Math.floor(r() * OYUNLAR.length)];
-  if (r() < 0.28) {
-    const sablon = NABIZ_KONU_SABLONLARI[Math.floor(r() * NABIZ_KONU_SABLONLARI.length)];
-    return { kisi, tip: "konu", metin: sablon.replace("{oyun}", oyun.ad), hedef: "konu.html?id=" + oyun.konuId };
+  const konular = [];
+  for (let s = sonSlot; s > sonSlot - SIM_PENCERE; s--) {
+    const dogum = s * SIM_KONU_ARALIK;
+    const r = tohumluRastgele((s % 2147483647) ^ 0x51ED270B);
+    const acan = rumuzlar[Math.floor(r() * rumuzlar.length)];
+    const oyun = OYUNLAR[Math.floor(r() * OYUNLAR.length)];
+    const baslik = NABIZ_KONU_SABLONLARI[Math.floor(r() * NABIZ_KONU_SABLONLARI.length)].replace("{oyun}", oyun.ad);
+    const mesaj = SIM_MESAJLAR[Math.floor(r() * SIM_MESAJLAR.length)].replace("{oyun}", oyun.ad);
+    const yorumlar = [];
+    const yanitSayisi = Math.min(SIM_YANIT_TAVAN, Math.floor((simdi - dogum) / SIM_YANIT_ARALIK));
+    for (let k = 1; k <= yanitSayisi; k++) {
+      const rk = tohumluRastgele(((s * 31 + k) % 2147483647) ^ 0x2545F491);
+      const kim = rumuzlar[Math.floor(rk() * rumuzlar.length)];
+      const parca = NABIZ_YANIT_PARCALARI[Math.floor(rk() * NABIZ_YANIT_PARCALARI.length)];
+      yorumlar.push({
+        rumuz: kim,
+        tarih: saatYaz(dogum + k * SIM_YANIT_ARALIK),
+        metin: parca.charAt(0).toLocaleUpperCase("tr") + parca.slice(1) + "."
+      });
+    }
+    konular.push({ id: "sim-" + s, sim: true, etiket: "Canlı", oyunId: oyun.id, baslik, acan, tarih: saatYaz(dogum), mesaj, yorumlar });
   }
-  const konu = KONULAR[Math.floor(r() * KONULAR.length)];
-  const parca = NABIZ_YANIT_PARCALARI[Math.floor(r() * NABIZ_YANIT_PARCALARI.length)];
-  return { kisi, tip: "yanit", metin: "“" + parca + "” · " + kisalt(konu.baslik, 40), hedef: "konu.html?id=" + konu.id };
+  return konular;
+}
+
+/* Nabız tablosu: simülasyonun GERÇEK olayları — her satır var olan bir konuya gider. */
+function nabizOlaylari(simdi) {
+  const olaylar = [];
+  simKonulari(simdi).forEach(k => {
+    const dogum = parseInt(k.id.slice(4), 10) * SIM_KONU_ARALIK;
+    olaylar.push({ zaman: dogum, kisi: k.acan, eylem: " konu açtı: ", metin: kisalt(k.baslik, 54), hedef: "konu.html?id=" + k.id });
+    k.yorumlar.forEach((y, i) => {
+      olaylar.push({
+        zaman: dogum + (i + 1) * SIM_YANIT_ARALIK,
+        kisi: y.rumuz,
+        eylem: " yanıt verdi: ",
+        metin: "“" + kisalt(y.metin, 42) + "” · " + kisalt(k.baslik, 30),
+        hedef: "konu.html?id=" + k.id
+      });
+    });
+  });
+  return olaylar.sort((a, b) => b.zaman - a.zaman).slice(0, 8);
 }
 
 let nabizZamanlayici = null;
 
-function nabizCiz(listeKutu, sayacKutu, canli) {
-  const simdiTik = Math.floor(Date.now() / NABIZ_ARALIK);
+function nabizCiz(listeKutu, sayacKutu, oncekiIlkZaman) {
+  const simdi = Date.now();
   const gunBasi = new Date(); gunBasi.setHours(0, 0, 0, 0);
-  sayacKutu.textContent = " Meydan Nabzı · bugün " + Math.floor((Date.now() - gunBasi.getTime()) / NABIZ_ARALIK) + " hamle";
+  sayacKutu.textContent = " Meydan Nabzı · son " + SIM_PENCERE + " canlı konu ayakta · bugün " +
+    (Math.floor((simdi - gunBasi.getTime()) / SIM_KONU_ARALIK) + 1) + " konu açıldı";
+  const olaylar = nabizOlaylari(simdi);
   listeKutu.textContent = "";
-  for (let i = 0; i < 6; i++) {
-    const olay = nabizOlayi(simdiTik - i);
-    const satir = el("p", "nabiz-satir" + (canli && i === 0 ? " yeni" : ""));
+  olaylar.forEach(olay => {
+    const yeniMi = oncekiIlkZaman !== undefined && olay.zaman > oncekiIlkZaman;
+    const satir = el("p", "nabiz-satir" + (yeniMi ? " yeni" : ""));
     const kisiLink = el("a", "rumuz", olay.kisi);
     kisiLink.href = "profil.html?rumuz=" + encodeURIComponent(olay.kisi);
     const hedefLink = el("a", null, olay.metin);
     hedefLink.href = olay.hedef;
-    const sn = i * (NABIZ_ARALIK / 1000);
+    const dk = Math.floor((simdi - olay.zaman) / 60000);
     satir.append(
       kisiLink,
-      document.createTextNode(olay.tip === "konu" ? " konu açtı: " : " yanıt verdi: "),
+      document.createTextNode(olay.eylem),
       hedefLink,
-      el("span", "nabiz-zaman", i === 0 ? "az önce" : sn < 60 ? sn + " sn önce" : Math.round(sn / 60) + " dk önce")
+      el("span", "nabiz-zaman", dk < 1 ? "az önce" : dk < 60 ? dk + " dk önce" : Math.floor(dk / 60) + " sa önce")
     );
     listeKutu.append(satir);
-  }
+  });
+  return olaylar.length ? olaylar[0].zaman : 0;
 }
 
 function nabizPaneli() {
@@ -413,9 +471,9 @@ function nabizPaneli() {
   baslik.append(el("span", "canli-nokta"), sayac);
   const listeKutu = el("div", "nabiz-listesi");
   panel.append(baslik, listeKutu);
-  nabizCiz(listeKutu, sayac, false);
+  let sonZaman = nabizCiz(listeKutu, sayac);
   if (nabizZamanlayici) clearInterval(nabizZamanlayici);
-  nabizZamanlayici = setInterval(() => nabizCiz(listeKutu, sayac, true), NABIZ_ARALIK);
+  nabizZamanlayici = setInterval(() => { sonZaman = nabizCiz(listeKutu, sayac, sonZaman); }, 30000);
   return panel;
 }
 
@@ -478,7 +536,8 @@ function forumSayfasi() {
     oyun: konuOyunu(k),
     toplam: k.yorumlar.length + kullaniciYorumlari(k.id).length
   }));
-  const oneCikan = tumVeriler.reduce((a, b) => (b.toplam > a.toplam ? b : a));
+  /* Manşet editoryal kalır: canlı simülasyon konuları manşet yarışına girmez. */
+  const oneCikan = tumVeriler.filter(v => !v.konu.sim).reduce((a, b) => (b.toplam > a.toplam ? b : a));
 
   /* Filtre + sıralama: durum URL'de yaşar, görünüm paylaşılabilir link olur. */
   let veriler = tumVeriler;
@@ -577,7 +636,7 @@ function kalpPuani(k) {
 
 function filtreCubugu(etiketSecimi, siralama) {
   const kutu = el("div", "filtre-cubugu");
-  ["", "Tartışma", "Rehber", "Teori"].forEach(e => {
+  ["", "Tartışma", "Rehber", "Teori", "Canlı"].forEach(e => {
     const cip = el("a", "filtre-cip" + (etiketSecimi === e ? " aktif" : ""), e || "Tümü");
     cip.href = forumUrl(1, e, siralama);
     kutu.append(cip);
@@ -1263,7 +1322,7 @@ function kullaniciKonulari() {
   return Array.isArray(liste) ? liste : [];
 }
 
-function tumKonular() { return KONULAR.concat(kullaniciKonulari()); }
+function tumKonular() { return KONULAR.concat(simKonulari()).concat(kullaniciKonulari()); }
 
 function konuOyunu(k) {
   return OYUNLAR.find(o => o.konuId === k.id) || OYUNLAR.find(o => o.id === k.oyunId) || null;
