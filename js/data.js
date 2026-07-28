@@ -425,6 +425,16 @@ const IPUCLARI = [
   ]}
 ];
 
+/* Yan Görev kurgu kadrosu: künye sayfasının yüzleri. Rumuzlar topluluk evreninden. */
+const EKIP = [
+  { rumuz: "fenerbekcisi", gorev: "Baş Editör", bio: "Işığı ilk yakan. Finaller hakkında spoiler'sız konuşmayı hâlâ öğrenemedi.", imzalar: ["kul-ve-fener", "derin-uyku"] },
+  { rumuz: "notdefteri", gorev: "İnceleme Editörü", bio: "Her cümleyi üç kez okur, en güzelini siler. 6,9 puanını da o savundu.", imzalar: ["son-otobus", "bahcivan-krali"] },
+  { rumuz: "gecegezen", gorev: "Gece Nöbeti Muhabiri", bio: "Sabaha karşı üçte market gezme fikri ondan çıktı. Pişman değil.", imzalar: ["gece-vardiyasi", "vites"] },
+  { rumuz: "katmankazici", gorev: "Rehber Şefi", bio: "İpuçları bölümünü fırçayla temizler; spoiler'ları baklava dilimiyle örter.", imzalar: ["hoyuk", "pas-ve-pervane"] },
+  { rumuz: "meydanokuyan", gorev: "Forum Moderatörü", bio: "Kavgayı söndürmez, hakemliğini yapar. Veriyi hep yanında taşır.", imzalar: ["meydan", "ocakbasi"] },
+  { rumuz: "tozlufirca", gorev: "Stajyer", bio: "Bir yorum için üye oldu, bir daha gitmedi. Kadroya böyle girilir.", imzalar: [] }
+];
+
 /* Topluluk rozetleri: rumuz → unvan. Kurgu kullanıcının kimliği her konuda onunla gezer. */
 const ROZETLER = {
   meydanokuyan: "Konuyu Açan",
