@@ -290,8 +290,39 @@ function anaSayfa() {
 
   const tumForum = el("a", "forum-cta", "Forumun tamamı: büyük başlıklar, büyük kavgalar →");
   tumForum.href = "forum.html";
-  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, aktivite, tumForum);
+  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, aktivite, tumForum, toplulukSayimi());
   canlandir();
+}
+
+/* Sayfa dibi topluluk sayaçları: hepsi gerçek veriden türer, üye olunca
+   "son katılan" gerçekten SEN olursun. */
+function toplulukSayimi() {
+  const rumuzlar = new Set();
+  KONULAR.forEach(k => {
+    rumuzlar.add(k.acan);
+    k.yorumlar.forEach(y => rumuzlar.add(y.rumuz));
+  });
+  const uye = uyeGetir();
+  const ipucuSayisi = IPUCLARI.reduce((t, g) => t + g.liste.length, 0);
+  const veriler = [
+    [OYUNLAR.length, "inceleme"],
+    [tumKonular().length, "konu"],
+    [ipucuSayisi, "ipucu"],
+    [rumuzlar.size + (uye ? 1 : 0), "kayıtlı sakin"],
+    [uye ? uye.rumuz : "tozlufirca", "son katılan"]
+  ];
+  const serit = el("section", "sayim js-reveal");
+  serit.setAttribute("aria-label", "Topluluk sayıları");
+  veriler.forEach(([deger, etiket]) => {
+    const kutucuk = el("div", "sayim-kutu");
+    const yazilik = typeof deger === "string";
+    kutucuk.append(
+      el("span", "sayim-deger" + (yazilik ? " yazi" : ""), String(deger)),
+      el("span", "sayim-etiket", etiket)
+    );
+    serit.append(kutucuk);
+  });
+  return serit;
 }
 
 /* ---------- forum sayfası ---------- */

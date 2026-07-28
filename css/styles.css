@@ -1814,6 +1814,46 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
 .aktivite-satiri b { color: var(--murekkep); }
 .aktivite-satiri a { font-weight: 600; }
 
+/* ---------- Topluluk sayaçları (stat kutuları) ---------- */
+
+.sayim {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 2.4rem;
+  padding: 1.7rem 1.8rem;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--r-m);
+  text-align: center;
+}
+
+.sayim-deger {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--murekkep);
+  font-variant-numeric: tabular-nums;
+}
+
+.sayim-deger.yazi {
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  padding-top: 0.45em;
+  color: var(--vurgu);
+}
+
+.sayim-etiket {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--soluk);
+}
+
 /* ---------- Benzer görevler ---------- */
 
 .benzer-serit {
