@@ -302,10 +302,16 @@ function anaSayfa() {
     grid.append(kart);
   });
 
+  /* Kartlar hafif sola, sağda ızgara boyunda iki dikey baloncuk:
+     en çok okunan konu + en çok okunan ipucu. */
+  const duzen = el("div", "inceleme-duzeni");
+  duzen.append(grid, kenarBaloncuklari());
+
   const forumBaslik = el("h2", "bolum-baslik", "Yan Görevler · Forum");
   forumBaslik.id = "forum";
   const liste = el("ul", "forum-liste");
-  tumKonular().forEach(k => {
+  /* Radar konuları ana sayfa akışına taşmaz — kendi sayfaları ve forum filtresi var. */
+  tumKonular().filter(k => !k.radarAppid).forEach(k => {
     const li = el("li", "js-reveal");
     const a = el("a");
     a.href = "konu.html?id=" + k.id;
@@ -322,8 +328,78 @@ function anaSayfa() {
   if (tartisma) icerik.append(tartisma);
   const tumForum = el("a", "forum-cta", "Forumun tamamı: büyük başlıklar, büyük kavgalar →");
   tumForum.href = "forum.html";
-  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, nabizPaneli(), tumForum, toplulukSayimi());
+  icerik.append(hero, incelemeBaslik, duzen, forumBaslik, liste, nabizPaneli(), tumForum, toplulukSayimi());
   canlandir();
+}
+
+/* ---------- Kenar baloncukları: incelemelerin sağında dikey vitrin ----------
+   "Okunma" sayısı gösterge amaçlıdır: anahtar + gün tohumundan deterministik
+   türetilir (rastgelelik ilkesi: asla Math.random) — herkes aynı sayıyı görür,
+   sayı her gün kendiliğinden biraz artar. */
+function okunmaSayisi(anahtar, taban) {
+  let h = 0;
+  for (const harf of anahtar) h = (h * 31 + harf.charCodeAt(0)) % 811;
+  return taban + h + (Math.floor(Date.now() / 86400000) % 97) * 13;
+}
+
+function kenarBaloncuklari() {
+  const sutun = el("aside", "kenar-baloncuklari");
+
+  /* 1) En çok okunan konu = meydanın en çok yorumlusu (kullanıcı yorumları dahil,
+     Radar hariç — bu vitrin kurgu evrenin). */
+  const adaylar = tumKonular().filter(k => !k.radarAppid);
+  let konu = adaylar[0], enCok = -1;
+  adaylar.forEach(k => {
+    const t = k.yorumlar.length + kullaniciYorumlari(k.id).length;
+    if (t > enCok) { enCok = t; konu = k; }
+  });
+  if (konu) {
+    const kutu = el("section", "kenar-balon konu-balonu js-reveal");
+    kutu.append(el("p", "eyebrow", "🔥 En çok okunan konu"));
+    const h3 = el("h3");
+    const a = el("a", null, konu.baslik);
+    a.href = "konu.html?id=" + konu.id;
+    h3.append(a);
+    kutu.append(h3);
+    const alinti = el("div", "balon-alinti");
+    const avatar = el("span", "k-avatar", (konu.acan || "?").charAt(0));
+    avatar.style.background = avatarRengi(konu.acan || "?");
+    const alintiGovde = el("div", "alinti-govde");
+    alintiGovde.append(
+      el("b", "rumuz", konu.acan),
+      el("p", null, konu.mesaj || (konu.yorumlar[0] && konu.yorumlar[0].metin) || "")
+    );
+    alinti.append(avatar, alintiGovde);
+    kutu.append(alinti);
+    kutu.append(el("p", "kenar-istatistik",
+      "≈ " + okunmaSayisi(konu.id, 1900 + enCok * 137).toLocaleString("tr-TR") + " okunma · " + enCok + " yorum"));
+    const git = el("a", "tartisma-git");
+    git.href = "konu.html?id=" + konu.id;
+    git.append(document.createTextNode("Kavgaya katıl"), el("span", "ok-mini", "→"));
+    kutu.append(git);
+    sutun.append(kutu);
+  }
+
+  /* 2) En çok okunan ipucu: spoiler'sız havuzdan gün tohumlu seçim.
+     +5 kaydırma, ipuçları sayfasındaki "en çok aranan"la aynı güne denk gelmesin diye. */
+  const havuz = [];
+  IPUCLARI.forEach(g => g.liste.forEach(ip => { if (!ip.spoiler) havuz.push({ oyunId: g.oyunId, metin: ip.metin }); }));
+  if (havuz.length) {
+    const secim = havuz[(new Date().getDate() + 5) % havuz.length];
+    const oyun = OYUNLAR.find(o => o.id === secim.oyunId);
+    const kutu = el("section", "kenar-balon ipucu-balonu js-reveal");
+    kutu.append(el("p", "eyebrow", "💡 En çok okunan ipucu"));
+    if (oyun) kutu.append(el("p", "ipucu-oyun", oyun.ad + " · Görev Rehberi"));
+    kutu.append(el("blockquote", "ipucu-metin", "“" + secim.metin + "”"));
+    kutu.append(el("p", "kenar-istatistik",
+      "≈ " + okunmaSayisi(secim.metin, 1100).toLocaleString("tr-TR") + " okunma"));
+    const git = el("a", "tartisma-git");
+    git.href = "ipuclari.html";
+    git.append(document.createTextNode("Rehberin tamamı"), el("span", "ok-mini", "→"));
+    kutu.append(git);
+    sutun.append(kutu);
+  }
+  return sutun;
 }
 
 /* ---------- Meydan Nabzı: kendi kendine yaşayan topluluk simülasyonu ----------
