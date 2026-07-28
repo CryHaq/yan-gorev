@@ -60,6 +60,18 @@ html[data-tema="gunduz"] .gunun-tartismasi {
 
 html[data-tema="gunduz"] .gunun-tartismasi .eyebrow { color: #c2542e; }
 
+/* Gündüzde turuncu aile koyulaşır: açık zeminde kontrast ayakta kalsın. */
+html[data-tema="gunduz"] .one-cikan-eyebrow,
+html[data-tema="gunduz"] .ipucu.spoiler .isaret,
+html[data-tema="gunduz"] .rozet-mini.unvan { color: #c2542e; }
+
+html[data-tema="gunduz"] .rozet-mini.unvan { border-color: rgba(194, 84, 46, 0.5); }
+
+html[data-tema="gunduz"] .ipucu.spoiler:not(.acik)::after {
+  color: #c2542e;
+  border-color: rgba(194, 84, 46, 0.5);
+}
+
 *, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -1615,6 +1627,15 @@ button.tartisma-git { border: none; cursor: pointer; font: inherit; font-weight:
 
 /* Manşet ipucu: forum manşetiyle aynı çerçeve, içinde büyük serif alıntı */
 .ipucu-kart.forum-one-cikan { padding: 0; }
+
+/* Özgüllük düzeltmesi: manşet kapağı, kart kapağının 132px kare kuralını ezer. */
+.ipucu-kart.forum-one-cikan .konu-kapak {
+  width: 42%;
+  aspect-ratio: auto;
+  align-self: stretch;
+  min-height: 240px;
+  border-radius: 0;
+}
 .buyuk-ipucu {
   font-family: var(--serif);
   font-size: clamp(1.25rem, 2.6vw, 1.7rem);
