@@ -787,24 +787,45 @@ function temaDugmesiKur() {
     guvenliYaz("yg-tema", yeni);
   });
   ciz();
-  nav.append(dugme);
+  /* Tema düğmesi profil simgesinin SOLUNA girer: profil hep en sağda. */
+  const profil = document.getElementById("nav-profil");
+  if (profil) nav.insertBefore(dugme, profil);
+  else nav.append(dugme);
 }
 
 /* Bulunulan sayfanın nav başlığı kobaltla işaretlenir. */
 function navAktifIsaretle() {
   const sayfa = location.pathname.split("/").pop() || "index.html";
-  document.querySelectorAll(".site-header nav a:not(#nav-uye)").forEach(a => {
+  document.querySelectorAll(".site-header nav a:not(#nav-profil)").forEach(a => {
     const hedef = (a.getAttribute("href") || "").split("#")[0];
     if (hedef === sayfa) a.classList.add("aktif");
   });
 }
 
+/* Sabit, güvenli işaretleme — kullanıcı verisi içermez. */
+const PROFIL_SIMGE = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.2 4.8-6 8-6s6.5 1.8 8 6"/></svg>';
+
 function uyeNavGuncelle() {
-  const nav = document.getElementById("nav-uye");
-  if (!nav) return;
+  const dugme = document.getElementById("nav-profil");
+  if (!dugme) return;
   const uye = uyeGetir();
-  nav.textContent = uye ? uye.rumuz : "Üye Ol";
-  nav.classList.toggle("girisli", !!uye);
+  if (uye) {
+    /* Girişli: harf-avatar, kendi renginde → profiline gider. */
+    dugme.textContent = uye.rumuz.charAt(0);
+    dugme.style.background = uye.renk || "";
+    dugme.classList.add("girisli");
+    dugme.href = "profil.html?rumuz=" + encodeURIComponent(uye.rumuz);
+    dugme.setAttribute("aria-label", "Profilin: " + uye.rumuz);
+    dugme.title = uye.rumuz;
+  } else {
+    /* Çıkışlı: kişi simgesi → giriş/üyelik sayfasına gider. */
+    dugme.innerHTML = PROFIL_SIMGE;
+    dugme.style.background = "";
+    dugme.classList.remove("girisli");
+    dugme.href = "uye.html";
+    dugme.setAttribute("aria-label", "Giriş ve üyelik");
+    dugme.title = "Giriş / Üye Ol";
+  }
 }
 
 function uyeSayfasi() {
@@ -946,7 +967,12 @@ function profilSayfasi() {
   const h1 = el("h1", null, rumuz || "İsimsiz sakin");
   adKutu.append(h1);
   const rozetSatiri = el("p", "profil-rozetler");
-  if (benim) rozetSatiri.append(el("span", "sen", "sen"), el("span", "rozet-mini unvan", uyeUnvani()));
+  if (benim) {
+    rozetSatiri.append(el("span", "sen", "sen"), el("span", "rozet-mini unvan", uyeUnvani()));
+    const duzenle = el("a", "rozet-mini", "profili düzenle");
+    duzenle.href = "uye.html";
+    rozetSatiri.append(duzenle);
+  }
   if (typeof ROZETLER !== "undefined" && ROZETLER[rumuz]) rozetSatiri.append(el("span", "rozet-mini", ROZETLER[rumuz]));
   if (rozetSatiri.childElementCount) adKutu.append(rozetSatiri);
   adKutu.append(el("p", "alt", yorumSayisi + " yorum · " + acilanKonu + " konu"));

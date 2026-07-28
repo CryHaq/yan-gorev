@@ -1180,20 +1180,31 @@ html[data-tema="gunduz"] .form-hata { color: #b3402a; }
 
 /* ---------- Üye navigasyonu ---------- */
 
-.site-header nav .nav-uye {
+.site-header nav .nav-profil {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   border: 1px solid var(--vurgu);
-  border-radius: var(--r-tam);
-  padding: 0.25rem 0.85rem;
   color: var(--vurgu);
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  transition: box-shadow 140ms ease, border-color 140ms ease;
 }
 
-.site-header nav .nav-uye.girisli {
-  background: var(--vurgu-derin);
-  border-color: var(--vurgu-derin);
-  color: #fff;
-  text-transform: none;
-  letter-spacing: 0.02em;
+.site-header nav .nav-profil:hover { box-shadow: var(--parilti); }
+
+.site-header nav .nav-profil.girisli {
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #0c0f1e;
+  border-color: rgba(255, 255, 255, 0.4);
+  text-shadow: none;
 }
+
+a.rozet-mini { text-decoration: none; }
+a.rozet-mini:hover { border-color: var(--vurgu); }
 
 /* ---------- Forum sayfası ---------- */
 
