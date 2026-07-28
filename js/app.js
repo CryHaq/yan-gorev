@@ -105,7 +105,7 @@ function ipuclariSayfasi() {
         li.setAttribute("role", "button");
         li.setAttribute("tabindex", "0");
         li.setAttribute("aria-label", "Spoiler içeren ipucu — görmek için tıkla");
-        const ac = () => li.classList.add("acik");
+        const ac = () => { li.classList.add("acik"); guvenliYaz("yg-spoiler-acildi", "1"); };
         li.addEventListener("click", ac);
         li.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ac(); } });
       }
@@ -700,6 +700,57 @@ function uyeGetir() {
   return uye && typeof uye.rumuz === "string" && uye.rumuz.trim() ? uye : null;
 }
 
+/* ---------- Görev Günlüğü ----------
+   Sitenin adının hakkı: her görev, kullanıcının ZATEN bıraktığı localStorage
+   izlerinden doğrulanır — ayrı ilerleme kaydı tutulmaz, günlük yalan söyleyemez. */
+
+function anahtarVar(onek, deger) {
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf(onek) === 0 && (deger === undefined || localStorage.getItem(k) === deger)) return true;
+    }
+  } catch (e) { /* depolama engelli: görev tamamlanmamış sayılır */ }
+  return false;
+}
+
+const GOREVLER = [
+  { ad: "Aramıza katıl", ipucu: "Bir rumuz seç, rengini kap", kontrol: () => !!uyeGetir() },
+  { ad: "Işıkları dene", ipucu: "Gece/gündüz düğmesine bas", kontrol: () => { try { return localStorage.getItem("yg-tema") !== null; } catch (e) { return false; } } },
+  { ad: "Meydanda oyunu kullan", ipucu: "Pehlivan anketine katıl", kontrol: () => anahtarVar("yg-anket-") },
+  { ad: "Duygunu belli et", ipucu: "Bir yoruma ♥, 🔥 ya da 🧂 bırak", kontrol: () => anahtarVar("yg-begeni-", "1") || anahtarVar("yg-tepki-", "1") },
+  { ad: "Sırra bak", ipucu: "İpuçlarında bir spoiler aç", kontrol: () => anahtarVar("yg-spoiler-acildi", "1") },
+  { ad: "Beş kavga oku", ipucu: "Beş farklı konuyu ziyaret et", kontrol: () => okunanlar().size >= 5 },
+  { ad: "Söze karış", ipucu: "Toplam üç yorum yaz", kontrol: () => uyeYorumSayisi() >= 3 },
+  { ad: "Kendi meydanını kur", ipucu: "Bir konu aç", kontrol: () => kullaniciKonulari().length >= 1 }
+];
+
+function gorevPaneli() {
+  const panel = el("section", "yan-panel gorev-gunlugu js-reveal");
+  panel.append(el("p", "yan-baslik", "📜 Görev Günlüğün"));
+  let bitti = 0;
+  const satirlar = GOREVLER.map(g => {
+    let tamam = false;
+    try { tamam = !!g.kontrol(); } catch (e) {}
+    if (tamam) bitti++;
+    const satir = el("div", "gorev" + (tamam ? " tamam" : ""));
+    const govde = el("span", "gorev-govde");
+    govde.append(el("span", "gorev-ad", g.ad), el("span", "gorev-ipucu", g.ipucu));
+    satir.append(el("span", "isaret", tamam ? "✓" : "◇"), govde);
+    return satir;
+  });
+  const cubuk = el("div", "gorev-cubuk");
+  const dolgu = el("div", "gorev-dolgu");
+  dolgu.style.width = Math.round((bitti / GOREVLER.length) * 100) + "%";
+  cubuk.append(dolgu);
+  panel.append(
+    el("p", "gorev-ozet", bitti + " / " + GOREVLER.length + " görev tamamlandı" + (bitti === GOREVLER.length ? " — meydan senindir! 🏆" : "")),
+    cubuk,
+    ...satirlar
+  );
+  return panel;
+}
+
 /* Unvan merdiveni: unvan satın alınmaz, yorumla kazanılır. */
 function uyeYorumSayisi() {
   return tumKonular().reduce((t, k) => t + kullaniciYorumlari(k.id).length, 0);
@@ -834,7 +885,24 @@ function uyeSayfasi() {
 
   kart.append(form);
   kart.append(el("p", "demo-not", "Demo üyelik: bilgin yalnızca bu tarayıcının localStorage'ında saklanır, sunucuya hiçbir şey gönderilmez. Bu yüzden şifre de istemiyoruz."));
-  icerik.append(kart);
+
+  const kolonlar = el("div", "iki-kolon");
+  const sol = el("div", "kolon-icerik");
+  sol.append(kart);
+  const yan = el("aside", "yan-kutu");
+  yan.append(gorevPaneli());
+  if (uye) {
+    const profilPaneli = el("div", "yan-panel");
+    profilPaneli.append(el("p", "yan-baslik", "Meydan Geçmişin"));
+    const git = el("a", "tartisma-git");
+    git.href = "profil.html?rumuz=" + encodeURIComponent(uye.rumuz);
+    git.append(document.createTextNode("Profiline git"), el("span", "ok-mini", "→"));
+    profilPaneli.append(git);
+    yan.append(profilPaneli);
+  }
+  kolonlar.append(sol, yan);
+  icerik.append(kolonlar);
+  canlandir();
 }
 
 /* Günün Tartışması: adaylar arasından ayın gününe göre seçilir — her gün başka alıntı. */
