@@ -21,6 +21,8 @@ function sayfayiKur() {
     else if (sayfa === "forum.html") forumSayfasi();
     else if (sayfa === "ipuclari.html") ipuclariSayfasi();
     else if (sayfa === "uye.html") uyeSayfasi();
+    else if (sayfa === "profil.html") profilSayfasi();
+    else if (sayfa === "ekip.html") ekipSayfasi();
     else anaSayfa();
   } catch (hata) {
     console.error("Yan Görev render hatası:", hata);
@@ -905,6 +907,119 @@ function uyeSayfasi() {
   canlandir();
 }
 
+/* ---------- profil sayfası ----------
+   Rumuzun tüm izleri: açtığı konular + kurgu ve kullanıcı yorumları,
+   veriyi tarayarak derlenir — profil için ayrı kayıt tutulmaz. */
+function profilSayfasi() {
+  const rumuz = (new URLSearchParams(location.search).get("rumuz") || "").trim();
+  document.title = (rumuz || "Profil") + " — Yan Görev";
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+
+  const uye = uyeGetir();
+  const benim = !!(uye && rumuz && uye.rumuz === rumuz);
+
+  const girisler = [];
+  let acilanKonu = 0;
+  tumKonular().forEach(k => {
+    if (k.acan === rumuz) {
+      acilanKonu++;
+      girisler.push({ konu: k, metin: k.mesaj, tarih: k.tarih, tip: "Konuyu açtı" });
+    }
+    k.yorumlar.forEach(y => {
+      if (y.rumuz === rumuz) girisler.push({ konu: k, metin: y.metin, tarih: y.tarih, tip: "Yorum" });
+    });
+    kullaniciYorumlari(k.id).forEach(y => {
+      if (y.rumuz === rumuz) girisler.push({ konu: k, metin: y.metin, tarih: y.tarih, tip: "Yorum" });
+    });
+  });
+  const yorumSayisi = girisler.length - acilanKonu;
+
+  const baslik = el("header", "forum-basligi profil-basligi");
+  const geri = el("a", "geri-izi", "← Foruma dön");
+  geri.href = "forum.html";
+  baslik.append(geri, el("p", "eyebrow", "Yan Görev · Meydan Sakini"));
+  const kimlik = el("div", "profil-kimlik");
+  const avatar = el("span", "avatar buyuk", (rumuz || "?").charAt(0));
+  avatar.style.background = benim && uye.renk ? uye.renk : avatarRengi(rumuz || "?");
+  const adKutu = el("div");
+  const h1 = el("h1", null, rumuz || "İsimsiz sakin");
+  adKutu.append(h1);
+  const rozetSatiri = el("p", "profil-rozetler");
+  if (benim) rozetSatiri.append(el("span", "sen", "sen"), el("span", "rozet-mini unvan", uyeUnvani()));
+  if (typeof ROZETLER !== "undefined" && ROZETLER[rumuz]) rozetSatiri.append(el("span", "rozet-mini", ROZETLER[rumuz]));
+  if (rozetSatiri.childElementCount) adKutu.append(rozetSatiri);
+  adKutu.append(el("p", "alt", yorumSayisi + " yorum · " + acilanKonu + " konu"));
+  kimlik.append(avatar, adKutu);
+  baslik.append(kimlik);
+  icerik.append(baslik);
+
+  if (!girisler.length) {
+    const bos = el("div", "bos-durum");
+    bos.append(el("p", null, "Bu rumuz meydanda henüz iz bırakmamış — belki de sadece okuyor."));
+    icerik.append(bos);
+    canlandir();
+    return;
+  }
+
+  const akis = el("div", "profil-akisi");
+  girisler.forEach(g => {
+    const kutu = el("article", "profil-giris js-reveal");
+    const ust = el("p", "giris-ust");
+    const konuLink = el("a", null, kisalt(g.konu.baslik, 60));
+    konuLink.href = "konu.html?id=" + g.konu.id;
+    ust.append(el("span", "etiket-mini", g.tip), konuLink, el("span", "tarih", g.tarih || ""));
+    kutu.append(ust, el("p", "giris-metin", g.metin || ""));
+    akis.append(kutu);
+  });
+  icerik.append(akis);
+  canlandir();
+}
+
+/* ---------- ekip / künye sayfası ---------- */
+function ekipSayfasi() {
+  document.title = "Ekip ve Künye — Yan Görev";
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+
+  const baslik = el("header", "forum-basligi");
+  baslik.append(
+    el("p", "eyebrow", "Yan Görev · Künye"),
+    el("h1", null, "Işıkları Yakanlar"),
+    el("p", "alt", "Yan Görev'i çıkaran kurgu kadro — footer'daki imzanın yüzleri.")
+  );
+  icerik.append(baslik);
+
+  const izgara = el("div", "forum-izgara ipucu-izgara");
+  EKIP.forEach(kisi => {
+    const kart = el("article", "ekip-kart js-reveal");
+    const avatar = el("span", "avatar buyuk", kisi.rumuz.charAt(0));
+    avatar.style.background = avatarRengi(kisi.rumuz);
+    kart.append(avatar);
+    const ad = el("p", "konu-oyun");
+    const link = el("a", null, kisi.rumuz);
+    link.href = "profil.html?rumuz=" + encodeURIComponent(kisi.rumuz);
+    ad.append(link, el("span", "tur-etiket", kisi.gorev));
+    kart.append(ad, el("p", "ekip-bio", kisi.bio));
+    if (kisi.imzalar.length) {
+      const imzalar = el("p", "ekip-imzalar");
+      imzalar.append(document.createTextNode("İmzası: "));
+      kisi.imzalar.forEach((oyunId, i) => {
+        const oyun = OYUNLAR.find(o => o.id === oyunId);
+        if (!oyun) return;
+        if (i > 0) imzalar.append(document.createTextNode(" · "));
+        const a = el("a", null, oyun.ad);
+        a.href = "oyun.html?id=" + oyun.id;
+        imzalar.append(a);
+      });
+      kart.append(imzalar);
+    }
+    izgara.append(kart);
+  });
+  icerik.append(izgara);
+  canlandir();
+}
+
 /* Günün Tartışması: adaylar arasından ayın gününe göre seçilir — her gün başka alıntı. */
 function gununTartismasi() {
   const aday = TARTISMA_ADAYLARI[new Date().getDate() % TARTISMA_ADAYLARI.length];
@@ -1063,7 +1178,13 @@ function konuSayfasi() {
     geri,
     el("p", "eyebrow", "Yan Görev · Forum"),
     el("h1", null, konu.baslik),
-    el("p", "meta", konu.acan + " açtı · " + konu.tarih)
+    (() => {
+      const meta = el("p", "meta");
+      const acanLink = el("a", null, konu.acan);
+      acanLink.href = "profil.html?rumuz=" + encodeURIComponent(konu.acan);
+      meta.append(acanLink, document.createTextNode(" açtı · " + konu.tarih));
+      return meta;
+    })()
   );
 
   aktifYanit = null;
@@ -1202,7 +1323,9 @@ function yorumSatiri(konuId, yorum, sira) {
   li.append(avatar);
   const balon = el("div", "balon");
   const ust = el("div", "ust");
-  ust.append(el("span", "rumuz", yorum.rumuz || "?"), el("span", "tarih", yorum.tarih || ""));
+  const rumuzLink = el("a", "rumuz", yorum.rumuz || "?");
+  rumuzLink.href = "profil.html?rumuz=" + encodeURIComponent(yorum.rumuz || "");
+  ust.append(rumuzLink, el("span", "tarih", yorum.tarih || ""));
   if (yorum.kullanici) {
     ust.append(el("span", "sen", "sen"), el("span", "rozet-mini unvan", uyeUnvani()));
   } else if (typeof ROZETLER !== "undefined" && ROZETLER[yorum.rumuz]) {

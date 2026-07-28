@@ -1900,6 +1900,77 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   color: var(--soluk);
 }
 
+/* ---------- Profil + Ekip ---------- */
+
+.balon a.rumuz { color: inherit; text-decoration: none; }
+.balon a.rumuz:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+.konu-baslik .meta a { color: inherit; font-weight: 600; }
+
+.profil-kimlik {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 0.4rem;
+}
+
+.profil-basligi h1 { margin: 0 0 0.2rem; }
+
+.profil-rozetler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.3rem;
+}
+
+.profil-basligi .alt { margin: 0; }
+
+.profil-akisi {
+  margin-top: 1.6rem;
+  max-width: var(--govde-olcu);
+  display: grid;
+  gap: 1rem;
+}
+
+.profil-giris {
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--r-m);
+  padding: 1rem 1.3rem;
+}
+
+.giris-ust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.5rem;
+}
+
+.giris-ust a { font-weight: 700; text-decoration: none; color: var(--murekkep); }
+.giris-ust a:hover { color: var(--vurgu); }
+.giris-ust .tarih { color: var(--soluk); font-size: 0.8rem; margin-left: auto; }
+
+.giris-metin { margin: 0; color: var(--metin-yumusak); }
+
+.ekip-kart {
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--r-m);
+  padding: 1.5rem 1.5rem 1.3rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.ekip-kart:hover { border-color: var(--vurgu); box-shadow: var(--parilti); }
+
+.forum-izgara .ekip-kart { flex: 1 1 300px; max-width: 424px; }
+
+.ekip-kart .avatar.buyuk { width: 64px; height: 64px; font-size: 1.7rem; margin-bottom: 0.9rem; }
+.ekip-kart .konu-oyun { font-size: 1.3rem; margin-bottom: 0.35rem; }
+.ekip-bio { margin: 0 0 0.8rem; color: var(--metin-yumusak); font-size: 0.95rem; }
+.ekip-imzalar { margin: 0; color: var(--soluk); font-size: 0.85rem; }
+.ekip-imzalar a { font-weight: 600; }
+
 /* ---------- Görev Günlüğü ---------- */
 
 .gorev-ozet { margin: 0 0 0.5rem; font-weight: 700; font-size: 0.95rem; }
