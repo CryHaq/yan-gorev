@@ -47,7 +47,7 @@ function ipuclariSayfasi() {
     const mansetKapak = el("a", "konu-kapak");
     mansetKapak.href = "oyun.html?id=" + adayOyun.id;
     mansetKapak.setAttribute("aria-label", adayOyun.ad + " incelemesine git");
-    mansetKapak.append(kapakGorseli(adayOyun, "(max-width: 640px) 100vw, 480px"));
+    mansetKapak.append(kapakGorseli(adayOyun, "(max-width: 640px) 100vw, 480px", true));
     manset.append(mansetKapak);
     const mansetGovde = el("div", "konu-govde");
     mansetGovde.append(el("p", "one-cikan-eyebrow", "💡 En Çok Aranan İpucu"));
@@ -151,16 +151,27 @@ function el(tag, sinif, metin) {
   return e;
 }
 
-/* Kart görselleri: 720px orta varyant varsayılan, retina/geniş için tam boy srcset. */
-function kapakGorseli(oyun, boyutlar) {
-  const img = el("img");
+/* Kart görselleri: AVIF öncelikli <picture>, JPG yedek; 720px orta + 1400px srcset.
+   eager=true manşet/LCP görselleri içindir: lazy anti-pattern'inden kaçınır (denetim #3, #6). */
+function kapakGorseli(oyun, boyutlar, eager) {
   const orta = oyun.gorsel.replace("img/", "img/orta/");
+  const resim = el("picture");
+  const avif = document.createElement("source");
+  avif.type = "image/avif";
+  avif.srcset = orta.replace(".jpg", ".avif") + " 720w, " + oyun.gorsel.replace(".jpg", ".avif") + " 1400w";
+  avif.sizes = boyutlar;
+  const img = el("img");
   img.src = orta;
   img.srcset = orta + " 720w, " + oyun.gorsel + " 1400w";
   img.sizes = boyutlar;
   img.alt = oyun.ad + " oyununun görseli";
-  img.loading = "lazy";
-  return img;
+  if (eager) {
+    img.fetchPriority = "high";
+  } else {
+    img.loading = "lazy";
+  }
+  resim.append(avif, img);
+  return resim;
 }
 
 function puanRozet(puan) {
@@ -181,24 +192,41 @@ function anaSayfa() {
   const manset = OYUNLAR.find(o => o.manset) || OYUNLAR[0];
   const hero = el("section", "hero hero-prisma");
 
+  /* LCP yolu: manşet görseli AVIF <picture> + srcset + yüksek öncelik (denetim #2, #6). */
+  const heroOrta = manset.gorsel.replace("img/", "img/orta/");
+  const heroResim = el("picture");
+  const heroAvif = document.createElement("source");
+  heroAvif.type = "image/avif";
+  heroAvif.srcset = heroOrta.replace(".jpg", ".avif") + " 720w, " + manset.gorsel.replace(".jpg", ".avif") + " 1400w";
+  heroAvif.sizes = "100vw";
   const heroGorsel = el("img", "hero-gorsel");
   heroGorsel.src = manset.gorsel;
+  heroGorsel.srcset = heroOrta + " 720w, " + manset.gorsel + " 1400w";
+  heroGorsel.sizes = "100vw";
+  heroGorsel.fetchPriority = "high";
   heroGorsel.alt = manset.ad + " oyununun tanıtım görseli";
-  hero.append(heroGorsel);
+  heroResim.append(heroAvif, heroGorsel);
+  hero.append(heroResim);
 
-  /* Video varsa görselin üzerine biner; hareket azaltma tercihinde hiç eklenmez. */
+  /* Video LCP görseli YÜKLENDİKTEN sonra eklenir: 800KB'lık dosya
+     manşet görseliyle bant genişliği yarıştırmaz (denetim #2).
+     Hareket azaltma tercihinde hiç eklenmez. */
   if (manset.video && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const video = document.createElement("video");
-    video.className = "hero-video";
-    video.src = manset.video;
-    video.poster = manset.gorsel;
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute("muted", "");
-    video.setAttribute("playsinline", "");
-    hero.append(video);
+    const videoEkle = () => {
+      const video = document.createElement("video");
+      video.className = "hero-video";
+      video.src = manset.video;
+      video.poster = manset.gorsel;
+      video.autoplay = true;
+      video.loop = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.setAttribute("muted", "");
+      video.setAttribute("playsinline", "");
+      hero.insertBefore(video, heroResim.nextSibling);
+    };
+    if (heroGorsel.complete) videoEkle();
+    else heroGorsel.addEventListener("load", videoEkle, { once: true });
   }
 
   hero.append(puanRozet(manset.puan));
@@ -393,7 +421,7 @@ function konuKarti(veri, oneCikan) {
     const kapak = el("a", "konu-kapak");
     kapak.href = "oyun.html?id=" + oyun.id;
     kapak.setAttribute("aria-label", oyun.ad + " incelemesine git");
-    kapak.append(kapakGorseli(oyun, oneCikan ? "(max-width: 640px) 100vw, 480px" : "(max-width: 640px) 100vw, 346px"));
+    kapak.append(kapakGorseli(oyun, oneCikan ? "(max-width: 640px) 100vw, 480px" : "(max-width: 640px) 100vw, 346px", oneCikan));
     kutu.append(kapak);
   }
 

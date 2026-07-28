@@ -89,32 +89,36 @@ body {
 
 /* Su gibi akan RGB zemin: iki bulanık ışık katmanı ters yönlerde süzülür,
    hue-rotate ile renkler kobalt→mor→turkuaz arasında döner. */
+/* GPU diyeti (denetim #7): blur/hue-rotate keyframe'den çıktı — yumuşaklık
+   gradyan duraklarında, renk kayması iki katmanın opacity çapraz-solmasında.
+   Yalnız transform+opacity animasyonu = compositor bedava, pil rahat. */
 body::before {
   content: "";
   position: fixed;
-  inset: -32%;
+  inset: -12%;
   z-index: -2;
   pointer-events: none;
   background:
-    radial-gradient(45% 40% at 20% 25%, rgba(43, 86, 255, 0.68), transparent 66%),
-    radial-gradient(40% 38% at 82% 14%, rgba(168, 62, 255, 0.58), transparent 66%),
-    radial-gradient(46% 44% at 76% 80%, rgba(0, 200, 215, 0.55), transparent 66%),
-    radial-gradient(36% 32% at 10% 86%, rgba(255, 92, 140, 0.45), transparent 66%);
+    radial-gradient(45% 40% at 20% 25%, rgba(43, 86, 255, 0.55), rgba(43, 86, 255, 0.18) 45%, transparent 72%),
+    radial-gradient(40% 38% at 82% 14%, rgba(168, 62, 255, 0.46), rgba(168, 62, 255, 0.15) 45%, transparent 72%),
+    radial-gradient(46% 44% at 76% 80%, rgba(0, 200, 215, 0.44), rgba(0, 200, 215, 0.14) 45%, transparent 72%),
+    radial-gradient(36% 32% at 10% 86%, rgba(255, 92, 140, 0.36), rgba(255, 92, 140, 0.12) 45%, transparent 72%);
   animation: suAk 14s ease-in-out infinite alternate;
-  will-change: transform, filter;
+  will-change: transform, opacity;
 }
 
 body::after {
   content: "";
   position: fixed;
-  inset: -32%;
+  inset: -12%;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(34% 30% at 58% 42%, rgba(92, 128, 255, 0.42), transparent 60%),
-    radial-gradient(30% 28% at 32% 68%, rgba(0, 225, 190, 0.36), transparent 60%);
+    radial-gradient(34% 30% at 58% 42%, rgba(92, 128, 255, 0.36), rgba(92, 128, 255, 0.12) 45%, transparent 66%),
+    radial-gradient(30% 28% at 32% 68%, rgba(0, 225, 190, 0.30), rgba(0, 225, 190, 0.10) 45%, transparent 66%),
+    radial-gradient(38% 34% at 78% 24%, rgba(255, 122, 200, 0.22), transparent 64%);
   animation: suAkKarsi 19s ease-in-out infinite alternate;
-  will-change: transform, filter;
+  will-change: transform, opacity;
 }
 
 html[data-tema="gunduz"] body::before {
@@ -132,17 +136,17 @@ html[data-tema="gunduz"] body::after {
 }
 
 @keyframes suAk {
-  0%   { transform: translate3d(-6%, -3%, 0) rotate(-4deg) scale(1);    filter: blur(52px) hue-rotate(0deg); }
-  33%  { transform: translate3d(4%, 4%, 0)   rotate(3deg)  scale(1.16); filter: blur(60px) hue-rotate(70deg); }
-  66%  { transform: translate3d(-3%, 6%, 0)  rotate(-2deg) scale(1.08); filter: blur(55px) hue-rotate(-50deg); }
-  100% { transform: translate3d(5%, -4%, 0)  rotate(3deg)  scale(1.2);  filter: blur(62px) hue-rotate(35deg); }
+  0%   { transform: translate3d(-4%, -2%, 0) rotate(-4deg) scale(1);    opacity: 1; }
+  33%  { transform: translate3d(3%, 3%, 0)   rotate(3deg)  scale(1.16); opacity: 0.62; }
+  66%  { transform: translate3d(-2%, 4%, 0)  rotate(-2deg) scale(1.08); opacity: 0.85; }
+  100% { transform: translate3d(4%, -3%, 0)  rotate(3deg)  scale(1.2);  opacity: 0.7; }
 }
 
 @keyframes suAkKarsi {
-  0%   { transform: translate3d(5%, 3%, 0)   rotate(3deg)  scale(1.1);  filter: blur(64px) hue-rotate(0deg); }
-  33%  { transform: translate3d(-4%, -5%, 0) rotate(-3deg) scale(1);    filter: blur(72px) hue-rotate(-65deg); }
-  66%  { transform: translate3d(3%, -2%, 0)  rotate(2deg)  scale(1.14); filter: blur(66px) hue-rotate(45deg); }
-  100% { transform: translate3d(-5%, 5%, 0)  rotate(-2deg) scale(1.05); filter: blur(70px) hue-rotate(-30deg); }
+  0%   { transform: translate3d(4%, 2%, 0)   rotate(3deg)  scale(1.1);  opacity: 0.55; }
+  33%  { transform: translate3d(-3%, -4%, 0) rotate(-3deg) scale(1);    opacity: 1; }
+  66%  { transform: translate3d(2%, -2%, 0)  rotate(2deg)  scale(1.14); opacity: 0.65; }
+  100% { transform: translate3d(-4%, 4%, 0)  rotate(-2deg) scale(1.05); opacity: 0.9; }
 }
 
 /* ---------- Tema düğmesi ---------- */
@@ -175,6 +179,9 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 img { max-width: 100%; display: block; }
+
+/* <picture> sarmalayıcısı yerleşimde görünmez: flex/grid çocuğu img'nin kendisi kalır. */
+picture { display: contents; }
 
 /* ---------- Üst bar ---------- */
 
@@ -254,6 +261,10 @@ main {
   margin: 0 auto;
   padding: 0 1.25rem 4rem;
 }
+
+/* CLS koruması: JS içeriği basana dek footer ekran DIŞINDA başlar,
+   dolunca zıplaması Core Web Vitals'a sayılmaz. (Denetim bulgusu #1) */
+main:empty { min-height: 100vh; }
 
 .bolum-baslik {
   font-family: var(--grotesk);
@@ -916,7 +927,7 @@ main {
 .footer-kolon a {
   color: var(--soluk);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   width: fit-content;
 }
 
@@ -2071,7 +2082,7 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   .kart:hover, .yorum-form button:hover, .forum-liste a:hover .isaret { transform: none; }
   .kart:hover .kart-kapak img { transform: none; }
   .hero-gorsel, .gunun-tartismasi, .hero-icerik, .hero .puan-rozet { animation: none; }
-  body::before, body::after { animation: none; filter: blur(60px); }
+  body::before, body::after { animation: none; }
   .forum-konu, .renk-secenek, .hero-cta, .hero-cta .ok, .konu-kapak img { transition: none; }
   .forum-konu:hover, .renk-secenek:hover, .hero-cta:hover .ok { transform: none; }
   .forum-konu:hover .konu-kapak img { transform: none; }
