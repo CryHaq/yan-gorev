@@ -318,27 +318,105 @@ function anaSayfa() {
 
   const tartisma = gununTartismasi();
   if (tartisma) icerik.append(tartisma);
-  /* Son aktivite şeridi: bugünün konularının son sözleri, kurgu zaman damgalarıyla. */
-  const aktivite = el("div", "aktivite js-reveal");
-  const sureler = ["az önce", "4 dk önce", "11 dk önce"];
-  tumKonular().filter(k => k.tarih === "27 Temmuz 2026" && k.yorumlar.length).slice(0, 3).forEach((k, i) => {
-    const son = k.yorumlar[k.yorumlar.length - 1];
-    const satir = el("p", "aktivite-satiri");
-    const git = el("a", null, kisalt(k.baslik, 46));
-    git.href = "konu.html?id=" + k.id;
-    satir.append(
-      el("span", "canli-nokta"),
-      el("b", null, " " + son.rumuz),
-      document.createTextNode(" " + (sureler[i] || "bugün") + " yazdı → "),
-      git
-    );
-    aktivite.append(satir);
-  });
-
   const tumForum = el("a", "forum-cta", "Forumun tamamı: büyük başlıklar, büyük kavgalar →");
   tumForum.href = "forum.html";
-  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, aktivite, tumForum, toplulukSayimi());
+  icerik.append(hero, incelemeBaslik, grid, forumBaslik, liste, nabizPaneli(), tumForum, toplulukSayimi());
   canlandir();
+}
+
+/* ---------- Meydan Nabzı: kendi kendine yaşayan topluluk simülasyonu ----------
+   Her 20 sn'lik zaman dilimi, TOHUMLU sözde-rastgele üreteçle bir "hamle"ye
+   dönüşür (konu açma / yanıt). Rastgelelik yok: aynı an siteye bakan herkes
+   aynı akışı görür; dönünce meydan "sen yokken yaşamış" olur. */
+
+const NABIZ_ARALIK = 20000;
+
+const NABIZ_KONU_SABLONLARI = [
+  "«{oyun}» için gizli bir detay buldum, kimse fark etmemiş",
+  "{oyun} hakkında tuhaf bir teorim var, gelin tartışalım",
+  "Gece gece {oyun} açanlar kulübü",
+  "{oyun} yamadan sonra daha mı iyi oldu?",
+  "{oyun} hakkında kimsenin konuşmadığı şey",
+  "{oyun} ilk kez oynayacak arkadaşa tavsiyeler"
+];
+
+const NABIZ_YANIT_PARCALARI = [
+  "buna saygıyla katılmıyorum",
+  "denedim ve gerçekten çalışıyor",
+  "kanıt olmadan olmaz, ekran görüntüsü bekliyorum",
+  "ilk mesajıma dönüp haklı çıktığımı not düşüyorum",
+  "spoiler vermeden söylüyorum: sabredin",
+  "bunu bir kenara yazın, bir gün turnuva kuralı olacak",
+  "meydan bu akşam yine dolu",
+  "rehberdeki ipucu buradaki kavgayı bitiriyor aslında"
+];
+
+/* mulberry32: minik, deterministik tohumlu üreteç. */
+function tohumluRastgele(tohum) {
+  return function () {
+    tohum |= 0; tohum = (tohum + 0x6D2B79F5) | 0;
+    let t = Math.imul(tohum ^ (tohum >>> 15), 1 | tohum);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function kurguRumuzlari() {
+  const kume = new Set();
+  KONULAR.forEach(k => { kume.add(k.acan); k.yorumlar.forEach(y => kume.add(y.rumuz)); });
+  return [...kume];
+}
+
+function nabizOlayi(tik) {
+  const r = tohumluRastgele((tik % 2147483647) ^ 0x9E3779B9);
+  const rumuzlar = kurguRumuzlari();
+  const kisi = rumuzlar[Math.floor(r() * rumuzlar.length)];
+  const oyun = OYUNLAR[Math.floor(r() * OYUNLAR.length)];
+  if (r() < 0.28) {
+    const sablon = NABIZ_KONU_SABLONLARI[Math.floor(r() * NABIZ_KONU_SABLONLARI.length)];
+    return { kisi, tip: "konu", metin: sablon.replace("{oyun}", oyun.ad), hedef: "konu.html?id=" + oyun.konuId };
+  }
+  const konu = KONULAR[Math.floor(r() * KONULAR.length)];
+  const parca = NABIZ_YANIT_PARCALARI[Math.floor(r() * NABIZ_YANIT_PARCALARI.length)];
+  return { kisi, tip: "yanit", metin: "“" + parca + "” · " + kisalt(konu.baslik, 40), hedef: "konu.html?id=" + konu.id };
+}
+
+let nabizZamanlayici = null;
+
+function nabizCiz(listeKutu, sayacKutu, canli) {
+  const simdiTik = Math.floor(Date.now() / NABIZ_ARALIK);
+  const gunBasi = new Date(); gunBasi.setHours(0, 0, 0, 0);
+  sayacKutu.textContent = " Meydan Nabzı · bugün " + Math.floor((Date.now() - gunBasi.getTime()) / NABIZ_ARALIK) + " hamle";
+  listeKutu.textContent = "";
+  for (let i = 0; i < 6; i++) {
+    const olay = nabizOlayi(simdiTik - i);
+    const satir = el("p", "nabiz-satir" + (canli && i === 0 ? " yeni" : ""));
+    const kisiLink = el("a", "rumuz", olay.kisi);
+    kisiLink.href = "profil.html?rumuz=" + encodeURIComponent(olay.kisi);
+    const hedefLink = el("a", null, olay.metin);
+    hedefLink.href = olay.hedef;
+    const sn = i * (NABIZ_ARALIK / 1000);
+    satir.append(
+      kisiLink,
+      document.createTextNode(olay.tip === "konu" ? " konu açtı: " : " yanıt verdi: "),
+      hedefLink,
+      el("span", "nabiz-zaman", i === 0 ? "az önce" : sn < 60 ? sn + " sn önce" : Math.round(sn / 60) + " dk önce")
+    );
+    listeKutu.append(satir);
+  }
+}
+
+function nabizPaneli() {
+  const panel = el("section", "nabiz js-reveal");
+  const baslik = el("p", "nabiz-baslik");
+  const sayac = el("span");
+  baslik.append(el("span", "canli-nokta"), sayac);
+  const listeKutu = el("div", "nabiz-listesi");
+  panel.append(baslik, listeKutu);
+  nabizCiz(listeKutu, sayac, false);
+  if (nabizZamanlayici) clearInterval(nabizZamanlayici);
+  nabizZamanlayici = setInterval(() => nabizCiz(listeKutu, sayac, true), NABIZ_ARALIK);
+  return panel;
 }
 
 /* Sayfa dibi topluluk sayaçları: hepsi gerçek veriden türer, üye olunca

@@ -1857,6 +1857,48 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   30% { transform: translateY(-5px); opacity: 1; }
 }
 
+.nabiz {
+  margin-top: 2rem;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--r-m);
+  padding: 1.15rem 1.4rem 1rem;
+}
+
+.nabiz-baslik {
+  margin: 0 0 0.7rem;
+  color: #6ee7b7;
+  font-weight: 700;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-tema="gunduz"] .nabiz-baslik { color: #0a7c5a; }
+
+.nabiz-listesi { display: grid; gap: 0.4rem; }
+
+.nabiz-satir {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--soluk);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.nabiz-satir a.rumuz { color: var(--murekkep); font-weight: 700; text-decoration: none; }
+.nabiz-satir a.rumuz:hover { color: var(--vurgu); }
+.nabiz-satir a:not(.rumuz) { font-weight: 600; min-width: 0; }
+.nabiz-zaman { margin-left: auto; flex: none; font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+
+.nabiz-satir.yeni { animation: nabizGiris 500ms ease; }
+
+@keyframes nabizGiris {
+  from { opacity: 0; transform: translateY(-7px); }
+  to { opacity: 1; transform: none; }
+}
+
 .aktivite {
   margin-top: 1.6rem;
   padding: 0.9rem 1.2rem;
@@ -2216,6 +2258,7 @@ html[data-tema="gunduz"] .cevrimici { color: #0a7c5a; }
   .forum-konu:hover .konu-kapak img { transform: none; }
   .kelime-ic { transform: none; animation: none; }
   .canli-nokta, .yaziyor-noktalar span { animation: none; }
+  .nabiz-satir.yeni { animation: none; }
   .anket-dolgu { transition: none; }
   .js-reveal { opacity: 1; }
   .js-reveal.gorunur { animation: none; }
