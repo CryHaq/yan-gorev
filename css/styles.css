@@ -2084,7 +2084,16 @@ html[data-tema="gunduz"] .tur-etiket.gercek { color: #b3592a; }
 .radar-notu { max-width: 62ch; margin-bottom: 1.4rem; }
 .radar-notu .yan-baslik { color: #ffb26b; }
 html[data-tema="gunduz"] .radar-notu .yan-baslik { color: #b3592a; }
-.radar-notu p:last-child { margin: 0; font-size: 1.02rem; }
+.radar-notu p { margin: 0 0 0.9rem; font-size: 1.02rem; line-height: 1.65; }
+.radar-notu p:last-child { margin: 0; }
+.radar-notu .radar-gorus-olcusu {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: var(--metin-soluk, var(--metin-yumusak));
+  border-bottom: 1px dashed var(--cizgi, rgba(255, 178, 107, 0.25));
+  padding-bottom: 0.7rem;
+  margin-bottom: 1.1rem;
+}
 
 .radar-kunye { margin-top: 0.4rem; }
 

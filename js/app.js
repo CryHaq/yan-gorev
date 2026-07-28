@@ -1226,7 +1226,13 @@ function radarOyunSayfasi() {
   /* Tanım İLK, sonra sitenin görüşü (Radar Notu), sonra künye. */
   sol.append(el("p", "radar-tanim", o.tanim));
   const notPanel = el("section", "yan-panel radar-notu");
-  notPanel.append(el("p", "yan-baslik", "✦ Radar Notu — Yan Görev'in görüşü"), el("p", null, o.not));
+  notPanel.append(el("p", "yan-baslik", "✦ Yan Görev Görüşü"));
+  /* Ev kuralı: görüşün okuma süresi ≈ tanıtım videosunun süresi. Rozetle ilan ediyoruz. */
+  if (o.videoSn) {
+    const dk = Math.floor(o.videoSn / 60), sn = o.videoSn % 60;
+    notPanel.append(el("p", "radar-gorus-olcusu", "Okuma süresi ≈ tanıtım videosu: " + dk + ":" + String(sn).padStart(2, "0") + " — ev kuralımız: görüş, videodan uzun sürmez."));
+  }
+  (o.gorus || []).forEach(p => notPanel.append(el("p", null, p)));
   sol.append(notPanel);
   const kunye = el("ul", "kunye radar-kunye");
   [["Geliştirici", o.gelistirici], ["Çıkış", o.cikis], ["Tür", o.tur], ["Bugünkü zirve", o.zirve.toLocaleString("tr-TR") + " oyuncu"]]
