@@ -200,6 +200,9 @@ html[data-tema="gunduz"] .site-header {
 .site-header > * { max-width: var(--sayfa-genislik); }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
   font-family: var(--serif);
   font-weight: 800;
   font-size: 1.7rem;
@@ -207,6 +210,13 @@ html[data-tema="gunduz"] .site-header {
   color: var(--murekkep);
   text-decoration: none;
   text-shadow: 0 0 18px rgba(107, 139, 255, 0.35);
+}
+
+.logo-isaret {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  filter: drop-shadow(0 0 10px rgba(107, 139, 255, 0.35));
 }
 
 .logo::after {
@@ -878,16 +888,9 @@ main {
 }
 
 .footer-logo {
-  display: inline-grid;
-  place-items: center;
+  display: block;
   width: 44px;
   height: 44px;
-  border-radius: 12px;
-  background: var(--vurgu-derin);
-  color: #fff;
-  font-family: var(--serif);
-  font-weight: 800;
-  font-size: 1.15rem;
 }
 
 .footer-slogan {
