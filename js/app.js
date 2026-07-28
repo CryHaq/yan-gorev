@@ -23,6 +23,7 @@ function sayfayiKur() {
     else if (sayfa === "uye.html") uyeSayfasi();
     else if (sayfa === "profil.html") profilSayfasi();
     else if (sayfa === "ekip.html") ekipSayfasi();
+    else if (sayfa === "radar.html") radarSayfasi();
     else anaSayfa();
   } catch (hata) {
     console.error("Yan Görev render hatası:", hata);
@@ -1136,6 +1137,54 @@ function profilSayfasi() {
     akis.append(kutu);
   });
   icerik.append(akis);
+  canlandir();
+}
+
+/* ---------- radar: gerçek dünya sayfası ----------
+   Kurgu evrenin TEK istisnası, açıkça işaretlenmiş ayrı sayfa: Steam'de
+   şu anda en çok oynanan GERÇEK oyunlar. Görseller Steam CDN'inden atıfla
+   gösterilir; veri js/radar-verisi.js anlık görüntüsüdür. */
+function radarSayfasi() {
+  document.title = "Radar — Yan Görev";
+  const icerik = document.getElementById("icerik");
+  icerik.textContent = "";
+
+  const baslik = el("header", "forum-basligi");
+  baslik.append(
+    el("p", "eyebrow radar-eyebrow", "Gerçek Dünya · Steam"),
+    el("h1", null, "Radar"),
+    el("p", "alt", "Camdan dışarı bir bakış: şu anda dünyada en çok oynanan gerçek oyunlar. Bu sayfadaki her şey gerçektir — kurgu evrenimizle ilgisi yoktur.")
+  );
+  icerik.append(baslik);
+
+  if (typeof RADAR === "undefined") {
+    const bos = el("div", "bos-durum");
+    bos.append(el("p", null, "Radar verisi yüklenemedi. Sayfayı yenilemeyi dene."));
+    icerik.append(bos);
+    return;
+  }
+
+  const izgara = el("div", "forum-izgara ipucu-izgara");
+  RADAR.oyunlar.forEach(o => {
+    const kart = el("a", "radar-kart js-reveal");
+    kart.href = "https://store.steampowered.com/app/" + o.appid;
+    kart.target = "_blank";
+    kart.rel = "noopener noreferrer";
+    const kapak = el("span", "radar-kapak");
+    const img = el("img");
+    img.src = "https://cdn.akamai.steamstatic.com/steam/apps/" + o.appid + "/header.jpg";
+    img.alt = o.ad + " — Steam mağaza görseli";
+    img.loading = "lazy";
+    kapak.append(img);
+    const govde = el("span", "radar-govde");
+    const adSatiri = el("span", "radar-ad");
+    adSatiri.append(el("span", "radar-sira", "#" + o.sira), document.createTextNode(" " + o.ad));
+    govde.append(adSatiri, el("span", "radar-sayi", "bugünkü zirve: " + o.zirve.toLocaleString("tr-TR") + " oyuncu"));
+    kart.append(kapak, govde);
+    izgara.append(kart);
+  });
+  icerik.append(izgara);
+  icerik.append(el("p", "radar-not", "Veriler ve görseller Steam'e aittir · anlık görüntü: " + RADAR.guncelleme + " · araç/istemci girdileri (ör. Wallpaper Engine) listeden elenmiştir."));
   canlandir();
 }
 

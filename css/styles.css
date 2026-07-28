@@ -2024,6 +2024,56 @@ html[data-tema="gunduz"] .nabiz-baslik { color: #0a7c5a; }
 .ekip-imzalar { margin: 0; color: var(--soluk); font-size: 0.85rem; }
 .ekip-imzalar a { font-weight: 600; }
 
+/* ---------- Radar: gerçek dünya ---------- */
+
+.radar-eyebrow { color: #ffb26b !important; }
+html[data-tema="gunduz"] .radar-eyebrow { color: #b3592a !important; }
+
+.radar-kart {
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border: 1px solid var(--cizgi);
+  border-radius: var(--r-m);
+  overflow: hidden;
+  text-decoration: none;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.radar-kart:hover {
+  border-color: #ffb26b;
+  transform: translateY(-3px);
+  box-shadow: 0 0 24px rgba(255, 178, 107, 0.18);
+}
+
+.forum-izgara .radar-kart { flex: 1 1 300px; max-width: 424px; }
+
+.radar-kapak { display: block; aspect-ratio: 460 / 215; overflow: hidden; }
+.radar-kapak img { width: 100%; height: 100%; object-fit: cover; transition: transform 300ms ease; }
+.radar-kart:hover .radar-kapak img { transform: scale(1.04); }
+
+.radar-govde { display: grid; gap: 0.2rem; padding: 0.9rem 1.1rem 1rem; }
+
+.radar-ad {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--murekkep);
+  line-height: 1.25;
+}
+
+.radar-sira { color: #ffb26b; font-variant-numeric: tabular-nums; }
+html[data-tema="gunduz"] .radar-sira { color: #b3592a; }
+
+.radar-sayi { color: var(--soluk); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+
+.radar-not {
+  margin: 1.8rem 0 0;
+  color: var(--soluk);
+  font-size: 0.82rem;
+  max-width: 70ch;
+}
+
 /* ---------- Görev Günlüğü ---------- */
 
 .gorev-ozet { margin: 0 0 0.5rem; font-weight: 700; font-size: 0.95rem; }
